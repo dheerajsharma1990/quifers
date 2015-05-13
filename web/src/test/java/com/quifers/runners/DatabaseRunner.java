@@ -14,7 +14,7 @@ public class DatabaseRunner {
 
     public static Server runDatabaseServer() throws Exception {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
-        Server server = Server.createTcpServer("-tcpPort", "9123");
+        Server server = Server.createTcpServer("-tcpPort", "9092");
         server.start();
         Class.forName(quifersProperties.getDriverClass());
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());

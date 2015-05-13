@@ -9,6 +9,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.JettyRunner.runJettyServer;
@@ -23,7 +24,8 @@ public class EndToEndWebTest {
         HttpURLConnection connection = getConnection("http://localhost:9111/bookOrder");
 
         DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-        String content = "client_name=Dheeraj&mobile_number=9999770595&email=dheerajsharma1990@gmail.com";
+        String content = "client_name=Dheeraj&mobile_number=9999770595&email=dheerajsharma1990@gmail.com&from_address=" + URLEncoder.encode("123 HBC,Faridabad", "UTF-8")
+                + "&to_address=" + URLEncoder.encode("456 HBC@Delhi", "UTF-8") + "&booking_date=" + URLEncoder.encode("22/09/1990 10:20:30", "UTF-8");
         outputStream.writeBytes(content);
         outputStream.flush();
         outputStream.close();

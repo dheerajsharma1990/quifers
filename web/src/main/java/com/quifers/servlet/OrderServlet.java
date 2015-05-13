@@ -1,7 +1,7 @@
 package com.quifers.servlet;
 
 import com.quifers.db.DatabaseHelper;
-import com.quifers.domain.Client;
+import com.quifers.domain.Order;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -9,6 +9,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 import static com.quifers.listener.StartupContextListener.DATABASE_HELPER;
 
@@ -27,13 +31,18 @@ public class OrderServlet extends HttpServlet {
             String clientName = request.getParameter("client_name");
             long mobileNumber = Long.valueOf(request.getParameter("mobile_number"));
             String email = request.getParameter("email");
-            Client client = new Client(clientName, mobileNumber, email);
-            databaseHelper.saveClient(client);
-            Client savedClient = databaseHelper.getClientByMobile(client.getMobileNumber());
-            response.getWriter().write(String.format("ClientId:[%d]%nName:[%s]%nMobile:[%d]%nEmail:[%s]",savedClient.getClientId(),
-                    savedClient.getName(),savedClient.getMobileNumber(),savedClient.getEmail()));
+            String fromAddress = request.getParameter("from_address");
+            String toAddress = request.getParameter("to_address");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+            Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
+            Order order = new Order(clientName, mobileNumber, email, fromAddress, toAddress, bookingDate);
+            databaseHelper.saveOrder(order);
+            List<Order> orders = databaseHelper.getOrdersByName(clientName);
+            response.getWriter().write(orders.iterator().next().toString());
         } catch (SQLException e) {
             response.getWriter().write("Unable to save client.");
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }
