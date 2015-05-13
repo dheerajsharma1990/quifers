@@ -8,11 +8,6 @@ dependencies {
     compile project(':domain')
     testCompile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.0.M2'
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.187'
-}
-
-idea {
-    module {
-        downloadJavadoc = false
-        downloadSources = false
-    }
+    testCompile (group: 'org.testng', name: 'testng', version: '6.9.4')
+    testCompile (group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3')
 }

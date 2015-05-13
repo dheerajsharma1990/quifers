@@ -13,4 +13,14 @@ allprojects {
             vcs = 'Git'
         }
     }
+
+}
+
+subprojects {
+    idea {
+        module {
+            downloadJavadoc = false
+            downloadSources = false
+        }
+    }
 }
