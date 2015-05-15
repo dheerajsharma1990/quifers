@@ -1,5 +1,6 @@
 package com.quifers.db;
 
+import com.quifers.db.annotations.DomainMapperFactory;
 import com.quifers.domain.Order;
 
 import java.sql.*;
@@ -20,7 +21,7 @@ public class DatabaseHelper {
     }
 
     public List<Order> getOrdersByName(String name) throws SQLException {
-        String sql = "SELECT order_id,name,mobile_number,email,from_address,to_address,booking_date from orders where name = ?";
+        String sql = "SELECT order_id,name,mobile_number,email,from_address,to_address,booking_date from " + DomainMapperFactory.getTableName(Order.class) + " where name = ?";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, name);
         ResultSet resultSet = preparedStatement.executeQuery();

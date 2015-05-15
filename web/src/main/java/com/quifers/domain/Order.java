@@ -1,5 +1,8 @@
 package com.quifers.domain;
 
+import com.quifers.db.annotations.DomainMapperFactory;
+import com.quifers.db.annotations.Table;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 
+@Table(name = "orders")
 public class Order implements Serializable {
 
     private long orderId;
@@ -38,7 +42,7 @@ public class Order implements Serializable {
     }
 
     public PreparedStatement getInsertStatement(Connection connection) throws SQLException {
-        String sql = String.format("INSERT INTO orders (name,mobile_number,email,from_address,to_address,booking_date) " +
+        String sql = String.format("INSERT INTO " + DomainMapperFactory.getTableName(Order.class) + " (name,mobile_number,email,from_address,to_address,booking_date) " +
                 "values (?,?,?,?,?,?)");
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         preparedStatement.setString(1, name);
