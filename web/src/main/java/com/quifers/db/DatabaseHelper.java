@@ -15,6 +15,14 @@ public class DatabaseHelper {
     }
 
     public int saveOrder(Order order) throws SQLException {
+        String sql = DomainMapperFactory.getInsertSql(order.getClass());
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, order.getName());
+        preparedStatement.setLong(2, order.getMobileNumber());
+        preparedStatement.setString(3, order.getEmail());
+        preparedStatement.setString(4, order.getFromAddress());
+        preparedStatement.setString(5, order.getToAddress());
+        preparedStatement.setTimestamp(6, new Timestamp(order.getBookingDate().getTime()));
         PreparedStatement statement = order.getInsertStatement(connection);
         return statement.executeUpdate();
     }

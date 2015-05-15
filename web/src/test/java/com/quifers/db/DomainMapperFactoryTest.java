@@ -25,6 +25,14 @@ public class DomainMapperFactoryTest {
         assertThat(columns[1], is("other_date"));
     }
 
+    @Test
+    public void shouldGetCorrectInsertSql() {
+        String actualSql = DomainMapperFactory.getInsertSql(XYZ.class);
+
+        String expectedSql = "INSERT INTO xyz (abc,other_date) VALUES (?,?)";
+        assertThat(actualSql, is(expectedSql));
+    }
+
 
     @Table(name = "xyz")
     private class XYZ {

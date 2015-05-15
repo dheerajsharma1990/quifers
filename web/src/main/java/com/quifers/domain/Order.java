@@ -49,6 +49,30 @@ public class Order implements Serializable {
         this.bookingDate = bookingDate;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public long getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFromAddress() {
+        return fromAddress;
+    }
+
+    public String getToAddress() {
+        return toAddress;
+    }
+
+    public Date getBookingDate() {
+        return bookingDate;
+    }
+
     public PreparedStatement getInsertStatement(Connection connection) throws SQLException {
         String sql = String.format("INSERT INTO " + DomainMapperFactory.getTableName(Order.class) + " (name,mobile_number,email,from_address,to_address,booking_date) " +
                 "values (?,?,?,?,?,?)");
