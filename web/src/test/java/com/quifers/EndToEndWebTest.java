@@ -49,8 +49,8 @@ public class EndToEndWebTest {
     public void startServerAndDatabase() throws Exception {
         server = runDatabaseServer();
         runJettyServer(9111);
-    }
 
+    }
     @AfterClass
     public void shutDownDatabase() {
         server.stop();

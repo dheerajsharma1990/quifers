@@ -3,9 +3,11 @@ package com.quifers.db;
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
 import com.quifers.domain.QuifersDomainObject;
+import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -54,7 +56,7 @@ public class DomainMapperFactory {
         return builder.toString();
     }
 
-    public static void setParameters(PreparedStatement preparedStatement, QuifersDomainObject domainObject) throws IllegalAccessException, SQLException {
+    public static void setInsertParameters(PreparedStatement preparedStatement, QuifersDomainObject domainObject) throws IllegalAccessException, SQLException {
         Class<? extends QuifersDomainObject> clazz = domainObject.getClass();
         DbColumn[] dbColumns = getColumns(clazz);
         for (int i = 1; i <= dbColumns.length; i++) {
@@ -79,4 +81,72 @@ public class DomainMapperFactory {
             }
         }
     }
+
+    public static String getCreateSql(Class clazz, DbColumn dbColumn) {
+        StringBuilder builder = new StringBuilder();
+        DbColumn[] columns = getColumns(clazz);
+        builder.append("SELECT ");
+        int totalColumns = columns.length;
+        for (int i = 0; i < totalColumns - 1; i++) {
+            builder.append(columns[i].getColumnName()).append(",");
+        }
+        builder.append(columns[totalColumns - 1].getColumnName());
+        builder.append(" ").append("FROM").append(" ");
+        builder.append(getTableName(clazz)).append(" ");
+        builder.append("WHERE ").append(dbColumn.getColumnName()).append(" =").append(" ?");
+
+        return builder.toString();
+    }
+
+    public static void createSelectStatement(PreparedStatement preparedStatement, DbColumn dbColumn, Object value) throws SQLException {
+        Field field = dbColumn.getField();
+        Class<?> type = field.getType();
+        if (type.equals(String.class)) {
+            String string = (String) value;
+            preparedStatement.setString(1, string);
+        } else if (type.equals(Date.class)) {
+            Date date = (Date) value;
+            preparedStatement.setTimestamp(1, new Timestamp(date.getTime()));
+        } else if (type.equals(int.class)) {
+            int integer = (int) value;
+            preparedStatement.setInt(1, integer);
+        } else if (type.equals(long.class)) {
+            long longValue = (long) value;
+            preparedStatement.setLong(1, longValue);
+        } else {
+            throw new IllegalArgumentException("No mapper found for type:[" + type + "].");
+        }
+    }
+
+    public static <T extends QuifersDomainObject> List<T> mapObjects(ResultSet resultSet, Class<T> clazz) throws SQLException, IllegalAccessException, InstantiationException {
+        DbColumn[] columns = getColumns(clazz);
+        T domainObject = clazz.newInstance();
+        List<T> domainObjects = new ArrayList<>();
+        while (resultSet.next()) {
+            for (DbColumn column : columns) {
+                Field field = column.getField();
+                Class<?> type = field.getType();
+                field.setAccessible(true);
+                if (type.equals(String.class)) {
+                    String value = resultSet.getString(column.getColumnName());
+                    field.set(domainObject, value);
+                } else if (type.equals(Date.class)) {
+                    Date value = new Date(resultSet.getTimestamp(column.getColumnName()).getTime());
+                    field.set(domainObject, value);
+                } else if (type.equals(int.class)) {
+                    int value = resultSet.getInt(column.getColumnName());
+                    field.setInt(domainObject, value);
+                } else if (type.equals(long.class)) {
+                    long value = resultSet.getLong(column.getColumnName());
+                    field.setLong(domainObject, value);
+                } else {
+                    throw new IllegalArgumentException("No mapper found for type:[" + type + "].");
+                }
+            }
+            domainObjects.add(domainObject);
+        }
+        return domainObjects;
+    }
+
+
 }

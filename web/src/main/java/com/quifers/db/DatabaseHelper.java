@@ -3,11 +3,10 @@ package com.quifers.db;
 import com.quifers.domain.Order;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import static com.quifers.db.DomainMapperFactory.setParameters;
+import static com.quifers.db.DomainMapperFactory.createSelectStatement;
+import static com.quifers.db.DomainMapperFactory.setInsertParameters;
 
 public class DatabaseHelper {
     private final Connection connection;
@@ -19,26 +18,17 @@ public class DatabaseHelper {
     public int saveOrder(Order order) throws SQLException, IllegalAccessException {
         String sql = DomainMapperFactory.getInsertSql(order.getClass());
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        setParameters(preparedStatement, order);
+        setInsertParameters(preparedStatement, order);
         return preparedStatement.executeUpdate();
     }
 
-    public List<Order> getOrdersByName(String name) throws SQLException {
-        String sql = "SELECT order_id,name,mobile_number,email,from_address,to_address,booking_date from " + DomainMapperFactory.getTableName(Order.class) + " where name = ?";
+    public List<Order> getOrdersByName(String name) throws SQLException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        DbColumn dbColumn = new DbColumn("name", Order.class.getDeclaredField("name"));
+        String sql = DomainMapperFactory.getCreateSql(Order.class, dbColumn);
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setString(1, name);
+        createSelectStatement(preparedStatement, dbColumn, name);
         ResultSet resultSet = preparedStatement.executeQuery();
-        List<Order> orders = new ArrayList<>();
-        while (resultSet.next()) {
-            long id = resultSet.getLong("order_id");
-            String clientName = resultSet.getString("name");
-            long mobileNumber = resultSet.getLong("mobile_number");
-            String email = resultSet.getString("email");
-            String fromAddress = resultSet.getString("from_address");
-            String toAddress = resultSet.getString("to_address");
-            Date bookingDate = new Date(resultSet.getTimestamp("booking_date").getTime());
-            orders.add(new Order(id, clientName, mobileNumber, email, fromAddress, toAddress, bookingDate));
-        }
+        List<Order> orders = DomainMapperFactory.mapObjects(resultSet, Order.class);
         return orders;
     }
 

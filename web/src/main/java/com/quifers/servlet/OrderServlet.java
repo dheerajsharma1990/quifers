@@ -53,6 +53,12 @@ public class OrderServlet extends HttpServlet {
         } catch (IllegalAccessException e) {
             response.getWriter().write("Unable to save client.");
             e.printStackTrace();
+        } catch (InstantiationException e) {
+            response.getWriter().write("Unable to save client.");
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            response.getWriter().write("Unable to save client.");
+            e.printStackTrace();
         }
     }
 
