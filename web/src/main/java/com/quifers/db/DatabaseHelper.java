@@ -1,7 +1,5 @@
 package com.quifers.db;
 
-import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.QuifersDomainObject;
 
 import java.sql.*;
@@ -24,23 +22,13 @@ public class DatabaseHelper {
         return preparedStatement.executeUpdate();
     }
 
-    public List<Order> getOrdersByName(String name) throws SQLException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-        DbColumn dbColumn = new DbColumn("name", Order.class.getDeclaredField("name"));
-        String sql = DomainMapperFactory.getCreateSql(Order.class, dbColumn);
+    public <T extends QuifersDomainObject> List<T> getObjects(Class<T> clazz, String columnName, Object columnValue) throws NoSuchFieldException, SQLException, InstantiationException, IllegalAccessException {
+        DbColumn dbColumn = new DbColumn(clazz.getDeclaredField(columnName));
+        String sql = DomainMapperFactory.getCreateSql(clazz, dbColumn);
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        createSelectStatement(preparedStatement, dbColumn, name);
+        createSelectStatement(preparedStatement, dbColumn, columnValue);
         ResultSet resultSet = preparedStatement.executeQuery();
-        List<Order> orders = DomainMapperFactory.mapObjects(resultSet, Order.class);
-        return orders;
+        return DomainMapperFactory.mapObjects(resultSet, clazz);
     }
 
-    public List<OrderWorkflow> getOrderWorkflowByOrderId(long orderId) throws SQLException, InstantiationException, IllegalAccessException, NoSuchFieldException {
-        DbColumn dbColumn = new DbColumn("order_id", OrderWorkflow.class.getDeclaredField("orderId"));
-        String sql = DomainMapperFactory.getCreateSql(OrderWorkflow.class, dbColumn);
-        PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        createSelectStatement(preparedStatement, dbColumn, orderId);
-        ResultSet resultSet = preparedStatement.executeQuery();
-        List<OrderWorkflow> orderWorkflows = DomainMapperFactory.mapObjects(resultSet, OrderWorkflow.class);
-        return orderWorkflows;
-    }
 }

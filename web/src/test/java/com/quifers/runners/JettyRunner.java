@@ -13,7 +13,7 @@ public class JettyRunner {
 
         contextHandler.setDescriptor(webappDirLocation + "/WEB-INF/web.xml");
         contextHandler.setResourceBase(webappDirLocation);
-
+        contextHandler.setInitParameter("env","LOCAL");
         contextHandler.setParentLoaderPriority(true);
         server.setHandler(contextHandler);
 

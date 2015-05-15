@@ -22,6 +22,7 @@ public class EndToEndWebTest {
     //create table sql automatic
     // test domain object default constructor
     // dealing with enums
+    //log4j properties for different environments..
     private Server server;
 
     @Test
@@ -42,7 +43,7 @@ public class EndToEndWebTest {
                 .add("mobile_number", "9999770595")
                 .add("email", "dheerajsharma1990@gmail.com")
                 .add("from_address", "House Number 1234, Faridabad")
-                .add("to_address", "Houser Number 4567, Gurgaon")
+                .add("to_address", "House Number 4567, Gurgaon")
                 .add("booking_date", "22/09/1990 10:20:30").build();
     }
 

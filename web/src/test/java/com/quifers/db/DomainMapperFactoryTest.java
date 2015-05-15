@@ -54,7 +54,7 @@ public class DomainMapperFactoryTest {
     @Test
     public void shouldGetCorrectSelectSql() throws Exception {
 
-        String actualSql = DomainMapperFactory.getCreateSql(XYZ.class, new DbColumn("abc", XYZ.class.getDeclaredField("abc")));
+        String actualSql = DomainMapperFactory.getCreateSql(XYZ.class, new DbColumn(XYZ.class.getDeclaredField("abc")));
         String expectedSql = "SELECT abc,other_date,count FROM xyz WHERE abc = ?";
         assertThat(actualSql, is(expectedSql));
     }

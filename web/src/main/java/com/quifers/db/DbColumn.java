@@ -1,5 +1,7 @@
 package com.quifers.db;
 
+import com.quifers.db.annotations.Column;
+
 import java.lang.reflect.Field;
 
 public class DbColumn {
@@ -7,8 +9,8 @@ public class DbColumn {
     private String columnName;
     private Field field;
 
-    public DbColumn(String columnName,Field field) {
-        this.columnName = columnName;
+    public DbColumn(Field field) {
+        this.columnName = field.getAnnotation(Column.class).name();
         this.field = field;
     }
 

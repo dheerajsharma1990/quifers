@@ -27,7 +27,7 @@ public class DomainMapperFactory {
         for (Field field : fields) {
             Column annotation = field.getAnnotation(Column.class);
             if (annotation != null) {
-                dbColumns.add(new DbColumn(annotation.name(), field));
+                dbColumns.add(new DbColumn(field));
             }
         }
         return dbColumns.toArray(new DbColumn[0]);

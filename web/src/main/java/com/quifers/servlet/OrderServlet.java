@@ -46,8 +46,8 @@ public class OrderServlet extends HttpServlet {
             OrderWorkflow orderWorkflow = new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate);
             databaseHelper.save(order);
             databaseHelper.save(orderWorkflow);
-            List<Order> orders = databaseHelper.getOrdersByName(clientName);
-            List<OrderWorkflow> orderWorkflows = databaseHelper.getOrderWorkflowByOrderId(orderId);
+            List<Order> orders = databaseHelper.getObjects(Order.class, "name", clientName);
+            List<OrderWorkflow> orderWorkflows = databaseHelper.getObjects(OrderWorkflow.class, "orderId", orderId);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
