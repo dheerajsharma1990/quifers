@@ -1,6 +1,5 @@
 package com.quifers.db;
 
-import com.quifers.db.annotations.DomainMapperFactory;
 import com.quifers.domain.Order;
 
 import java.sql.*;
