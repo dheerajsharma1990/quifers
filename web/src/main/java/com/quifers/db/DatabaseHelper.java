@@ -1,6 +1,8 @@
 package com.quifers.db;
 
 import com.quifers.domain.Order;
+import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.QuifersDomainObject;
 
 import java.sql.*;
 import java.util.List;
@@ -15,7 +17,7 @@ public class DatabaseHelper {
         this.connection = DriverManager.getConnection(url);
     }
 
-    public int saveOrder(Order order) throws SQLException, IllegalAccessException {
+    public int save(QuifersDomainObject order) throws SQLException, IllegalAccessException {
         String sql = DomainMapperFactory.getInsertSql(order.getClass());
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
         setInsertParameters(preparedStatement, order);
@@ -32,4 +34,13 @@ public class DatabaseHelper {
         return orders;
     }
 
+    public List<OrderWorkflow> getOrderWorkflowByOrderId(long orderId) throws SQLException, InstantiationException, IllegalAccessException, NoSuchFieldException {
+        DbColumn dbColumn = new DbColumn("order_id", OrderWorkflow.class.getDeclaredField("orderId"));
+        String sql = DomainMapperFactory.getCreateSql(OrderWorkflow.class, dbColumn);
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        createSelectStatement(preparedStatement, dbColumn, orderId);
+        ResultSet resultSet = preparedStatement.executeQuery();
+        List<OrderWorkflow> orderWorkflows = DomainMapperFactory.mapObjects(resultSet, OrderWorkflow.class);
+        return orderWorkflows;
+    }
 }

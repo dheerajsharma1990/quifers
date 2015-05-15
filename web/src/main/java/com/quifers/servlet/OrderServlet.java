@@ -2,6 +2,8 @@ package com.quifers.servlet;
 
 import com.quifers.db.DatabaseHelper;
 import com.quifers.domain.Order;
+import com.quifers.domain.OrderState;
+import com.quifers.domain.OrderWorkflow;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,26 +40,23 @@ public class OrderServlet extends HttpServlet {
             String email = request.getParameter("email");
             String fromAddress = request.getParameter("from_address");
             String toAddress = request.getParameter("to_address");
+            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress);
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
             Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
-            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress, bookingDate);
-            databaseHelper.saveOrder(order);
+            OrderWorkflow orderWorkflow = new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate);
+            databaseHelper.save(order);
+            databaseHelper.save(orderWorkflow);
             List<Order> orders = databaseHelper.getOrdersByName(clientName);
-            response.getWriter().write(orders.iterator().next().toString());
+            List<OrderWorkflow> orderWorkflows = databaseHelper.getOrderWorkflowByOrderId(orderId);
         } catch (SQLException e) {
-            response.getWriter().write("Unable to save client.");
-            e.printStackTrace();
-        } catch (ParseException e) {
-            response.getWriter().write("Unable to save client.");
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            response.getWriter().write("Unable to save client.");
             e.printStackTrace();
         } catch (InstantiationException e) {
-            response.getWriter().write("Unable to save client.");
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
-            response.getWriter().write("Unable to save client.");
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
     }

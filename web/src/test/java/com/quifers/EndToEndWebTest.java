@@ -18,7 +18,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class EndToEndWebTest {
-
+    // tasks
+    //create table sql automatic
+    // test domain object default constructor
+    // dealing with enums
     private Server server;
 
     @Test
@@ -38,7 +41,7 @@ public class EndToEndWebTest {
         return new ParametersBuilder().add("client_name", "Dheeraj Sharma")
                 .add("mobile_number", "9999770595")
                 .add("email", "dheerajsharma1990@gmail.com")
-                .add("from_adddress", "House Number 1234, Faridabad")
+                .add("from_address", "House Number 1234, Faridabad")
                 .add("to_address", "Houser Number 4567, Gurgaon")
                 .add("booking_date", "22/09/1990 10:20:30").build();
     }

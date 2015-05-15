@@ -2,8 +2,8 @@ package com.quifers.db;
 
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
+import com.quifers.domain.OrderState;
 import com.quifers.domain.QuifersDomainObject;
-import org.omg.CORBA.PUBLIC_MEMBER;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -76,6 +76,9 @@ public class DomainMapperFactory {
             } else if (type.equals(long.class)) {
                 long value = field.getLong(domainObject);
                 preparedStatement.setLong(i, value);
+            } else if (type.equals(OrderState.class)) {
+                OrderState value = (OrderState) field.get(domainObject);
+                preparedStatement.setObject(i, value.toString());
             } else {
                 throw new IllegalArgumentException("No mapper found for type:[" + type + "].");
             }
@@ -113,6 +116,8 @@ public class DomainMapperFactory {
         } else if (type.equals(long.class)) {
             long longValue = (long) value;
             preparedStatement.setLong(1, longValue);
+        } else if (type.equals(OrderState.class)) {
+            preparedStatement.setObject(1, value.toString());
         } else {
             throw new IllegalArgumentException("No mapper found for type:[" + type + "].");
         }
@@ -120,9 +125,9 @@ public class DomainMapperFactory {
 
     public static <T extends QuifersDomainObject> List<T> mapObjects(ResultSet resultSet, Class<T> clazz) throws SQLException, IllegalAccessException, InstantiationException {
         DbColumn[] columns = getColumns(clazz);
-        T domainObject = clazz.newInstance();
         List<T> domainObjects = new ArrayList<>();
         while (resultSet.next()) {
+            T domainObject = clazz.newInstance();
             for (DbColumn column : columns) {
                 Field field = column.getField();
                 Class<?> type = field.getType();
@@ -139,6 +144,9 @@ public class DomainMapperFactory {
                 } else if (type.equals(long.class)) {
                     long value = resultSet.getLong(column.getColumnName());
                     field.setLong(domainObject, value);
+                } else if (type.equals(OrderState.class)) {
+                    String object = resultSet.getString(column.getColumnName());
+                    field.set(domainObject, OrderState.valueOf(object));
                 } else {
                     throw new IllegalArgumentException("No mapper found for type:[" + type + "].");
                 }

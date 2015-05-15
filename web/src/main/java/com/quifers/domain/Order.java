@@ -3,8 +3,6 @@ package com.quifers.domain;
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
 
-import java.util.Date;
-
 @Table(name = "orders")
 public class Order implements QuifersDomainObject {
 
@@ -26,20 +24,16 @@ public class Order implements QuifersDomainObject {
     @Column(name = "to_address")
     private String toAddress;
 
-    @Column(name = "booking_date")
-    private Date bookingDate;
-
     public Order() {
     }
 
-    public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress, Date bookingDate) {
+    public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.email = email;
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
-        this.bookingDate = bookingDate;
     }
 
     @Override
@@ -51,7 +45,6 @@ public class Order implements QuifersDomainObject {
                 ", email='" + email + '\'' +
                 ", fromAddress='" + fromAddress + '\'' +
                 ", toAddress='" + toAddress + '\'' +
-                ", bookingDate=" + bookingDate +
                 '}';
     }
 }
