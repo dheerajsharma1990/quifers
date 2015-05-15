@@ -13,21 +13,26 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.quifers.listener.StartupContextListener.DATABASE_HELPER;
+import static com.quifers.listener.StartupContextListener.ORDER_ID_COUNTER;
 
 public class OrderServlet extends HttpServlet {
 
     private DatabaseHelper databaseHelper;
+    private AtomicLong orderIdCounter;
 
     @Override
     public void init() throws ServletException {
         databaseHelper = (DatabaseHelper) getServletContext().getAttribute(DATABASE_HELPER);
+        orderIdCounter = (AtomicLong) getServletContext().getAttribute(ORDER_ID_COUNTER);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
+            long orderId = orderIdCounter.getAndIncrement();
             String clientName = request.getParameter("client_name");
             long mobileNumber = Long.valueOf(request.getParameter("mobile_number"));
             String email = request.getParameter("email");
@@ -35,7 +40,7 @@ public class OrderServlet extends HttpServlet {
             String toAddress = request.getParameter("to_address");
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
             Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
-            Order order = new Order(clientName, mobileNumber, email, fromAddress, toAddress, bookingDate);
+            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress, bookingDate);
             databaseHelper.saveOrder(order);
             List<Order> orders = databaseHelper.getOrdersByName(clientName);
             response.getWriter().write(orders.iterator().next().toString());
@@ -43,6 +48,10 @@ public class OrderServlet extends HttpServlet {
             response.getWriter().write("Unable to save client.");
             e.printStackTrace();
         } catch (ParseException e) {
+            response.getWriter().write("Unable to save client.");
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            response.getWriter().write("Unable to save client.");
             e.printStackTrace();
         }
     }

@@ -4,7 +4,6 @@ import com.quifers.db.DomainMapperFactory;
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
 
-import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,7 +11,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 @Table(name = "orders")
-public class Order implements Serializable {
+public class Order implements QuifersDomainObject {
 
     @Column(name = "order_id")
     private long orderId;

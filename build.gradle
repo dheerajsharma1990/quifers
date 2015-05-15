@@ -16,11 +16,3 @@ allprojects {
 
 }
 
-subprojects {
-    idea {
-        module {
-            downloadJavadoc = false
-            downloadSources = false
-        }
-    }
-}
