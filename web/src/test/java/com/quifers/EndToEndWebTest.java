@@ -24,11 +24,12 @@ public class EndToEndWebTest {
     // dealing with enums
     //log4j properties for different environments..
     private Server server;
+    private static final String BASE_URL = "http://localhost:9111/";
 
     @Test
     public void shouldSaveAndGetOrder() throws Exception {
         //given
-        HttpURLConnection connection = getConnection("http://localhost:9111/bookOrder");
+        HttpURLConnection connection = getConnection(BASE_URL + "bookOrder");
         String request = buildRequest();
 
         //when
@@ -36,6 +37,25 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
+    }
+
+    @Test
+    public void shouldRegisterFieldManager() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "registerFieldManager");
+        String request = buildFieldManagerAccount();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        assertThat(responseCode, is(200));
+    }
+
+    private String buildFieldManagerAccount() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("password", "mypassword")
+                .add("name","Dheeraj Sharma")
+                .add("mobile_number","9999770595").build();
     }
 
     private String buildRequest() throws UnsupportedEncodingException {
