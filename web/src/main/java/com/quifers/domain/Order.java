@@ -2,6 +2,7 @@ package com.quifers.domain;
 
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @Table(name = "orders")
 public class Order implements QuifersDomainObject {
@@ -24,6 +25,9 @@ public class Order implements QuifersDomainObject {
     @Column(name = "to_address")
     private String toAddress;
 
+    @Column(name = "field_manager_id")
+    private String fieldManagerId;
+
     public Order() {
     }
 
@@ -36,15 +40,12 @@ public class Order implements QuifersDomainObject {
         this.toAddress = toAddress;
     }
 
+    public void setFieldManagerId(String fieldManagerId) {
+        this.fieldManagerId = fieldManagerId;
+    }
+
     @Override
     public String toString() {
-        return "Order{" +
-                "orderId=" + orderId +
-                ", name='" + name + '\'' +
-                ", mobileNumber=" + mobileNumber +
-                ", email='" + email + '\'' +
-                ", fromAddress='" + fromAddress + '\'' +
-                ", toAddress='" + toAddress + '\'' +
-                '}';
+        return ReflectionToStringBuilder.reflectionToString(this);
     }
 }

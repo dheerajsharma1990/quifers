@@ -6,14 +6,25 @@
         </listener>
 
         <servlet>
+                <servlet-name>fieldManagerRegisterServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.FieldManagerRegisterServlet</servlet-class>
+        </servlet>
+
+        <servlet>
                 <servlet-name>orderServlet</servlet-name>
                 <servlet-class>com.quifers.servlet.OrderServlet</servlet-class>
         </servlet>
 
         <servlet>
-                <servlet-name>fieldManagerRegisterServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.FieldManagerRegisterServlet</servlet-class>
+                <servlet-name>assignFieldManagerServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.AssignOrderToFieldManagerServlet</servlet-class>
         </servlet>
+
+
+        <servlet-mapping>
+                <servlet-name>fieldManagerRegisterServlet</servlet-name>
+                <url-pattern>/registerFieldManager</url-pattern>
+        </servlet-mapping>
 
         <servlet-mapping>
                 <servlet-name>orderServlet</servlet-name>
@@ -21,8 +32,8 @@
         </servlet-mapping>
 
         <servlet-mapping>
-                <servlet-name>fieldManagerRegisterServlet</servlet-name>
-                <url-pattern>/registerFieldManager</url-pattern>
+                <servlet-name>assignFieldManagerServlet</servlet-name>
+                <url-pattern>/assignFieldManager</url-pattern>
         </servlet-mapping>
 
 </web-app>   

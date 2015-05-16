@@ -101,6 +101,7 @@ public class DomainMapperFactory {
         return builder.toString();
     }
 
+
     public static void createSelectStatement(PreparedStatement preparedStatement, DbColumn dbColumn, Object value) throws SQLException {
         Field field = dbColumn.getField();
         Class<?> type = field.getType();

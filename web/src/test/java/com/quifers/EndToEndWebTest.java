@@ -27,7 +27,19 @@ public class EndToEndWebTest {
     private static final String BASE_URL = "http://localhost:9111/";
 
     @Test
-    public void shouldSaveAndGetOrder() throws Exception {
+    public void shouldRegisterFieldManager() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "registerFieldManager");
+        String request = buildFieldManagerAccount();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        assertThat(responseCode, is(200));
+    }
+
+    @Test(dependsOnMethods = "shouldRegisterFieldManager")
+    public void shouldSaveOrder() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "bookOrder");
         String request = buildRequest();
@@ -39,15 +51,16 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
     }
 
-    @Test
-    public void shouldRegisterFieldManager() throws Exception {
+    @Test(dependsOnMethods = "shouldSaveOrder")
+    public void shouldAssignOrderToFieldManager() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "registerFieldManager");
-        String request = buildFieldManagerAccount();
+        HttpURLConnection connection = getConnection(BASE_URL + "assignFieldManager");
+        String request = buildAssignFieldManagerRequest();
 
         //when
         int responseCode = sendRequest(connection, request);
 
+        //then
         assertThat(responseCode, is(200));
     }
 
@@ -65,6 +78,11 @@ public class EndToEndWebTest {
                 .add("from_address", "House Number 1234, Faridabad")
                 .add("to_address", "House Number 4567, Gurgaon")
                 .add("booking_date", "22/09/1990 10:20:30").build();
+    }
+
+    private String buildAssignFieldManagerRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("order_id", "1")
+                .add("field_manager_id", "dheerajsharma1990").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

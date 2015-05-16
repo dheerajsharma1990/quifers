@@ -1,5 +1,6 @@
 package com.quifers.db;
 
+import com.quifers.domain.Order;
 import com.quifers.domain.QuifersDomainObject;
 
 import java.sql.*;
@@ -29,6 +30,18 @@ public class DatabaseHelper {
         createSelectStatement(preparedStatement, dbColumn, columnValue);
         ResultSet resultSet = preparedStatement.executeQuery();
         return DomainMapperFactory.mapObjects(resultSet, clazz);
+    }
+
+    public void updateOrder(long orderId, String fieldManagerId) throws NoSuchFieldException, SQLException {
+        DbColumn dbColumn = new DbColumn(Order.class.getDeclaredField("fieldManagerId"));
+        DbColumn orderIdColumn = new DbColumn(Order.class.getDeclaredField("orderId"));
+        String sql = "UPDATE " + DomainMapperFactory.getTableName(Order.class) +
+                " SET " + dbColumn.getColumnName() + " = ? " +
+                "WHERE " + orderIdColumn.getColumnName() + " = ?";
+        PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        preparedStatement.setString(1, fieldManagerId);
+        preparedStatement.setLong(2, orderId);
+        preparedStatement.executeUpdate();
     }
 
 }
