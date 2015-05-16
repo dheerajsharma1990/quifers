@@ -2,6 +2,7 @@ package com.quifers.domain;
 
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.Date;
 
@@ -29,10 +30,6 @@ public class OrderWorkflow implements QuifersDomainObject {
 
     @Override
     public String toString() {
-        return "OrderWorkflow{" +
-                "orderId=" + orderId +
-                ", orderState=" + orderState +
-                ", effectiveTime=" + effectiveTime +
-                '}';
+        return ReflectionToStringBuilder.reflectionToString(this);
     }
 }

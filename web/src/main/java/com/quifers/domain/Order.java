@@ -4,6 +4,8 @@ import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import java.util.Collection;
+
 @Table(name = "orders")
 public class Order implements QuifersDomainObject {
 
@@ -28,6 +30,8 @@ public class Order implements QuifersDomainObject {
     @Column(name = "field_manager_id")
     private String fieldManagerId;
 
+    private Collection<OrderWorkflow> orderWorkflows;
+
     public Order() {
     }
 
@@ -40,9 +44,6 @@ public class Order implements QuifersDomainObject {
         this.toAddress = toAddress;
     }
 
-    public void setFieldManagerId(String fieldManagerId) {
-        this.fieldManagerId = fieldManagerId;
-    }
 
     @Override
     public String toString() {
