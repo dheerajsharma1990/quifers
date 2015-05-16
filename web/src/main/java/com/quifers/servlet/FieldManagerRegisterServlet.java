@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static com.quifers.listener.StartupContextListener.DATABASE_HELPER;
@@ -42,14 +41,9 @@ public class FieldManagerRegisterServlet extends HttpServlet {
             List<FieldManager> fieldManagers = databaseHelper.getObjects(FieldManager.class, "userId", userId);
             LOGGER.info("FieldManagerAccount: {}", accounts.iterator().next());
             LOGGER.info("FieldManagerDetails: {}", fieldManagers.iterator().next());
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
+        } catch (Throwable e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal server error has occurred.");
+            LOGGER.error("An error occurred.", e);
         }
     }
 

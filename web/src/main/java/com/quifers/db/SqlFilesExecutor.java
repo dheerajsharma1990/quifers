@@ -1,5 +1,8 @@
 package com.quifers.db;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,6 +16,8 @@ public class SqlFilesExecutor {
     private final Connection connection;
     private final SqlScriptParser parser;
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlFilesExecutor.class);
+
     public SqlFilesExecutor(Connection connection, SqlScriptParser parser) {
         this.connection = connection;
         this.parser = parser;
@@ -20,9 +25,10 @@ public class SqlFilesExecutor {
 
     public void execute(String dirName) throws IOException, SQLException {
         List<String> fileNames = getFileAsNamesFromDir(dirName);
-        for (String file : fileNames) {
+        for (String file : fileNames) {;
             List<String> sqls = parser.parseSqlFile(new File(dirName, file));
             for (String sql : sqls) {
+                LOGGER.info("Executing sql: [{}]", sql);
                 executeSql(sql);
             }
         }

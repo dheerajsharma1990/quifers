@@ -21,6 +21,11 @@ public class DomainMapperFactory {
         return annotation.name();
     }
 
+    public static DbColumn getColumn(Class clazz,String fieldName) throws NoSuchFieldException {
+        Field field = clazz.getDeclaredField(fieldName);
+        return new DbColumn(field);
+    }
+
     public static DbColumn[] getColumns(Class clazz) {
         Field[] fields = clazz.getDeclaredFields();
         List<DbColumn> dbColumns = new ArrayList<>();
