@@ -36,7 +36,8 @@ public class OrderServlet extends HttpServlet {
             Order order = requestValidator.validateRequest(request);
             orderDao.saveOrder(order);
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("Error in saving order.", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to book order.");
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
