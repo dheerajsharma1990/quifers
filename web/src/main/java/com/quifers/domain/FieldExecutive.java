@@ -1,20 +1,15 @@
 package com.quifers.domain;
 
-import com.quifers.db.annotations.Column;
-import com.quifers.db.annotations.Table;
+import java.io.Serializable;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
-@Table(name = "field_executive")
-public class FieldExecutive implements QuifersDomainObject {
+public class FieldExecutive implements Serializable {
 
-    @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "mobile_number")
     private long mobileNumber;
 
 

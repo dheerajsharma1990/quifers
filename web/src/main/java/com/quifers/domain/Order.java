@@ -1,31 +1,23 @@
 package com.quifers.domain;
 
-import com.quifers.db.annotations.Column;
-import com.quifers.db.annotations.Table;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-@Table(name = "orders")
-public class Order implements QuifersDomainObject {
+import java.io.Serializable;
 
-    @Column(name = "order_id")
+public class Order implements Serializable {
+
     private long orderId;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "mobile_number")
     private long mobileNumber;
 
-    @Column(name = "email")
     private String email;
 
-    @Column(name = "from_address")
     private String fromAddress;
 
-    @Column(name = "to_address")
     private String toAddress;
 
-    @Column(name = "field_executive_id")
     private String fieldExecutiveId;
 
     public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress, String fieldExecutiveId) {

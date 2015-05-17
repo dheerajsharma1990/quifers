@@ -3,7 +3,7 @@ package com.quifers.listener;
 import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
-import com.quifers.db.DatabaseHelper;
+import com.quifers.dao.OrderWorkflowDao;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
 import org.slf4j.Logger;
@@ -22,11 +22,11 @@ import static com.quifers.properties.PropertiesLoader.loadProperties;
 
 public class StartupContextListener implements ServletContextListener {
 
-    public static final String DATABASE_HELPER = "DATABASE_HELPER";
     public static final String ORDER_ID_COUNTER = "ORDER_ID_COUNTER";
     public static final String FIELD_EXECUTIVE_ACCOUNT_DAO = "FIELD_EXECUTIVE_ACCOUNT_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
+    public static final String ORDER_WORKFLOW_DAO = "ORDER_WORKFLOW_DAO";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -38,7 +38,6 @@ public class StartupContextListener implements ServletContextListener {
             Environment environment = getEnvironment(servletContext);
             QuifersProperties quifersProperties = loadProperties(environment);
             Connection connection = getDatabaseConnection(quifersProperties);
-            initialiseDatabaseHelper(connection, servletContext);
             initialiseDao(connection, servletContext);
             initialiseOrderId(servletContext);
         } catch (SQLException e) {
@@ -66,10 +65,6 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-    private void initialiseDatabaseHelper(Connection connection, ServletContext servletContext) throws SQLException {
-        DatabaseHelper databaseHelper = new DatabaseHelper(connection);
-        servletContext.setAttribute(DATABASE_HELPER, databaseHelper);
-    }
 
     public void initialiseOrderId(ServletContext servletContext) {
         servletContext.setAttribute(ORDER_ID_COUNTER, new AtomicLong(1L));
@@ -84,5 +79,6 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, new FieldExecutiveAccountDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_DAO, new FieldExecutiveDao(connection));
         servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
+        servletContext.setAttribute(ORDER_WORKFLOW_DAO, new OrderWorkflowDao(connection));
     }
 }

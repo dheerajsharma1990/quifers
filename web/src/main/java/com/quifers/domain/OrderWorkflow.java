@@ -1,32 +1,57 @@
 package com.quifers.domain;
 
-import com.quifers.db.annotations.Column;
-import com.quifers.db.annotations.Table;
 import com.quifers.domain.enums.OrderState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
+import java.io.Serializable;
 import java.util.Date;
 
-@Table(name = "order_workflow")
-public class OrderWorkflow implements QuifersDomainObject {
+public class OrderWorkflow implements Serializable {
 
-    @Column(name = "order_id")
     private long orderId;
 
-    @Column(name = "order_state")
     private OrderState orderState;
 
-    @Column(name = "effective_time")
     private Date effectiveTime;
 
-    public OrderWorkflow() {
-
-    }
 
     public OrderWorkflow(long orderId, OrderState orderState, Date effectiveTime) {
         this.orderId = orderId;
         this.orderState = orderState;
         this.effectiveTime = effectiveTime;
+    }
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public Date getEffectiveTime() {
+        return effectiveTime;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        OrderWorkflow that = (OrderWorkflow) o;
+
+        if (orderId != that.orderId) return false;
+        if (!effectiveTime.equals(that.effectiveTime)) return false;
+        if (orderState != that.orderState) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (orderId ^ (orderId >>> 32));
+        result = 31 * result + orderState.hashCode();
+        return result;
     }
 
     @Override

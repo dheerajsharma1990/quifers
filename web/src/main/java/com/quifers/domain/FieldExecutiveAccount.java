@@ -1,17 +1,13 @@
 package com.quifers.domain;
 
-import com.quifers.db.annotations.Column;
-import com.quifers.db.annotations.Table;
+import java.io.Serializable;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
-@Table(name = "field_executive_account")
-public class FieldExecutiveAccount implements QuifersDomainObject {
+public class FieldExecutiveAccount implements Serializable {
 
-    @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "password")
     private String password;
 
     public FieldExecutiveAccount(String userId, String password) {
