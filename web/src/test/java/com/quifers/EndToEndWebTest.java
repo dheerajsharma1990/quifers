@@ -82,7 +82,7 @@ public class EndToEndWebTest {
 
     private String buildAssignFieldManagerRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("order_id", "1")
-                .add("field_manager_id", "dheerajsharma1990").build();
+                .add("field_executive_id", "dheerajsharma1990").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

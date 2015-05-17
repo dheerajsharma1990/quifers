@@ -1,8 +1,8 @@
 package com.quifers.servlet;
 
 import com.quifers.db.DatabaseHelper;
-import com.quifers.domain.FieldManager;
-import com.quifers.domain.FieldManagerAccount;
+import com.quifers.domain.FieldExecutive;
+import com.quifers.domain.FieldExecutiveAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +33,14 @@ public class FieldManagerRegisterServlet extends HttpServlet {
             String password = request.getParameter("password");
             String name = request.getParameter("name");
             long mobileNumber = Long.valueOf(request.getParameter("mobile_number"));
-            FieldManagerAccount account = new FieldManagerAccount(userId, password);
-            FieldManager fieldManager = new FieldManager(userId, name, mobileNumber);
+            FieldExecutiveAccount account = new FieldExecutiveAccount(userId, password);
+            FieldExecutive fieldExecutive = new FieldExecutive(userId, name, mobileNumber);
             databaseHelper.save(account);
-            databaseHelper.save(fieldManager);
-            List<FieldManagerAccount> accounts = databaseHelper.getObjects(FieldManagerAccount.class, "userId", userId);
-            List<FieldManager> fieldManagers = databaseHelper.getObjects(FieldManager.class, "userId", userId);
+            databaseHelper.save(fieldExecutive);
+            List<FieldExecutiveAccount> accounts = databaseHelper.getObjects(FieldExecutiveAccount.class, "userId", userId);
+            List<FieldExecutive> fieldExecutives = databaseHelper.getObjects(FieldExecutive.class, "userId", userId);
             LOGGER.info("FieldManagerAccount: {}", accounts.iterator().next());
-            LOGGER.info("FieldManagerDetails: {}", fieldManagers.iterator().next());
+            LOGGER.info("FieldManagerDetails: {}", fieldExecutives.iterator().next());
         } catch (Throwable e) {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An internal server error has occurred.");
             LOGGER.error("An error occurred.", e);

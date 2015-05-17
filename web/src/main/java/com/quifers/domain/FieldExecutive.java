@@ -5,21 +5,25 @@ import com.quifers.db.annotations.Table;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
-@Table(name = "field_manager_account")
-public class FieldManagerAccount implements QuifersDomainObject {
+@Table(name = "field_executive")
+public class FieldExecutive implements QuifersDomainObject {
 
     @Column(name = "user_id")
     private String userId;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "name")
+    private String name;
 
-    public FieldManagerAccount() {
+    @Column(name = "mobile_number")
+    private long mobileNumber;
+
+    public FieldExecutive() {
     }
 
-    public FieldManagerAccount(String userId, String password) {
+    public FieldExecutive(String userId, String name, long mobileNumber) {
         this.userId = userId;
-        this.password = password;
+        this.name = name;
+        this.mobileNumber = mobileNumber;
     }
 
     @Override

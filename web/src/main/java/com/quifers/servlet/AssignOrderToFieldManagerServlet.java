@@ -31,7 +31,7 @@ public class AssignOrderToFieldManagerServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             long orderId = Long.valueOf(request.getParameter("order_id"));
-            String fieldManagerId = request.getParameter("field_manager_id");
+            String fieldManagerId = request.getParameter("field_executive_id");
             databaseHelper.updateOrder(orderId, fieldManagerId);
             List<Order> orders = databaseHelper.getObjects(Order.class, "orderId", orderId);
             LOGGER.info("Order: {}", orders.iterator().next());

@@ -27,8 +27,8 @@ public class Order implements QuifersDomainObject {
     @Column(name = "to_address")
     private String toAddress;
 
-    @Column(name = "field_manager_id")
-    private String fieldManagerId;
+    @Column(name = "field_executive_id")
+    private String fieldExecutiveId;
 
     private Collection<OrderWorkflow> orderWorkflows;
 

@@ -1,4 +1,4 @@
-create table field_manager(
+create table field_executive(
 user_id varchar(255) not null,
 name varchar(255) not null,
 mobile_number bigint not null,

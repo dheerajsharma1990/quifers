@@ -33,7 +33,7 @@ public class DatabaseHelper {
     }
 
     public void updateOrder(long orderId, String fieldManagerId) throws NoSuchFieldException, SQLException {
-        DbColumn dbColumn = new DbColumn(Order.class.getDeclaredField("fieldManagerId"));
+        DbColumn dbColumn = new DbColumn(Order.class.getDeclaredField("fieldExecutiveId"));
         DbColumn orderIdColumn = new DbColumn(Order.class.getDeclaredField("orderId"));
         String sql = "UPDATE " + DomainMapperFactory.getTableName(Order.class) +
                 " SET " + dbColumn.getColumnName() + " = ? " +
