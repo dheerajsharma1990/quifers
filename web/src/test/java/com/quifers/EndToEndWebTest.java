@@ -22,12 +22,12 @@ import static org.hamcrest.Matchers.is;
 
 public class EndToEndWebTest {
 
-    private static final String BASE_URL = "http://localhost:9111/";
+    private static final String BASE_URL = "http://localhost:9111";
 
     @Test
     public void shouldRegisterFieldExecutive() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "admin/registerFieldExecutive");
+        HttpURLConnection connection = getConnection(BASE_URL + "/admin/registerFieldExecutive");
         String request = buildFieldExecutiveAccount();
 
         //when
@@ -39,7 +39,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
     public void shouldSaveOrder() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "bookOrder");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/order/book");
         String request = buildRequest();
 
         //when
@@ -52,7 +52,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldSaveOrder")
     public void shouldAssignOrderToFieldManager() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "assignFieldManager");
+        HttpURLConnection connection = getConnection(BASE_URL + "/assignFieldManager");
         String request = buildAssignFieldManagerRequest();
 
         //when

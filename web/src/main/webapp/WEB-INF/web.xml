@@ -6,13 +6,13 @@
         </listener>
 
         <servlet>
-                <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.FieldExecutiveRegisterServlet</servlet-class>
+                <servlet-name>orderServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.OrderServlet</servlet-class>
         </servlet>
 
         <servlet>
-                <servlet-name>orderServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.OrderServlet</servlet-class>
+                <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.FieldExecutiveRegisterServlet</servlet-class>
         </servlet>
 
         <servlet>
@@ -20,15 +20,14 @@
                 <servlet-class>com.quifers.servlet.AssignOrderToFieldManagerServlet</servlet-class>
         </servlet>
 
+        <servlet-mapping>
+                <servlet-name>orderServlet</servlet-name>
+                <url-pattern>/api/v0/guest/order/*</url-pattern>
+        </servlet-mapping>
 
         <servlet-mapping>
                 <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
                 <url-pattern>/admin/registerFieldExecutive</url-pattern>
-        </servlet-mapping>
-
-        <servlet-mapping>
-                <servlet-name>orderServlet</servlet-name>
-                <url-pattern>/bookOrder</url-pattern>
         </servlet-mapping>
 
         <servlet-mapping>

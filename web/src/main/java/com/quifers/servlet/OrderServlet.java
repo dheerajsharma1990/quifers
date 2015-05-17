@@ -2,8 +2,10 @@ package com.quifers.servlet;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
-import com.quifers.domain.enums.OrderState;
+import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.request.validators.OrderBookRequestValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,45 +13,33 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.concurrent.atomic.AtomicLong;
 
+import static com.quifers.listener.StartupContextListener.ORDER_BOOK_REQUEST_VALIDATOR;
 import static com.quifers.listener.StartupContextListener.ORDER_DAO;
-import static com.quifers.listener.StartupContextListener.ORDER_ID_COUNTER;
 
 public class OrderServlet extends HttpServlet {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(OrderServlet.class);
+
     private OrderDao orderDao;
-    private AtomicLong orderIdCounter;
+    private OrderBookRequestValidator requestValidator;
 
     @Override
     public void init() throws ServletException {
         orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
-        orderIdCounter = (AtomicLong) getServletContext().getAttribute(ORDER_ID_COUNTER);
+        requestValidator = (OrderBookRequestValidator) getServletContext().getAttribute(ORDER_BOOK_REQUEST_VALIDATOR);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            long orderId = orderIdCounter.getAndIncrement();
-            String clientName = request.getParameter("client_name");
-            long mobileNumber = Long.valueOf(request.getParameter("mobile_number"));
-            String email = request.getParameter("email");
-            String fromAddress = request.getParameter("from_address");
-            String toAddress = request.getParameter("to_address");
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
-            Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
-            OrderWorkflow orderWorkflow = new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate);
-            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress, null, new HashSet<>(Arrays.asList(orderWorkflow)));
+            Order order = requestValidator.validateRequest(request);
             orderDao.saveOrder(order);
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ParseException e) {
-            e.printStackTrace();
+        } catch (InvalidRequestException e) {
+            LOGGER.error("Error in validation.", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         }
     }
 

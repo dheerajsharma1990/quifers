@@ -5,6 +5,7 @@ import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
+import com.quifers.request.validators.OrderBookRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String FIELD_EXECUTIVE_ACCOUNT_DAO = "FIELD_EXECUTIVE_ACCOUNT_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
+    public static final String ORDER_BOOK_REQUEST_VALIDATOR = "ORDER_BOOK_REQUEST_VALIDATOR";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -36,11 +38,10 @@ public class StartupContextListener implements ServletContextListener {
             Environment environment = getEnvironment(servletContext);
             QuifersProperties quifersProperties = loadProperties(environment);
             Connection connection = getDatabaseConnection(quifersProperties);
+            AtomicLong counter = initialiseOrderId(servletContext);
             initialiseDao(connection, servletContext);
-            initialiseOrderId(servletContext);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+            initialiseValidators(servletContext, counter);
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -63,19 +64,25 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-
-    public void initialiseOrderId(ServletContext servletContext) {
-        servletContext.setAttribute(ORDER_ID_COUNTER, new AtomicLong(1L));
+    public AtomicLong initialiseOrderId(ServletContext servletContext) {
+        AtomicLong counter = new AtomicLong(1L);
+        servletContext.setAttribute(ORDER_ID_COUNTER, counter);
+        return counter;
     }
 
-    @Override
-    public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        LOGGER.info("Stopping quifers webapp...");
-    }
 
     public void initialiseDao(Connection connection, ServletContext servletContext) {
         servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, new FieldExecutiveAccountDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_DAO, new FieldExecutiveDao(connection));
         servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
+    }
+
+    private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {
+        servletContext.setAttribute(ORDER_BOOK_REQUEST_VALIDATOR, new OrderBookRequestValidator(counter));
+    }
+
+    @Override
+    public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        LOGGER.info("Stopping quifers webapp...");
     }
 }
