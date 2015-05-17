@@ -1,7 +1,6 @@
 package com.quifers.servlet;
 
 import com.quifers.dao.OrderDao;
-import com.quifers.dao.OrderWorkflowDao;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
@@ -21,18 +20,15 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import static com.quifers.listener.StartupContextListener.ORDER_DAO;
 import static com.quifers.listener.StartupContextListener.ORDER_ID_COUNTER;
-import static com.quifers.listener.StartupContextListener.ORDER_WORKFLOW_DAO;
 
 public class OrderServlet extends HttpServlet {
 
     private OrderDao orderDao;
-    private OrderWorkflowDao orderWorkflowDao;
     private AtomicLong orderIdCounter;
 
     @Override
     public void init() throws ServletException {
         orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
-        orderWorkflowDao = (OrderWorkflowDao) getServletContext().getAttribute(ORDER_WORKFLOW_DAO);
         orderIdCounter = (AtomicLong) getServletContext().getAttribute(ORDER_ID_COUNTER);
     }
 

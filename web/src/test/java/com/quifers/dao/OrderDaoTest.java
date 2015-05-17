@@ -16,9 +16,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
@@ -29,8 +29,13 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class OrderDaoTest {
 
     private final String USER_NAME = "userName";
-    private final Set<OrderWorkflow> orderWorkflows = new HashSet<>(Arrays.asList(new OrderWorkflow(10l, OrderState.BOOKED, new Date())));
-    private final Order order = new Order(10l, "name", 9988776655l, "email", "fromAddress", "toAddress", null, orderWorkflows);
+    private final Date bookedDate = new Date();
+    private final Date tripStartDate = new Date();
+    private final long ORDER_ID = 10l;
+    private final OrderWorkflow bookedWorkflow = new OrderWorkflow(ORDER_ID, OrderState.BOOKED, bookedDate);
+    private final OrderWorkflow tripStartWorkflow = new OrderWorkflow(ORDER_ID, OrderState.TRIP_STARTED, tripStartDate);
+    private final Collection<OrderWorkflow> orderWorkflows = new HashSet<>(Arrays.asList(bookedWorkflow, tripStartWorkflow));
+    private final Order order = new Order(ORDER_ID, "name", 9988776655l, "email", "fromAddress", "toAddress", null, orderWorkflows);
     private final FieldExecutiveAccount fieldExecutiveAccount = new FieldExecutiveAccount(USER_NAME, "password");
     private final FieldExecutive fieldExecutive = new FieldExecutive(USER_NAME, "name", 9988776655l);
 
@@ -39,24 +44,17 @@ public class OrderDaoTest {
     private FieldExecutiveDao fieldExecutiveDao;
 
     @Test
-    public void shouldSaveOrder() throws Exception {
+    public void shouldSaveAndGetOrder() throws Exception {
         //when
-        int rowsUpdated = dao.saveOrder(order);
-
-        //then
-        assertThat(rowsUpdated, is(1));
-    }
-
-    @Test(dependsOnMethods = "shouldSaveOrder")
-    public void shouldGetOrder() throws Exception {
-        //when
+        dao.saveOrder(order);
         Order orderFromDb = dao.getOrder(order.getOrderId());
 
         //then
         assertThat(orderFromDb, is(order));
     }
 
-    @Test(dependsOnMethods = "shouldGetOrder")
+
+    @Test(dependsOnMethods = "shouldSaveAndGetOrder")
     public void shouldAssignFieldExecutiveToOrder() throws Exception {
         //given
         fieldExecutiveExist();
@@ -82,7 +80,7 @@ public class OrderDaoTest {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
-        dao = new OrderDao(connection, new OrderWorkflowDao(connection));
+        dao = new OrderDao(connection);
         fieldExecutiveAccountDao = new FieldExecutiveAccountDao(connection);
         fieldExecutiveDao = new FieldExecutiveDao(connection);
     }
