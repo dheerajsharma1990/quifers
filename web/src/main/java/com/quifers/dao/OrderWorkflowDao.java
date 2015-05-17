@@ -24,14 +24,17 @@ public class OrderWorkflowDao {
         this.connection = connection;
     }
 
-    public int saveOrderWorkflow(OrderWorkflow orderWorkflow) throws SQLException {
+    public int[] saveOrderWorkflows(Collection<OrderWorkflow> orderWorkflows) throws SQLException {
         String sql = "INSERT INTO " + TABLE_NAME + " " +
                 "(" + allColumns + ")" + " " + "VALUES(?,?,?)";
         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-        preparedStatement.setLong(1, orderWorkflow.getOrderId());
-        preparedStatement.setString(2, orderWorkflow.getOrderState().name());
-        preparedStatement.setTimestamp(3, new Timestamp(orderWorkflow.getEffectiveTime().getTime()));
-        return preparedStatement.executeUpdate();
+        for(OrderWorkflow orderWorkflow : orderWorkflows) {
+            preparedStatement.setLong(1, orderWorkflow.getOrderId());
+            preparedStatement.setString(2, orderWorkflow.getOrderState().name());
+            preparedStatement.setTimestamp(3, new Timestamp(orderWorkflow.getEffectiveTime().getTime()));
+            preparedStatement.addBatch();
+        }
+        return preparedStatement.executeBatch();
     }
 
     public Collection<OrderWorkflow> getOrderWorkflows(long orderId) throws SQLException {

@@ -14,7 +14,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static com.quifers.listener.StartupContextListener.ORDER_DAO;
@@ -43,12 +45,11 @@ public class OrderServlet extends HttpServlet {
             String email = request.getParameter("email");
             String fromAddress = request.getParameter("from_address");
             String toAddress = request.getParameter("to_address");
-            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress, null);
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
             Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
             OrderWorkflow orderWorkflow = new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate);
+            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress, null, new HashSet<>(Arrays.asList(orderWorkflow)));
             orderDao.saveOrder(order);
-            orderWorkflowDao.saveOrderWorkflow(orderWorkflow);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ParseException e) {

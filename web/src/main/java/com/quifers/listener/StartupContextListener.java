@@ -78,7 +78,6 @@ public class StartupContextListener implements ServletContextListener {
     public void initialiseDao(Connection connection, ServletContext servletContext) {
         servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, new FieldExecutiveAccountDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_DAO, new FieldExecutiveDao(connection));
-        servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
-        servletContext.setAttribute(ORDER_WORKFLOW_DAO, new OrderWorkflowDao(connection));
+        servletContext.setAttribute(ORDER_DAO, new OrderDao(connection, new OrderWorkflowDao(connection)));
     }
 }

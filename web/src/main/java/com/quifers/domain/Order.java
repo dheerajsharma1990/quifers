@@ -3,6 +3,7 @@ package com.quifers.domain;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 public class Order implements Serializable {
 
@@ -20,7 +21,9 @@ public class Order implements Serializable {
 
     private String fieldExecutiveId;
 
-    public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress, String fieldExecutiveId) {
+    private Collection<OrderWorkflow> orderWorkflows;
+
+    public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress, String fieldExecutiveId, Collection<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
@@ -28,6 +31,7 @@ public class Order implements Serializable {
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
         this.fieldExecutiveId = fieldExecutiveId;
+        this.orderWorkflows = orderWorkflows;
     }
 
     public long getOrderId() {
@@ -58,6 +62,10 @@ public class Order implements Serializable {
         return fieldExecutiveId;
     }
 
+    public Collection<OrderWorkflow> getOrderWorkflows() {
+        return orderWorkflows;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -65,7 +73,15 @@ public class Order implements Serializable {
 
         Order order = (Order) o;
 
+        if (mobileNumber != order.mobileNumber) return false;
         if (orderId != order.orderId) return false;
+        if (!email.equals(order.email)) return false;
+        if (fieldExecutiveId != null ? !fieldExecutiveId.equals(order.fieldExecutiveId) : order.fieldExecutiveId != null)
+            return false;
+        if (!fromAddress.equals(order.fromAddress)) return false;
+        if (!name.equals(order.name)) return false;
+        if (!orderWorkflows.equals(order.orderWorkflows)) return false;
+        if (!toAddress.equals(order.toAddress)) return false;
 
         return true;
     }

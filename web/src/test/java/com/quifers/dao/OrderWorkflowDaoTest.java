@@ -13,8 +13,10 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
@@ -30,6 +32,7 @@ public class OrderWorkflowDaoTest {
     private final long ORDER_ID = 10l;
     private final OrderWorkflow bookedWorkflow = new OrderWorkflow(ORDER_ID, OrderState.BOOKED, bookedDate);
     private final OrderWorkflow tripStartWorkflow = new OrderWorkflow(ORDER_ID, OrderState.TRIP_STARTED, tripStartDate);
+    private final Collection<OrderWorkflow> orderWorkflows = new HashSet<>(Arrays.asList(bookedWorkflow, tripStartWorkflow));
     private OrderWorkflowDao dao;
     private OrderDao orderDao;
 
@@ -39,12 +42,10 @@ public class OrderWorkflowDaoTest {
         orderExists();
 
         //when
-        int rowUpdate1 = dao.saveOrderWorkflow(bookedWorkflow);
-        int rowUpdate2 = dao.saveOrderWorkflow(tripStartWorkflow);
+        int[] rowUpdates = dao.saveOrderWorkflows(orderWorkflows);
 
         //then
-        assertThat(rowUpdate1, is(1));
-        assertThat(rowUpdate2, is(1));
+        assertThat(rowUpdates, is(new int[]{1, 1}));
     }
 
     @Test(dependsOnMethods = "shouldSaveOrderWorkflows")
@@ -65,11 +66,11 @@ public class OrderWorkflowDaoTest {
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
         dao = new OrderWorkflowDao(connection);
-        orderDao = new OrderDao(connection);
+        orderDao = new OrderDao(connection, dao);
     }
 
     private void orderExists() throws SQLException {
-        Order order = new Order(ORDER_ID, "name", 9988776655l, "email", "fromAddress", "toAddress", null);
+        Order order = new Order(ORDER_ID, "name", 9988776655l, "email", "fromAddress", "toAddress", null, new HashSet<OrderWorkflow>());
         orderDao.saveOrder(order);
         Order orderFromDb = orderDao.getOrder(ORDER_ID);
         assertThat(orderFromDb, notNullValue());
