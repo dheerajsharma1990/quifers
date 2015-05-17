@@ -2,6 +2,7 @@ package com.quifers.listener;
 
 import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
+import com.quifers.dao.OrderDao;
 import com.quifers.db.DatabaseHelper;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
@@ -25,6 +26,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ORDER_ID_COUNTER = "ORDER_ID_COUNTER";
     public static final String FIELD_EXECUTIVE_ACCOUNT_DAO = "FIELD_EXECUTIVE_ACCOUNT_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
+    public static final String ORDER_DAO = "ORDER_DAO";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -81,5 +83,6 @@ public class StartupContextListener implements ServletContextListener {
     public void initialiseDao(Connection connection, ServletContext servletContext) {
         servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, new FieldExecutiveAccountDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_DAO, new FieldExecutiveDao(connection));
+        servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
     }
 }

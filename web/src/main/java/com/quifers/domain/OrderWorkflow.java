@@ -2,6 +2,7 @@ package com.quifers.domain;
 
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
+import com.quifers.domain.enums.OrderState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.util.Date;

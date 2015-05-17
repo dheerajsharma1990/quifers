@@ -2,7 +2,7 @@ package com.quifers.db;
 
 import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
-import com.quifers.domain.OrderState;
+import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.QuifersDomainObject;
 
 import java.lang.reflect.Field;

@@ -1,9 +1,9 @@
 package com.quifers.servlet;
 
-import com.quifers.db.DatabaseHelper;
+import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
-import com.quifers.domain.OrderState;
 import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.enums.OrderState;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,20 +14,19 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.quifers.listener.StartupContextListener.DATABASE_HELPER;
+import static com.quifers.listener.StartupContextListener.ORDER_DAO;
 import static com.quifers.listener.StartupContextListener.ORDER_ID_COUNTER;
 
 public class OrderServlet extends HttpServlet {
 
-    private DatabaseHelper databaseHelper;
+    private OrderDao orderDao;
     private AtomicLong orderIdCounter;
 
     @Override
     public void init() throws ServletException {
-        databaseHelper = (DatabaseHelper) getServletContext().getAttribute(DATABASE_HELPER);
+        orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
         orderIdCounter = (AtomicLong) getServletContext().getAttribute(ORDER_ID_COUNTER);
     }
 
@@ -40,21 +39,12 @@ public class OrderServlet extends HttpServlet {
             String email = request.getParameter("email");
             String fromAddress = request.getParameter("from_address");
             String toAddress = request.getParameter("to_address");
-            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress);
+            Order order = new Order(orderId, clientName, mobileNumber, email, fromAddress, toAddress, null);
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
             Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
             OrderWorkflow orderWorkflow = new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate);
-            databaseHelper.save(order);
-            databaseHelper.save(orderWorkflow);
-            List<Order> orders = databaseHelper.getObjects(Order.class, "name", clientName);
-            List<OrderWorkflow> orderWorkflows = databaseHelper.getObjects(OrderWorkflow.class, "orderId", orderId);
+            orderDao.saveOrder(order);
         } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();

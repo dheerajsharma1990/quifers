@@ -4,8 +4,6 @@ import com.quifers.db.annotations.Column;
 import com.quifers.db.annotations.Table;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
-import java.util.Collection;
-
 @Table(name = "orders")
 public class Order implements QuifersDomainObject {
 
@@ -30,20 +28,60 @@ public class Order implements QuifersDomainObject {
     @Column(name = "field_executive_id")
     private String fieldExecutiveId;
 
-    private Collection<OrderWorkflow> orderWorkflows;
-
-    public Order() {
-    }
-
-    public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress) {
+    public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress, String fieldExecutiveId) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.email = email;
         this.fromAddress = fromAddress;
         this.toAddress = toAddress;
+        this.fieldExecutiveId = fieldExecutiveId;
     }
 
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getMobileNumber() {
+        return mobileNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFromAddress() {
+        return fromAddress;
+    }
+
+    public String getToAddress() {
+        return toAddress;
+    }
+
+    public String getFieldExecutiveId() {
+        return fieldExecutiveId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (orderId != order.orderId) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (orderId ^ (orderId >>> 32));
+    }
 
     @Override
     public String toString() {
