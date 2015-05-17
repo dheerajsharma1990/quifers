@@ -72,7 +72,7 @@ public class OrderDaoTest {
         assertThat(account, notNullValue());
         fieldExecutiveDao.saveFieldExecutive(fieldExecutive);
         FieldExecutive executive = fieldExecutiveDao.getFieldExecutive(fieldExecutive.getUserId());
-        assertThat(fieldExecutive, notNullValue());
+        assertThat(executive, notNullValue());
     }
 
     @BeforeClass
