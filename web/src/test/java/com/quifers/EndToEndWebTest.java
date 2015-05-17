@@ -1,7 +1,9 @@
 package com.quifers;
 
+import com.quifers.properties.Environment;
+import com.quifers.properties.PropertiesLoader;
+import com.quifers.properties.QuifersProperties;
 import com.quifers.utils.ParametersBuilder;
-import org.h2.tools.Server;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -13,24 +15,20 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
+import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
 import static com.quifers.runners.JettyRunner.runJettyServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class EndToEndWebTest {
-    // tasks
-    //create table sql automatic
-    // test domain object default constructor
-    // dealing with enums
-    //log4j properties for different environments..
-    private Server server;
+
     private static final String BASE_URL = "http://localhost:9111/";
 
     @Test
-    public void shouldRegisterFieldManager() throws Exception {
+    public void shouldRegisterFieldExecutive() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "registerFieldManager");
-        String request = buildFieldManagerAccount();
+        HttpURLConnection connection = getConnection(BASE_URL + "admin/registerFieldExecutive");
+        String request = buildFieldExecutiveAccount();
 
         //when
         int responseCode = sendRequest(connection, request);
@@ -38,7 +36,7 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
     }
 
-    @Test(dependsOnMethods = "shouldRegisterFieldManager")
+    @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
     public void shouldSaveOrder() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "bookOrder");
@@ -64,11 +62,12 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
     }
 
-    private String buildFieldManagerAccount() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+    private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("userId", "dheerajsharma1990")
                 .add("password", "mypassword")
-                .add("name","Dheeraj Sharma")
-                .add("mobile_number","9999770595").build();
+                .add("name", "Dheeraj Sharma")
+                .add("mobileNumber", "9999770595")
+                .build();
     }
 
     private String buildRequest() throws UnsupportedEncodingException {
@@ -104,14 +103,14 @@ public class EndToEndWebTest {
 
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
-        server = runDatabaseServer();
+        QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
+        runDatabaseServer(quifersProperties);
         runJettyServer(9111);
 
     }
 
     @AfterClass
     public void shutDownDatabase() {
-        server.stop();
-        server.shutdown();
+        stopDatabaseServer();
     }
 }

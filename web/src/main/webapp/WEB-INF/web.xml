@@ -6,8 +6,8 @@
         </listener>
 
         <servlet>
-                <servlet-name>fieldManagerRegisterServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.FieldManagerRegisterServlet</servlet-class>
+                <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.FieldExecutiveRegisterServlet</servlet-class>
         </servlet>
 
         <servlet>
@@ -22,8 +22,8 @@
 
 
         <servlet-mapping>
-                <servlet-name>fieldManagerRegisterServlet</servlet-name>
-                <url-pattern>/registerFieldManager</url-pattern>
+                <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
+                <url-pattern>/admin/registerFieldExecutive</url-pattern>
         </servlet-mapping>
 
         <servlet-mapping>

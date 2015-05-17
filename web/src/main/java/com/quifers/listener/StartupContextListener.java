@@ -1,5 +1,7 @@
 package com.quifers.listener;
 
+import com.quifers.dao.FieldExecutiveAccountDao;
+import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.db.DatabaseHelper;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
@@ -10,6 +12,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -19,6 +23,8 @@ public class StartupContextListener implements ServletContextListener {
 
     public static final String DATABASE_HELPER = "DATABASE_HELPER";
     public static final String ORDER_ID_COUNTER = "ORDER_ID_COUNTER";
+    public static final String FIELD_EXECUTIVE_ACCOUNT_DAO = "FIELD_EXECUTIVE_ACCOUNT_DAO";
+    public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -29,13 +35,19 @@ public class StartupContextListener implements ServletContextListener {
             ServletContext servletContext = servletContextEvent.getServletContext();
             Environment environment = getEnvironment(servletContext);
             QuifersProperties quifersProperties = loadProperties(environment);
-            setUpDatabaseConnection(quifersProperties, servletContext);
-            setUpOrderIdCounter(servletContext);
+            Connection connection = getDatabaseConnection(quifersProperties);
+            initialiseDatabaseHelper(connection, servletContext);
+            initialiseDao(connection, servletContext);
+            initialiseOrderId(servletContext);
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private Connection getDatabaseConnection(QuifersProperties quifersProperties) throws SQLException {
+        return DriverManager.getConnection(quifersProperties.getDbUrl());
     }
 
     private Environment getEnvironment(ServletContext servletContext) {
@@ -52,12 +64,12 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-    private void setUpDatabaseConnection(QuifersProperties quifersProperties, ServletContext servletContext) throws SQLException {
-        DatabaseHelper databaseHelper = new DatabaseHelper(quifersProperties.getDbUrl());
+    private void initialiseDatabaseHelper(Connection connection, ServletContext servletContext) throws SQLException {
+        DatabaseHelper databaseHelper = new DatabaseHelper(connection);
         servletContext.setAttribute(DATABASE_HELPER, databaseHelper);
     }
 
-    public void setUpOrderIdCounter(ServletContext servletContext) {
+    public void initialiseOrderId(ServletContext servletContext) {
         servletContext.setAttribute(ORDER_ID_COUNTER, new AtomicLong(1L));
     }
 
@@ -66,4 +78,8 @@ public class StartupContextListener implements ServletContextListener {
         LOGGER.info("Stopping quifers webapp...");
     }
 
+    public void initialiseDao(Connection connection, ServletContext servletContext) {
+        servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, new FieldExecutiveAccountDao(connection));
+        servletContext.setAttribute(FIELD_EXECUTIVE_DAO, new FieldExecutiveDao(connection));
+    }
 }

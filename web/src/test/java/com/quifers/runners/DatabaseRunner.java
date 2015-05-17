@@ -15,10 +15,9 @@ import java.sql.DriverManager;
 public class DatabaseRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseRunner.class);
-
-    public static Server runDatabaseServer() throws Exception {
-        QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
-        Server server = Server.createTcpServer("-tcpPort", "9092");
+    private static Server server;
+    public static void runDatabaseServer(QuifersProperties quifersProperties) throws Exception {
+        server = Server.createTcpServer("-tcpPort", "9092");
         LOGGER.info("Starting database sever...");
         server.start();
         Class.forName(quifersProperties.getDriverClass());
@@ -26,11 +25,16 @@ public class DatabaseRunner {
         connection.prepareStatement("DROP ALL OBJECTS").execute();
         SqlFilesExecutor executor = new SqlFilesExecutor(connection, new SqlScriptParser());
         executor.execute("./src/main/resources/sql");
-        return server;
+    }
+
+    public static void stopDatabaseServer() {
+        server.stop();
+        server.shutdown();
     }
 
     public static void main(String[] args) throws Exception {
-        runDatabaseServer();
+        QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
+        runDatabaseServer(quifersProperties);
     }
 
 }

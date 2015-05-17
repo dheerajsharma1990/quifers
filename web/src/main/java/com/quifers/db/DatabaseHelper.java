@@ -12,8 +12,8 @@ import static com.quifers.db.DomainMapperFactory.setInsertParameters;
 public class DatabaseHelper {
     private final Connection connection;
 
-    public DatabaseHelper(String url) throws SQLException {
-        this.connection = DriverManager.getConnection(url);
+    public DatabaseHelper(Connection connection) throws SQLException {
+        this.connection = connection;
     }
 
     public int save(QuifersDomainObject order) throws SQLException, IllegalAccessException {
