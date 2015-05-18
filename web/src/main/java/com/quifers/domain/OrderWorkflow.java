@@ -14,6 +14,8 @@ public class OrderWorkflow implements Serializable {
 
     private Date effectiveTime;
 
+    public OrderWorkflow() {
+    }
 
     public OrderWorkflow(long orderId, OrderState orderState, Date effectiveTime) {
         this.orderId = orderId;
@@ -31,6 +33,18 @@ public class OrderWorkflow implements Serializable {
 
     public Date getEffectiveTime() {
         return effectiveTime;
+    }
+
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
+    }
+
+    public void setEffectiveTime(Date effectiveTime) {
+        this.effectiveTime = effectiveTime;
     }
 
     @Override

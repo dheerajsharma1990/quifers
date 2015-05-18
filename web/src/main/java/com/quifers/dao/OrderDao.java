@@ -5,9 +5,8 @@ import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
 
 import java.sql.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Date;
+import java.util.*;
 
 public class OrderDao {
 
@@ -37,6 +36,41 @@ public class OrderDao {
 
     public void saveOrder(Order order) throws SQLException {
         connection.setAutoCommit(false);
+        saveOrderWithoutWorkflows(order);
+        saveOrderWorkflows(order.getOrderWorkflows());
+        connection.commit();
+        connection.setAutoCommit(true);
+    }
+
+    public Order getOrder(long orderId) throws SQLException {
+        String sql = "select orders.order_id as order_id,name,mobile_number,email,from_address,to_address,field_executive_id,order_state,effective_time " +
+                "from orders inner join orders_workflow on orders.order_id = orders_workflow.order_id where orders.order_id = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setLong(1, orderId);
+        ResultSet resultSet = statement.executeQuery();
+        List<Order> orders = mapToObjects(resultSet);
+        return orders.size() == 0 ? null : orders.iterator().next();
+    }
+
+    public int assignFieldExecutiveToOrder(long orderId, String fieldExecutiveId) throws SQLException {
+        String sql = "UPDATE" + " " + TABLE_NAME + " SET " + FIELD_EXECUTIVE_COLUMN + " = ? " +
+                "WHERE " + ORDER_ID_COLUMN + " = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, fieldExecutiveId);
+        statement.setLong(2, orderId);
+        return statement.executeUpdate();
+    }
+
+    public List<Order> getOrderByFieldExecutiveId(String fieldExecutiveId) throws SQLException {
+        String sql = "select orders.order_id as order_id,name,mobile_number,email,from_address,to_address,field_executive_id,order_state,effective_time " +
+                "from orders inner join orders_workflow on orders.order_id = orders_workflow.order_id where orders.field_executive_id = ?";
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, fieldExecutiveId);
+        ResultSet resultSet = statement.executeQuery();
+        return mapToObjects(resultSet);
+    }
+
+    private void saveOrderWithoutWorkflows(Order order) throws SQLException {
         String sql = "INSERT INTO " + TABLE_NAME + " " +
                 "(" + allColumns + ")" + " " + "VALUES(?,?,?,?,?,?,?)";
         PreparedStatement statement = connection.prepareStatement(sql);
@@ -48,9 +82,6 @@ public class OrderDao {
         statement.setString(6, order.getToAddress());
         statement.setString(7, order.getFieldExecutiveId());
         statement.executeUpdate();
-        saveOrderWorkflows(order.getOrderWorkflows());
-        connection.commit();
-        connection.setAutoCommit(true);
     }
 
     private void saveOrderWorkflows(Collection<OrderWorkflow> orderWorkflows) throws SQLException {
@@ -66,58 +97,49 @@ public class OrderDao {
         preparedStatement.executeBatch();
     }
 
-    public int assignFieldExecutiveToOrder(long orderId, String fieldExecutiveId) throws SQLException {
-        String sql = "UPDATE" + " " + TABLE_NAME + " SET " + FIELD_EXECUTIVE_COLUMN + " = ? " +
-                "WHERE " + ORDER_ID_COLUMN + " = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, fieldExecutiveId);
-        statement.setLong(2, orderId);
-        return statement.executeUpdate();
-    }
-
-    public Order getOrder(long orderId) throws SQLException {
-        String sql = "SELECT" + " " + allColumns + " FROM " + TABLE_NAME + " WHERE " + ORDER_ID_COLUMN + " = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setLong(1, orderId);
-        ResultSet resultSet = statement.executeQuery();
-        Collection<OrderWorkflow> orderWorkflows = getOrderWorkflows(orderId);
-        Order order = mapToObject(resultSet, orderWorkflows);
-        return order;
-    }
-
-    private Order mapToObject(ResultSet resultSet, Collection<OrderWorkflow> orderWorkflows) throws SQLException {
-        while (resultSet.next()) {
-            long orderId = resultSet.getLong(ORDER_ID_COLUMN);
-            String name = resultSet.getString(NAME_COLUMN);
-            long mobileNumber = resultSet.getLong(MOBILE_NUMBER_COLUMN);
-            String email = resultSet.getString(EMAIL_COLUMN);
-            String fromAddress = resultSet.getString(FROM_ADDRESS_COLUMN);
-            String toAddress = resultSet.getString(TO_ADDRESS_COLUMN);
-            String fieldExecutiveId = resultSet.getString(FIELD_EXECUTIVE_COLUMN);
-            return new Order(orderId, name, mobileNumber, email, fromAddress, toAddress, fieldExecutiveId, orderWorkflows);
-        }
-        return null;
-    }
-
-    public Collection<OrderWorkflow> getOrderWorkflows(long orderId) throws SQLException {
-        String sql = "SELECT" + " " + allWorkflowColumns + " FROM " + ORDER_WORK_FLOWTABLE_NAME + " WHERE " + ORDER_ID_COLUMN + " = ?";
-        PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setLong(1, orderId);
-        ResultSet resultSet = statement.executeQuery();
-        Set<OrderWorkflow> orderWorkflows = mapToObject(resultSet);
-        return orderWorkflows;
-    }
-
-    private Set<OrderWorkflow> mapToObject(ResultSet resultSet) throws SQLException {
+    private List<Order> mapToObjects(ResultSet resultSet) throws SQLException {
+        Set<Order> orders = new HashSet<>();
         Set<OrderWorkflow> orderWorkflows = new HashSet<>();
         while (resultSet.next()) {
-            long orderId = resultSet.getLong(ORDER_ID_COLUMN);
-            String state = resultSet.getString(ORDER_STATE_COLUMN);
-            java.util.Date effectiveTime = new java.util.Date(resultSet.getTimestamp(EFFECTIVE_TIME_COLUMN).getTime());
-            orderWorkflows.add(new OrderWorkflow(orderId, OrderState.valueOf(state), effectiveTime));
+            Order order = new Order();
+            OrderWorkflow orderWorkflow = new OrderWorkflow();
+            long orderId = mapOrder(resultSet, orders, order);
+            mapOrderWorkflow(resultSet, orderWorkflows, orderWorkflow, orderId);
         }
-        return orderWorkflows;
+        return mapObject(orders, orderWorkflows);
     }
 
+    private long mapOrder(ResultSet resultSet, Set<Order> orders, Order order) throws SQLException {
+        long orderId = resultSet.getLong(ORDER_ID_COLUMN);
+        order.setOrderId(orderId);
+        order.setName(resultSet.getString(NAME_COLUMN));
+        order.setMobileNumber(resultSet.getLong(MOBILE_NUMBER_COLUMN));
+        order.setEmail(resultSet.getString(EMAIL_COLUMN));
+        order.setFromAddress(resultSet.getString(FROM_ADDRESS_COLUMN));
+        order.setToAddress(resultSet.getString(TO_ADDRESS_COLUMN));
+        order.setFieldExecutiveId(resultSet.getString(FIELD_EXECUTIVE_COLUMN));
+        orders.add(order);
+        return orderId;
+    }
+
+    private void mapOrderWorkflow(ResultSet resultSet, Set<OrderWorkflow> orderWorkflows, OrderWorkflow orderWorkflow, long orderId) throws SQLException {
+        orderWorkflow.setOrderId(orderId);
+        orderWorkflow.setOrderState(OrderState.valueOf(resultSet.getString(ORDER_STATE_COLUMN)));
+        orderWorkflow.setEffectiveTime(new Date(resultSet.getTimestamp(EFFECTIVE_TIME_COLUMN).getTime()));
+        orderWorkflows.add(orderWorkflow);
+    }
+
+    private List<Order> mapObject(Set<Order> orders, Set<OrderWorkflow> orderWorkflows) {
+        List<Order> orderList = new ArrayList<>();
+        for (Order order : orders) {
+            for (OrderWorkflow workflow : orderWorkflows) {
+                if (workflow.getOrderId() == order.getOrderId()) {
+                    order.addOrderWorkflow(workflow);
+                }
+            }
+            orderList.add(order);
+        }
+        return orderList;
+    }
 
 }

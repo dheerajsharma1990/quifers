@@ -15,10 +15,7 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
+import java.util.*;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
@@ -64,6 +61,13 @@ public class OrderDaoTest {
 
         //then
         assertThat(rowsUpdate, is(1));
+    }
+
+    @Test(dependsOnMethods = "shouldAssignFieldExecutiveToOrder")
+    public void shouldGetOrderByFieldExecutiveId() throws Exception {
+        List<Order> ordersFromDb = dao.getOrderByFieldExecutiveId(fieldExecutive.getUserId());
+
+        assertThat(ordersFromDb.size(), is(1));
     }
 
     private void fieldExecutiveExist() throws SQLException {

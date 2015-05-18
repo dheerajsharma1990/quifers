@@ -3,8 +3,6 @@ package com.quifers.request.validators;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -18,7 +16,6 @@ import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class OrderBookRequestValidator {
 
-    private static Logger LOGGER = LoggerFactory.getLogger(OrderBookRequestValidator.class);
     private final AtomicLong orderIdCounter;
 
     public OrderBookRequestValidator(AtomicLong orderIdCounter) {

@@ -4,6 +4,7 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 
 public class Order implements Serializable {
 
@@ -22,6 +23,9 @@ public class Order implements Serializable {
     private String fieldExecutiveId;
 
     private Collection<OrderWorkflow> orderWorkflows;
+
+    public Order() {
+    }
 
     public Order(long orderId, String name, long mobileNumber, String email, String fromAddress, String toAddress, String fieldExecutiveId, Collection<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
@@ -66,6 +70,45 @@ public class Order implements Serializable {
         return orderWorkflows;
     }
 
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMobileNumber(long mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setFromAddress(String fromAddress) {
+        this.fromAddress = fromAddress;
+    }
+
+    public void setToAddress(String toAddress) {
+        this.toAddress = toAddress;
+    }
+
+    public void setFieldExecutiveId(String fieldExecutiveId) {
+        this.fieldExecutiveId = fieldExecutiveId;
+    }
+
+    public void setOrderWorkflows(Collection<OrderWorkflow> orderWorkflows) {
+        this.orderWorkflows = orderWorkflows;
+    }
+
+    public void addOrderWorkflow(OrderWorkflow orderWorkflow) {
+        if (orderWorkflows == null) {
+            orderWorkflows = new HashSet<>();
+        }
+        this.orderWorkflows.add(orderWorkflow);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +123,8 @@ public class Order implements Serializable {
             return false;
         if (!fromAddress.equals(order.fromAddress)) return false;
         if (!name.equals(order.name)) return false;
-        if (!orderWorkflows.equals(order.orderWorkflows)) return false;
+        if (orderWorkflows != null ? !orderWorkflows.equals(order.orderWorkflows) : order.orderWorkflows != null)
+            return false;
         if (!toAddress.equals(order.toAddress)) return false;
 
         return true;
