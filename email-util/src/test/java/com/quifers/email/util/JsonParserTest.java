@@ -24,8 +24,8 @@ public class JsonParserTest {
         Credentials credentials = parser.parse(response);
 
         //then
-        assertThat(credentials.getAccessToken(), is("ya29.fAFNRKjJ-B16vJiQktXMLcqB1EsIZ6TSx1JNSklgs5nAHmPgY6WbfzNSiLbPsxQvPm7GMuDlmo1rMg"));
-        assertThat(credentials.getRefreshToken(), is("1/TiMjn9ZDVmnVQwvrJ41DYC9xIpLNmET1szMYIDfsWXYMEudVrK5jSpoR30zcRFq6"));
+        assertThat(credentials.getAccessToken(), is("ya29.fQHRsvnVkusn1Js0lt6t-KHNuq2uooz-UPRq6kLlprMv2MSV9-zFEWtwFrjDEV-jGFr_UL3qevbPtg"));
+        assertThat(credentials.getRefreshToken(), is("1/FULbjhL9F8U21IoB3IDU5SbMK-pt2BsMQe_FxN_cS7UMEudVrK5jSpoR30zcRFq6"));
         assertThat(credentials.getTokenType(), is("Bearer"));
         assertThat(credentials.getExpiry(), is(3600));
         assertThat(credentials.getGrantTime(), notNullValue());
