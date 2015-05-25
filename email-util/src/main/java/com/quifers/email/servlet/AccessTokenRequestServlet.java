@@ -1,22 +1,18 @@
 package com.quifers.email.servlet;
 
 import com.quifers.email.util.RequestParamBuilder;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class AccessTokenRequestServlet extends HttpServlet {
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccessTokenRequestServlet.class);
     private static final String ACCESS_TOKEN_URL = "https://accounts.google.com/o/oauth2/token";
 
     @Override
@@ -29,18 +25,21 @@ public class AccessTokenRequestServlet extends HttpServlet {
         }
 
         String accessCode = request.getParameter("code");
-        LOGGER.info("Access Code: {}", accessCode);
         String requestParams = getRequestParameters(accessCode);
         HttpURLConnection urlConnection = getConnection(ACCESS_TOKEN_URL);
-        sendRequest(urlConnection, requestParams);
-        String apiResponse = getResponse(urlConnection);
-
-        LOGGER.info("Api Response: {}", apiResponse);
+        int responseCode = sendRequest(urlConnection, requestParams);
+        if (responseCode != 200) {
+            String apiResponse = getResponse(urlConnection.getErrorStream());
+            response.sendError(responseCode, apiResponse);
+        } else {
+            String apiResponse = getResponse(urlConnection.getInputStream());
+            FileUtils.writeStringToFile(new File("./target/credentials.json"), apiResponse);
+        }
 
     }
 
-    private String getResponse(HttpURLConnection urlConnection) throws IOException {
-        return IOUtils.toString(urlConnection.getInputStream());
+    private String getResponse(InputStream inputStream) throws IOException {
+        return IOUtils.toString(inputStream);
     }
 
     private String getRequestParameters(String accessCode) throws UnsupportedEncodingException {
