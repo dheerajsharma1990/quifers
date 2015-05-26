@@ -1,12 +1,18 @@
 package com.quifers.email;
 
-import com.quifers.email.jms.OrderListener;
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailSender;
+import com.quifers.email.jms.OrderListener;
+import com.quifers.email.util.Credentials;
+import com.quifers.email.util.CredentialsService;
+import com.quifers.email.util.JsonParser;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.commons.io.FileUtils;
 
 import javax.jms.*;
 import javax.mail.MessagingException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class EmailService {
@@ -22,10 +28,22 @@ public class EmailService {
         MessageConsumer messageConsumer = session.createConsumer(queue);
         connection.start();
 
+        initCredentialService(new JsonParser());
+
         EmailCreator emailCreator = new EmailCreator();
         EmailSender emailSender = new EmailSender(emailCreator);
 
-        OrderListener orderListener = new OrderListener(emailSender, messageConsumer);
+        OrderListener orderListener = new OrderListener(messageConsumer, emailSender, CredentialsService.SERVICE);
         orderListener.listenForOrders();
+    }
+
+    public static void initCredentialService(JsonParser jsonParser) throws IOException {
+        File file = new File("./target/credentials.json");
+        if (!file.exists()) {
+            throw new FileNotFoundException(file.getName());
+        }
+        Credentials credentials = jsonParser.parse(FileUtils.readFileToString(file));
+        CredentialsService credentialsService = CredentialsService.SERVICE;
+        credentialsService.setCredentials(credentials);
     }
 }

@@ -7,6 +7,7 @@ public class CredentialsService {
     public static CredentialsService SERVICE = new CredentialsService();
 
     private CredentialsService() {
+
     }
 
     public Credentials getCredentials() {

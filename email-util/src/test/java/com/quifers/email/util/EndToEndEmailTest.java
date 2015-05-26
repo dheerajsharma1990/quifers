@@ -8,17 +8,20 @@ import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.jms.OrderListener;
 import com.quifers.email.util.jms.ActiveMqBroker;
 import com.quifers.email.util.jms.ActiveMqPublisher;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.jms.JMSException;
 import javax.mail.MessagingException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
-@Test(enabled = false)
+
 public class EndToEndEmailTest {
 
     private ActiveMqBroker broker = new ActiveMqBroker();
@@ -36,11 +39,18 @@ public class EndToEndEmailTest {
     public void startActiveMqBrokerAndEmailService() throws Exception {
         broker.startBroker();
         activeMqPublisher = new ActiveMqPublisher();
+        File file = new File("./target/credentials.json");
+        if (!file.exists()) {
+            throw new FileNotFoundException(file.getName());
+        }
+        Credentials credentials = new JsonParser().parse(FileUtils.readFileToString(file));
+        CredentialsService credentialsService = CredentialsService.SERVICE;
+        credentialsService.setCredentials(credentials);
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    new OrderListener(new EmailSender(new EmailCreator()), activeMqPublisher.getMessageConsumer()).listenForOrders();
+                    new OrderListener(activeMqPublisher.getMessageConsumer(), new EmailSender(new EmailCreator()), CredentialsService.SERVICE).listenForOrders();
                 } catch (JMSException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
