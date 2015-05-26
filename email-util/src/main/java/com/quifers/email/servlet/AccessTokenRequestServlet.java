@@ -34,6 +34,7 @@ public class AccessTokenRequestServlet extends HttpServlet {
         } else {
             String apiResponse = getResponse(urlConnection.getInputStream());
             FileUtils.writeStringToFile(new File("./target/credentials.json"), apiResponse);
+            response.getWriter().write(apiResponse);
         }
 
     }

@@ -1,20 +1,14 @@
 package com.quifers.email.util;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Properties;
 
 import static com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64.encodeBase64URLSafeString;
 
@@ -49,21 +43,6 @@ public class EmailSender {
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         return connection;
-    }
-
-    public static void main(String[] args) throws IOException, MessagingException {
-        JsonParser parser = new JsonParser();
-        Credentials credentials = parser.parse(FileUtils.readFileToString(new File("./target/credentials.json")));
-        Properties props = new Properties();
-        Session session = Session.getDefaultInstance(props, null);
-        MimeMessage msg = new MimeMessage(session);
-        msg.setFrom(new InternetAddress("dheeraj.sharma.aws@gmail.com", "Team Quifers"));
-        msg.addRecipient(Message.RecipientType.TO,
-                new InternetAddress("dheerajsharma1990@gmail.com"));
-        msg.setSubject("Thanks for placing Order");
-        msg.setText("Hey Man Thanks for placing order...");
-        EmailSender emailSender = new EmailSender();
-        emailSender.sendEmail(credentials,msg);
     }
 
 }
