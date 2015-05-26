@@ -3,72 +3,42 @@ package com.quifers.email.util;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.email.EmailService;
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailSender;
-import com.quifers.email.jms.OrderListener;
-import com.quifers.email.util.jms.ActiveMqBroker;
-import com.quifers.email.util.jms.ActiveMqPublisher;
-import org.apache.commons.io.FileUtils;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.jms.JMSException;
-import javax.mail.MessagingException;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
 public class EndToEndEmailTest {
 
-    private ActiveMqBroker broker = new ActiveMqBroker();
-    private ActiveMqPublisher activeMqPublisher;
+    private final EmailSender emailSender = new EmailSender(new EmailCreator());
 
-    @Test
+    @Test(enabled = false)
     public void shouldSendEmail() throws Exception {
         //given
         Order dummyOrder = buildOrder();
-        activeMqPublisher.publishOrder(dummyOrder);
-        Thread.sleep(10 * 1000);
+
+        //when
+        int responseCode = emailSender.sendEmail(CredentialsService.SERVICE.getCredentials(), dummyOrder, "dheeraj.sharma.aws@gmail.com");
+
+        //then
+        assertThat(responseCode, is(200));
     }
 
     @BeforeClass
-    public void startActiveMqBrokerAndEmailService() throws Exception {
-        broker.startBroker();
-        activeMqPublisher = new ActiveMqPublisher();
-        File file = new File("./target/credentials.json");
-        if (!file.exists()) {
-            throw new FileNotFoundException(file.getName());
-        }
-        Credentials credentials = new JsonParser().parse(FileUtils.readFileToString(file));
-        CredentialsService credentialsService = CredentialsService.SERVICE;
-        credentialsService.setCredentials(credentials);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    new OrderListener(activeMqPublisher.getMessageConsumer(), new EmailSender(new EmailCreator()), CredentialsService.SERVICE).listenForOrders();
-                } catch (JMSException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-    @AfterClass
-    public void stopActiveMqBroker() throws Exception {
-        broker.stopBroker();
+    public void readCredentialsFromFile() throws IOException {
+        EmailService.initCredentialService(new JsonParser());
     }
 
     private Order buildOrder() {
-        Order order = new Order(2l, "Rob", 9988776655l, "dheerajsharma1990@gmail.com", "237, Phase III",
+        Order order = new Order(2l, "Rob", 9988776655l, "dheeraj.sharma@snapdeal.com", "237, Phase III",
                 "456, Phase IV", null, Arrays.asList(new OrderWorkflow(2l, OrderState.BOOKED, new Date())));
         return order;
     }

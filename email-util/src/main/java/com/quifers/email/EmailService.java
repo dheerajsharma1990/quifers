@@ -2,7 +2,7 @@ package com.quifers.email;
 
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailSender;
-import com.quifers.email.jms.OrderListener;
+import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.JsonParser;
@@ -33,8 +33,8 @@ public class EmailService {
         EmailCreator emailCreator = new EmailCreator();
         EmailSender emailSender = new EmailSender(emailCreator);
 
-        OrderListener orderListener = new OrderListener(messageConsumer, emailSender, CredentialsService.SERVICE);
-        orderListener.listenForOrders();
+        OrderReceiver orderReceiver = new OrderReceiver(messageConsumer, emailSender, CredentialsService.SERVICE);
+        orderReceiver.listenForOrders();
     }
 
     public static void initCredentialService(JsonParser jsonParser) throws IOException {

@@ -2,7 +2,6 @@ package com.quifers.email.helpers;
 
 import com.quifers.domain.Order;
 import com.quifers.email.util.Credentials;
-import org.apache.commons.io.IOUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -24,7 +23,7 @@ public class EmailSender {
         this.emailCreator = emailCreator;
     }
 
-    public String sendEmail(Credentials credentials, Order order, String fromAddress) throws IOException, MessagingException {
+    public int sendEmail(Credentials credentials, Order order, String fromAddress) throws IOException, MessagingException {
         HttpURLConnection urlConnection = getConnection(EMAIL_URL);
         urlConnection.addRequestProperty("Content-Type", "application/json");
         urlConnection.addRequestProperty("Authorization", "Bearer" + " " + credentials.getAccessToken());
@@ -34,8 +33,7 @@ public class EmailSender {
         byte[] binaryData = out.toByteArray();
         String encode = encodeBase64URLSafeString(binaryData);
         String format = "{\"raw\":\"" + encode + "\"}";
-        sendRequest(urlConnection, format);
-        return IOUtils.toString(urlConnection.getInputStream());
+        return sendRequest(urlConnection, format);
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {
