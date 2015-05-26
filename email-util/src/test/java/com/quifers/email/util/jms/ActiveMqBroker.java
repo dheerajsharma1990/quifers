@@ -11,12 +11,10 @@ public class ActiveMqBroker {
         broker = new BrokerService();
         broker.setBrokerName("EmailActiveMqBroker");
         broker.setDedicatedTaskRunner(false);
-        //broker.setUseJmx(false);
         broker.setDeleteAllMessagesOnStartup(true);
         broker.addConnector(EmailService.ACTIVEMQ_URL);
         broker.setUseShutdownHook(false);
         broker.start();
-
         return this;
     }
 

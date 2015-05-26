@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
-//@Test(enabled = false)
+@Test(enabled = false)
 public class EndToEndEmailTest {
 
     private ActiveMqBroker broker = new ActiveMqBroker();
