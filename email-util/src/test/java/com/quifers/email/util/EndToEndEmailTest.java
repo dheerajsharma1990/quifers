@@ -3,6 +3,8 @@ package com.quifers.email.util;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.email.helpers.EmailCreator;
+import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.jms.OrderListener;
 import com.quifers.email.util.jms.ActiveMqBroker;
 import com.quifers.email.util.jms.ActiveMqPublisher;
@@ -16,29 +18,29 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
-import static com.quifers.email.jms.OrderListener.EMAIL_QUEUE;
-@Test(enabled = false)
+//@Test(enabled = false)
 public class EndToEndEmailTest {
 
     private ActiveMqBroker broker = new ActiveMqBroker();
-    private ActiveMqPublisher activeMqPublisher = new ActiveMqPublisher();
+    private ActiveMqPublisher activeMqPublisher;
 
     @Test
     public void shouldSendEmail() throws Exception {
         //given
         Order dummyOrder = buildOrder();
-        activeMqPublisher.publishOrderOnQueue(EMAIL_QUEUE, dummyOrder);
-        Thread.sleep(10*1000);
+        activeMqPublisher.publishOrder(dummyOrder);
+        Thread.sleep(10 * 1000);
     }
 
     @BeforeClass
     public void startActiveMqBrokerAndEmailService() throws Exception {
         broker.startBroker();
+        activeMqPublisher = new ActiveMqPublisher();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    new OrderListener(new EmailSender(), new EmailCreator()).listenForOrders();
+                    new OrderListener(new EmailSender(new EmailCreator()), activeMqPublisher.getMessageConsumer()).listenForOrders();
                 } catch (JMSException e) {
                     e.printStackTrace();
                 } catch (IOException e) {

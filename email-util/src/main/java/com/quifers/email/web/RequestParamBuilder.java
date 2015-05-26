@@ -1,4 +1,4 @@
-package com.quifers.email.util;
+package com.quifers.email.web;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;

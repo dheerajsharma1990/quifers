@@ -3,6 +3,7 @@ package com.quifers.email.util;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.email.helpers.EmailCreator;
 import org.hamcrest.core.Is;
 import org.testng.annotations.Test;
 

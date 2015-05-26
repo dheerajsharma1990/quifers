@@ -1,4 +1,4 @@
-package com.quifers.email.util;
+package com.quifers.email.helpers;
 
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
@@ -13,7 +13,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 public class EmailCreator {
-
 
     public MimeMessage createEmail(Order order, String fromAddress) throws UnsupportedEncodingException, MessagingException {
         Properties props = new Properties();

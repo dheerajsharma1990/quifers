@@ -1,5 +1,7 @@
-package com.quifers.email.util;
+package com.quifers.email.helpers;
 
+import com.quifers.domain.Order;
+import com.quifers.email.util.Credentials;
 import org.apache.commons.io.IOUtils;
 
 import javax.mail.MessagingException;
@@ -16,11 +18,18 @@ public class EmailSender {
 
     private static final String EMAIL_URL = "https://www.googleapis.com/gmail/v1/users/me/messages/send";
 
-    public String sendEmail(Credentials credentials, MimeMessage mimeMessage) throws IOException, MessagingException {
+    private final EmailCreator emailCreator;
+
+    public EmailSender(EmailCreator emailCreator) {
+        this.emailCreator = emailCreator;
+    }
+
+    public String sendEmail(Credentials credentials, Order order, String fromAddress) throws IOException, MessagingException {
         HttpURLConnection urlConnection = getConnection(EMAIL_URL);
         urlConnection.addRequestProperty("Content-Type", "application/json");
         urlConnection.addRequestProperty("Authorization", "Bearer" + " " + credentials.getAccessToken());
         ByteArrayOutputStream out = new ByteArrayOutputStream();
+        MimeMessage mimeMessage = emailCreator.createEmail(order, fromAddress);
         mimeMessage.writeTo(out);
         byte[] binaryData = out.toByteArray();
         String encode = encodeBase64URLSafeString(binaryData);

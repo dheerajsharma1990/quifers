@@ -1,7 +1,7 @@
 package com.quifers.email;
 
-import com.quifers.email.servlet.AccessCodeRequestServlet;
-import com.quifers.email.servlet.AccessTokenRequestServlet;
+import com.quifers.email.web.servlet.AccessCodeRequestServlet;
+import com.quifers.email.web.servlet.AccessTokenRequestServlet;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;

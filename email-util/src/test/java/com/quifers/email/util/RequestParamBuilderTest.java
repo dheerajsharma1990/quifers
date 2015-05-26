@@ -1,6 +1,6 @@
 package com.quifers.email.util;
 
-import com.quifers.email.util.RequestParamBuilder;
+import com.quifers.email.web.RequestParamBuilder;
 import org.hamcrest.MatcherAssert;
 import org.testng.annotations.Test;
 

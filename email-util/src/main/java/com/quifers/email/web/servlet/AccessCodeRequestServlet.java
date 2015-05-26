@@ -1,6 +1,6 @@
-package com.quifers.email.servlet;
+package com.quifers.email.web.servlet;
 
-import com.quifers.email.util.RequestParamBuilder;
+import com.quifers.email.web.RequestParamBuilder;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

@@ -1,8 +1,7 @@
 package com.quifers.email.util.jms;
 
-import org.apache.activemq.broker.BrokerService;
+import com.quifers.email.EmailService;import org.apache.activemq.broker.BrokerService;
 
-import static com.quifers.email.jms.OrderListener.ACTIVEMQ_URL;
 
 public class ActiveMqBroker {
 
@@ -14,7 +13,7 @@ public class ActiveMqBroker {
         broker.setDedicatedTaskRunner(false);
         //broker.setUseJmx(false);
         broker.setDeleteAllMessagesOnStartup(true);
-        broker.addConnector(ACTIVEMQ_URL);
+        broker.addConnector(EmailService.ACTIVEMQ_URL);
         broker.setUseShutdownHook(false);
         broker.start();
 
