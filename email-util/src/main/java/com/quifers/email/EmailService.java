@@ -5,6 +5,9 @@ import com.quifers.email.helpers.CredentialsRefresherTask;
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.jms.OrderReceiver;
+import com.quifers.email.properties.EmailUtilProperties;
+import com.quifers.email.properties.Environment;
+import com.quifers.email.properties.PropertiesLoader;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.JsonParser;
@@ -22,20 +25,25 @@ public class EmailService {
 
     public static final String ACTIVEMQ_URL = "tcp://localhost:61616";
     public static final String EMAIL_QUEUE = "QUIFERS.EMAIL.QUEUE";
+    private static JsonParser jsonParser = new JsonParser();
 
     public static void main(String[] args) throws JMSException, IOException, MessagingException {
+        EmailUtilProperties properties = getEmailUtilProperties();
         MessageConsumer messageConsumer = startActiveMq();
-        JsonParser jsonParser = new JsonParser();
 
         initCredentialsService(jsonParser);
-        startCredentialsRefreshingTask(new CredentialsRefresher(jsonParser));
+        startCredentialsRefreshingTask(new CredentialsRefresher(properties, jsonParser));
 
-        EmailSender emailSender = new EmailSender(new EmailCreator());
-
-        receiveOrders(messageConsumer, emailSender);
+        receiveOrders(messageConsumer);
     }
 
-    private static void receiveOrders(MessageConsumer messageConsumer, EmailSender emailSender) throws JMSException, IOException, MessagingException {
+    private static EmailUtilProperties getEmailUtilProperties() throws IOException {
+        Environment environment = Environment.valueOf(System.getProperty("env"));
+        return new PropertiesLoader().getEmailUtilProperties(environment);
+    }
+
+    private static void receiveOrders(MessageConsumer messageConsumer) throws JMSException, IOException, MessagingException {
+        EmailSender emailSender = new EmailSender(new EmailCreator());
         OrderReceiver orderReceiver = new OrderReceiver(messageConsumer, emailSender, CredentialsService.SERVICE);
         orderReceiver.receiveOrders();
     }

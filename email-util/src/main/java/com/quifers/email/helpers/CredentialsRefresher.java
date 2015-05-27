@@ -1,9 +1,9 @@
 package com.quifers.email.helpers;
 
+import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.JsonParser;
 import com.quifers.email.util.RequestParamBuilder;
-import com.quifers.email.credentials.servlet.AccessCodeRequestServlet;
 import org.apache.commons.io.IOUtils;
 
 import java.io.DataOutputStream;
@@ -16,9 +16,11 @@ public class CredentialsRefresher {
 
     private final String REFRESH_URL = "https://www.googleapis.com/oauth2/v3/token";
 
+    private final EmailUtilProperties properties;
     private final JsonParser jsonParser;
 
-    public CredentialsRefresher(JsonParser jsonParser) {
+    public CredentialsRefresher(EmailUtilProperties properties, JsonParser jsonParser) {
+        this.properties = properties;
         this.jsonParser = jsonParser;
     }
 
@@ -35,8 +37,8 @@ public class CredentialsRefresher {
     private String getRequestParameters(String refreshToken) throws UnsupportedEncodingException {
         RequestParamBuilder builder = new RequestParamBuilder();
         return builder.addParam("refresh_token", refreshToken)
-                .addParam("client_id", AccessCodeRequestServlet.CLIENT_ID)
-                .addParam("client_secret", AccessCodeRequestServlet.CLIENT_SECRET_KEY)
+                .addParam("client_id", properties.getClientId())
+                .addParam("client_secret", properties.getClientSecretKey())
                 .addParam("grant_type", "refresh_token").build();
     }
 

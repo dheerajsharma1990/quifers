@@ -21,6 +21,7 @@ public class CredentialsGenerator {
 
         contextHandler.setResourceBase(webappDirLocation);
         contextHandler.setParentLoaderPriority(true);
+        contextHandler.setInitParameter("env", "LOCAL");
         contextHandler.addEventListener(new StartupContextListener());
         contextHandler.addServlet(new ServletHolder(new AccessCodeRequestServlet()), "/accessCode");
         contextHandler.addServlet(new ServletHolder(new AccessTokenRequestServlet()), "/callback");

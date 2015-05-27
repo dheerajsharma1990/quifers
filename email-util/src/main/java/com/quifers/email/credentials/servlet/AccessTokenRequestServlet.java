@@ -1,6 +1,7 @@
 package com.quifers.email.credentials.servlet;
 
 import com.quifers.email.credentials.builders.AccessTokenRequestBuilder;
+import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.HttpRequestSender;
 import org.apache.commons.io.FileUtils;
 
@@ -12,17 +13,20 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.quifers.email.credentials.servlet.StartupContextListener.ACCESS_TOKEN_REQUEST_BUILDER;
+import static com.quifers.email.credentials.servlet.StartupContextListener.EMAIL_UTIL_PROPERTIES;
 import static com.quifers.email.credentials.servlet.StartupContextListener.HTTP_REQUEST_SENDER;
 
 public class AccessTokenRequestServlet extends HttpServlet {
 
     private static final String ACCESS_TOKEN_URL = "https://accounts.google.com/o/oauth2/token";
 
+    private EmailUtilProperties properties;
     private HttpRequestSender httpRequestSender;
     private AccessTokenRequestBuilder requestBuilder;
 
     @Override
     public void init() throws ServletException {
+        properties = (EmailUtilProperties) getServletContext().getAttribute(EMAIL_UTIL_PROPERTIES);
         httpRequestSender = (HttpRequestSender) getServletContext().getAttribute(HTTP_REQUEST_SENDER);
         requestBuilder = (AccessTokenRequestBuilder) getServletContext().getAttribute(ACCESS_TOKEN_REQUEST_BUILDER);
     }
@@ -37,7 +41,7 @@ public class AccessTokenRequestServlet extends HttpServlet {
         }
 
         String accessCode = request.getParameter("code");
-        String requestParams = requestBuilder.buildAccessTokenRequest(accessCode, "http://localhost:8008/callback", AccessCodeRequestServlet.CLIENT_ID, AccessCodeRequestServlet.CLIENT_SECRET_KEY);
+        String requestParams = requestBuilder.buildAccessTokenRequest(accessCode, properties.getCallbackUrl(), properties.getClientId(), properties.getClientSecretKey());
         String responseString = httpRequestSender.sendRequestAndGetResponse(ACCESS_TOKEN_URL, "POST", requestParams);
         FileUtils.writeStringToFile(new File("./target/credentials.json"), responseString);
         response.getWriter().write("Credentials successfully written to file ./target/credentials.json.\n\n" + responseString);
