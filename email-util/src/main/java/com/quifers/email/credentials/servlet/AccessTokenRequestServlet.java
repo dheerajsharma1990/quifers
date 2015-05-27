@@ -1,6 +1,6 @@
 package com.quifers.email.credentials.servlet;
 
-import com.quifers.email.credentials.builders.AccessTokenRequestBuilder;
+import com.quifers.email.builders.AccessTokenRequestBuilder;
 import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.HttpRequestSender;
 import org.apache.commons.io.FileUtils;

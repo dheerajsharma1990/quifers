@@ -1,4 +1,4 @@
-package com.quifers.email.credentials.builders;
+package com.quifers.email.builders;
 
 import com.quifers.email.util.RequestParamBuilder;
 

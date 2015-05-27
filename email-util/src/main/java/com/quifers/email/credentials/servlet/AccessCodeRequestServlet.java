@@ -1,6 +1,6 @@
 package com.quifers.email.credentials.servlet;
 
-import com.quifers.email.credentials.builders.AccessCodeRequestBuilder;
+import com.quifers.email.builders.AccessCodeRequestBuilder;
 import com.quifers.email.properties.EmailUtilProperties;
 
 import javax.servlet.ServletException;

@@ -1,10 +1,13 @@
 package com.quifers.email.util.jms;
 
 import com.quifers.domain.Order;
-import com.quifers.email.EmailService;
+import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.enums.OrderState;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
+import java.util.Arrays;
+import java.util.Date;
 
 
 public class ActiveMqPublisher {
@@ -14,10 +17,10 @@ public class ActiveMqPublisher {
     private Destination queue;
 
     public ActiveMqPublisher() throws JMSException {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(EmailService.ACTIVEMQ_URL);
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         Connection connection = connectionFactory.createConnection();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        queue = session.createQueue(EmailService.EMAIL_QUEUE);
+        queue = session.createQueue("QUIFERS.EMAIL.QUEUE");
         producer = session.createProducer(queue);
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
         connection.start();
@@ -31,6 +34,12 @@ public class ActiveMqPublisher {
 
     public MessageConsumer getMessageConsumer() throws JMSException {
         return session.createConsumer(queue);
+    }
+
+    public static void main(String[] args) throws JMSException {
+        Order order = new Order(2l, "Rob", 9988776655l, "dheeraj.sharma@snapdeal.com", "237, Phase III",
+                "456, Phase IV", null, Arrays.asList(new OrderWorkflow(2l, OrderState.BOOKED, new Date())));
+        new ActiveMqPublisher().publishOrder(order);
     }
 
 }

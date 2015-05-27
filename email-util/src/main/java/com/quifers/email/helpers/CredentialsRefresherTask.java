@@ -10,8 +10,9 @@ import java.util.TimerTask;
 
 public class CredentialsRefresherTask extends TimerTask {
 
-    private final CredentialsRefresher refresher;
     private static final Logger LOGGER = LoggerFactory.getLogger(CredentialsRefresherTask.class);
+
+    private final CredentialsRefresher refresher;
 
     public CredentialsRefresherTask(CredentialsRefresher refresher) {
         this.refresher = refresher;
@@ -22,7 +23,7 @@ public class CredentialsRefresherTask extends TimerTask {
         try {
             Credentials credentials = CredentialsService.SERVICE.getCredentials();
             Credentials newCredentials = refresher.getRefreshedCredentials(credentials);
-            LOGGER.info("New Credentials: {}", credentials);
+            LOGGER.info("Refreshed New Credentials : {}", credentials);
             CredentialsService.SERVICE.setCredentials(newCredentials);
         } catch (IOException e) {
             e.printStackTrace();

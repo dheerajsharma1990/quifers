@@ -1,6 +1,6 @@
 package com.quifers.email.util;
 
-import com.quifers.email.credentials.builders.AccessTokenRequestBuilder;
+import com.quifers.email.builders.AccessTokenRequestBuilder;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

@@ -24,5 +24,14 @@ public class EmailUtilProperties {
     public String getEmailAccount() {
         return properties.getProperty("EMAIL_ACCOUNT");
     }
+    public String getActiveMqUrl() {
+        return properties.getProperty("ACTIVEMQ_URL");
+    }
+    public String getEmailQueueName() {
+        return properties.getProperty("EMAIL_QUEUE_NAME");
+    }
+    public int getCredentialsRefreshDelayInSeconds() {
+        return Integer.valueOf(properties.getProperty("CREDENTIALS_REFRESH_DELAY_IN_SECONDS"));
+    }
 
 }
