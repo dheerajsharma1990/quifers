@@ -5,8 +5,6 @@ import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import org.apache.activemq.command.ActiveMQObjectMessage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
@@ -25,7 +23,7 @@ public class OrderReceiver {
         this.credentialsService = credentialsService;
     }
 
-    public void listenForOrders() throws JMSException, IOException, MessagingException {
+    public void receiveOrders() throws JMSException, IOException, MessagingException {
         while (true) {
             ActiveMQObjectMessage message = (ActiveMQObjectMessage) messageConsumer.receive();
             Order order = (Order) message.getObject();

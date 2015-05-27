@@ -1,5 +1,7 @@
 package com.quifers.email;
 
+import com.quifers.email.helpers.CredentialsRefresher;
+import com.quifers.email.helpers.CredentialsRefresherTask;
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.jms.OrderReceiver;
@@ -14,6 +16,7 @@ import javax.mail.MessagingException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Timer;
 
 public class EmailService {
 
@@ -21,20 +24,33 @@ public class EmailService {
     public static final String EMAIL_QUEUE = "QUIFERS.EMAIL.QUEUE";
 
     public static void main(String[] args) throws JMSException, IOException, MessagingException {
+        MessageConsumer messageConsumer = startActiveMq();
+
+        JsonParser jsonParser = new JsonParser();
+        initCredentialService(jsonParser);
+        startCredentialsRefreshingTask(new CredentialsRefresher(jsonParser));
+
+        EmailCreator emailCreator = new EmailCreator();
+        EmailSender emailSender = new EmailSender(emailCreator);
+
+        OrderReceiver orderReceiver = new OrderReceiver(messageConsumer, emailSender, CredentialsService.SERVICE);
+        orderReceiver.receiveOrders();
+    }
+
+    private static void startCredentialsRefreshingTask(CredentialsRefresher credentialsRefresher) {
+        CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsRefresher);
+        Timer timer = new Timer(true);
+        timer.scheduleAtFixedRate(refresherTask, 0, 30 * 60 * 1 * 1000);
+    }
+
+    private static MessageConsumer startActiveMq() throws JMSException {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(ACTIVEMQ_URL);
         Connection connection = connectionFactory.createConnection();
         Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
         Queue queue = session.createQueue(EMAIL_QUEUE);
         MessageConsumer messageConsumer = session.createConsumer(queue);
         connection.start();
-
-        initCredentialService(new JsonParser());
-
-        EmailCreator emailCreator = new EmailCreator();
-        EmailSender emailSender = new EmailSender(emailCreator);
-
-        OrderReceiver orderReceiver = new OrderReceiver(messageConsumer, emailSender, CredentialsService.SERVICE);
-        orderReceiver.listenForOrders();
+        return messageConsumer;
     }
 
     public static void initCredentialService(JsonParser jsonParser) throws IOException {
@@ -45,5 +61,6 @@ public class EmailService {
         Credentials credentials = jsonParser.parse(FileUtils.readFileToString(file));
         CredentialsService credentialsService = CredentialsService.SERVICE;
         credentialsService.setCredentials(credentials);
+        file.delete();
     }
 }

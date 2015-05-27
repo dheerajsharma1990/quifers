@@ -1,6 +1,6 @@
 package com.quifers.email.util;
 
-import java.util.Date;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 public class Credentials {
 
@@ -12,14 +12,11 @@ public class Credentials {
 
     private int expiry;
 
-    private Date grantTime;
-
-    public Credentials(String accessToken, String refreshToken, String tokenType, int expiry, Date grantTime) {
+    public Credentials(String accessToken, String refreshToken, String tokenType, int expiry) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.tokenType = tokenType;
         this.expiry = expiry;
-        this.grantTime = grantTime;
     }
 
     public String getAccessToken() {
@@ -38,7 +35,8 @@ public class Credentials {
         return expiry;
     }
 
-    public Date getGrantTime() {
-        return grantTime;
+    @Override
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
     }
 }
