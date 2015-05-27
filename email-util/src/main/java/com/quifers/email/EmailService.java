@@ -25,14 +25,17 @@ public class EmailService {
 
     public static void main(String[] args) throws JMSException, IOException, MessagingException {
         MessageConsumer messageConsumer = startActiveMq();
-
         JsonParser jsonParser = new JsonParser();
-        initCredentialService(jsonParser);
+
+        initCredentialsService(jsonParser);
         startCredentialsRefreshingTask(new CredentialsRefresher(jsonParser));
 
-        EmailCreator emailCreator = new EmailCreator();
-        EmailSender emailSender = new EmailSender(emailCreator);
+        EmailSender emailSender = new EmailSender(new EmailCreator());
 
+        receiveOrders(messageConsumer, emailSender);
+    }
+
+    private static void receiveOrders(MessageConsumer messageConsumer, EmailSender emailSender) throws JMSException, IOException, MessagingException {
         OrderReceiver orderReceiver = new OrderReceiver(messageConsumer, emailSender, CredentialsService.SERVICE);
         orderReceiver.receiveOrders();
     }
@@ -53,7 +56,7 @@ public class EmailService {
         return messageConsumer;
     }
 
-    public static void initCredentialService(JsonParser jsonParser) throws IOException {
+    public static void initCredentialsService(JsonParser jsonParser) throws IOException {
         File file = new File("./target/credentials.json");
         if (!file.exists()) {
             throw new FileNotFoundException(file.getName());

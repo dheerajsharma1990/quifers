@@ -34,7 +34,7 @@ public class EndToEndEmailTest {
 
     @BeforeClass
     public void readCredentialsFromFile() throws IOException {
-        EmailService.initCredentialService(new JsonParser());
+        EmailService.initCredentialsService(new JsonParser());
     }
 
     private Order buildOrder() {
