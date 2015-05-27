@@ -2,8 +2,8 @@ package com.quifers.email.helpers;
 
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.JsonParser;
-import com.quifers.email.web.RequestParamBuilder;
-import com.quifers.email.web.servlet.AccessCodeRequestServlet;
+import com.quifers.email.util.RequestParamBuilder;
+import com.quifers.email.credentials.servlet.AccessCodeRequestServlet;
 import org.apache.commons.io.IOUtils;
 
 import java.io.DataOutputStream;

@@ -1,4 +1,4 @@
-package com.quifers.email.web;
+package com.quifers.email.util;
 
 public class Pair<K, V> {
 
