@@ -11,6 +11,12 @@
         </servlet>
 
         <servlet>
+                <servlet-name>adminServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.AdminServlet</servlet-class>
+        </servlet>
+
+
+        <servlet>
                 <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
                 <servlet-class>com.quifers.servlet.FieldExecutiveRegisterServlet</servlet-class>
         </servlet>
@@ -23,6 +29,11 @@
         <servlet-mapping>
                 <servlet-name>orderServlet</servlet-name>
                 <url-pattern>/api/v0/guest/order/*</url-pattern>
+        </servlet-mapping>
+
+        <servlet-mapping>
+                <servlet-name>adminServlet</servlet-name>
+                <url-pattern>/api/v0/admin/account/register</url-pattern>
         </servlet-mapping>
 
         <servlet-mapping>

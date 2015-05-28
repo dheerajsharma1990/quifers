@@ -62,6 +62,19 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
     }
 
+    @Test
+    public void shouldRegisterNewAdmin() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/account/register");
+        String request = buildNewAdminRegisterRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+    }
+
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("userId", "dheerajsharma1990")
                 .add("password", "mypassword")
@@ -82,6 +95,13 @@ public class EndToEndWebTest {
     private String buildAssignFieldManagerRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("order_id", "1")
                 .add("field_executive_id", "dheerajsharma1990").build();
+    }
+
+    private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("password", "mypassword")
+                .add("name", "Dheeraj Sharma")
+                .add("mobile_number", "9999770595").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

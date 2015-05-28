@@ -1,10 +1,10 @@
 package com.quifers.listener;
 
-import com.quifers.dao.FieldExecutiveAccountDao;
-import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.dao.OrderDao;
+import com.quifers.dao.*;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
+import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
+import com.quifers.request.validators.AdminRegisterRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +27,10 @@ public class StartupContextListener implements ServletContextListener {
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
     public static final String ORDER_BOOK_REQUEST_VALIDATOR = "ORDER_BOOK_REQUEST_VALIDATOR";
+    public static final String ADMIN_ACCOUNT_REQUEST_VALIDATOR = "ADMIN_ACCOUNT_REQUEST_VALIDATOR";
+    public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
+    public static final String ADMIN_ACCOUNT_DAO = "ADMIN_ACCOUNT_DAO";
+    public static final String ADMIN_DAO = "ADMIN_DAO";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -75,6 +79,10 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, new FieldExecutiveAccountDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_DAO, new FieldExecutiveDao(connection));
         servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
+        servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
+        servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
+        servletContext.setAttribute(ADMIN_ACCOUNT_DAO, new AdminAccountDao(connection));
+        servletContext.setAttribute(ADMIN_DAO, new AdminDao(connection));
     }
 
     private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {
