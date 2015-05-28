@@ -1,10 +1,8 @@
 package com.quifers.email;
 
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
-import com.quifers.email.helpers.CredentialsRefresher;
-import com.quifers.email.helpers.CredentialsRefresherTask;
-import com.quifers.email.helpers.EmailCreator;
-import com.quifers.email.helpers.EmailSender;
+import com.quifers.email.builders.EmailRequestBuilder;
+import com.quifers.email.helpers.*;
 import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.properties.Environment;
@@ -35,11 +33,11 @@ public class EmailService {
         LOGGER.info("Starting quifers email service... ");
         EmailUtilProperties properties = loadEmailUtilProperties();
 
-        initCredentialsService(jsonParser);
+        initialiseCredentialsService(jsonParser);
         CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
-        startCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
+        scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
 
-        MessageConsumer messageConsumer = startActiveMq(properties);
+        MessageConsumer messageConsumer = connectToActiveMq(properties);
         receiveOrders(properties, messageConsumer);
     }
 
@@ -49,19 +47,21 @@ public class EmailService {
     }
 
     private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer) throws JMSException, IOException, MessagingException {
-        EmailSender emailSender = new EmailSender(new EmailCreator());
+        EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
+        EmailRequestBuilder builder = new EmailRequestBuilder();
+        EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder, new EmailCreator());
         OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE);
         orderReceiver.receiveOrders();
     }
 
-    private static void startCredentialsRefreshingTask(CredentialsRefresher credentialsRefresher, int delay) {
+    private static void scheduleCredentialsRefreshingTask(CredentialsRefresher credentialsRefresher, int delay) {
         LOGGER.info("Scheduling credential refresher task with delay of {} milliseconds...");
         CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsRefresher);
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(refresherTask, 0, delay * 1000);
     }
 
-    private static MessageConsumer startActiveMq(EmailUtilProperties properties) throws JMSException {
+    private static MessageConsumer connectToActiveMq(EmailUtilProperties properties) throws JMSException {
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(properties.getActiveMqUrl());
         Connection connection = connectionFactory.createConnection();
         Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
@@ -72,7 +72,7 @@ public class EmailService {
         return messageConsumer;
     }
 
-    public static void initCredentialsService(JsonParser jsonParser) throws IOException {
+    public static void initialiseCredentialsService(JsonParser jsonParser) throws IOException {
         File file = new File("./target/credentials.json");
         if (!file.exists()) {
             throw new FileNotFoundException(file.getName());

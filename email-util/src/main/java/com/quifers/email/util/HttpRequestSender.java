@@ -10,9 +10,19 @@ import java.net.URL;
 
 public class HttpRequestSender {
 
+    public String sendRequestAndGetResponse(HttpURLConnection urlConnection, String method, String request) throws IOException {
+        urlConnection.setRequestMethod(method);
+        int responseCode = sendRequest(urlConnection, request);
+        return parseResponse(urlConnection.getURL().toString(), method, request, urlConnection, responseCode);
+    }
+
     public String sendRequestAndGetResponse(String url, String method, String request) throws IOException {
         HttpURLConnection urlConnection = getConnection(url, method);
         int responseCode = sendRequest(urlConnection, request);
+        return parseResponse(url, method, request, urlConnection, responseCode);
+    }
+
+    private String parseResponse(String url, String method, String request, HttpURLConnection urlConnection, int responseCode) throws IOException {
         if (responseCode != HttpURLConnection.HTTP_OK) {
             throw new IOException("An error occurred in sending " + method +
                     " request " + request +

@@ -32,13 +32,10 @@ public class ActiveMqPublisher {
         producer.send(objectMessage);
     }
 
-    public MessageConsumer getMessageConsumer() throws JMSException {
-        return session.createConsumer(queue);
-    }
 
     public static void main(String[] args) throws JMSException {
-        Order order = new Order(2l, "Rob", 9988776655l, "dheeraj.sharma@snapdeal.com", "237, Phase III",
-                "456, Phase IV", null, Arrays.asList(new OrderWorkflow(2l, OrderState.BOOKED, new Date())));
+        Order order = new Order(10232l, "Dheeraj", 9988776655l, "katildheeraj@gmail.com", "237, Phase III",
+                "456, Phase IV", null, Arrays.asList(new OrderWorkflow(10232l, OrderState.BOOKED, new Date())));
         new ActiveMqPublisher().publishOrder(order);
     }
 
