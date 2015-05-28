@@ -33,7 +33,7 @@
 
         <servlet-mapping>
                 <servlet-name>adminServlet</servlet-name>
-                <url-pattern>/api/v0/admin/account/register</url-pattern>
+                <url-pattern>/api/v0/guest/admin/register</url-pattern>
         </servlet-mapping>
 
         <servlet-mapping>

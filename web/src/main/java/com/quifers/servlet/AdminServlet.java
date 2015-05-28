@@ -1,7 +1,6 @@
 package com.quifers.servlet;
 
-import com.quifers.dao.AdminAccountDao;
-import com.quifers.dao.AdminDao;
+import com.quifers.dao.AdminRegisterDao;
 import com.quifers.domain.Admin;
 import com.quifers.domain.AdminAccount;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
@@ -24,16 +23,13 @@ public class AdminServlet extends HttpServlet {
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminServlet.class);
     private AdminAccountRegisterRequestValidator adminAccountRegisterRequestValidator;
     private AdminRegisterRequestValidator adminRegisterRequestValidator;
-    private AdminAccountDao adminAccountDao;
-    private AdminDao adminDao;
-
+    private AdminRegisterDao adminRegisterDao;
 
     @Override
     public void init() throws ServletException {
         adminAccountRegisterRequestValidator = (AdminAccountRegisterRequestValidator) getServletContext().getAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR);
         adminRegisterRequestValidator = (AdminRegisterRequestValidator) getServletContext().getAttribute(ADMIN_REQUEST_VALIDATOR);
-        adminAccountDao = (AdminAccountDao) getServletContext().getAttribute(ADMIN_ACCOUNT_DAO);
-        adminDao = (AdminDao) getServletContext().getAttribute(ADMIN_DAO);
+        adminRegisterDao = (AdminRegisterDao) getServletContext().getAttribute(ADMIN_REGISTER_DAO);
     }
 
     @Override
@@ -41,8 +37,7 @@ public class AdminServlet extends HttpServlet {
         try {
             AdminAccount account = adminAccountRegisterRequestValidator.validateAdminAccountRequest(request);
             Admin admin = adminRegisterRequestValidator.validateAdminAccountRequest(request);
-            adminAccountDao.saveAccount(account);
-            adminDao.saveAdmin(admin);
+            adminRegisterDao.saveAdmin(account, admin);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

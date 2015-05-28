@@ -29,8 +29,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ORDER_BOOK_REQUEST_VALIDATOR = "ORDER_BOOK_REQUEST_VALIDATOR";
     public static final String ADMIN_ACCOUNT_REQUEST_VALIDATOR = "ADMIN_ACCOUNT_REQUEST_VALIDATOR";
     public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
-    public static final String ADMIN_ACCOUNT_DAO = "ADMIN_ACCOUNT_DAO";
-    public static final String ADMIN_DAO = "ADMIN_DAO";
+    public static final String ADMIN_REGISTER_DAO = "ADMIN_REGISTER_DAO";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -81,8 +80,7 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
         servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
-        servletContext.setAttribute(ADMIN_ACCOUNT_DAO, new AdminAccountDao(connection));
-        servletContext.setAttribute(ADMIN_DAO, new AdminDao(connection));
+        servletContext.setAttribute(ADMIN_REGISTER_DAO, new AdminRegisterDao(connection));
     }
 
     private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {

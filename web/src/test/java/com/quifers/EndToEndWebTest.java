@@ -65,7 +65,7 @@ public class EndToEndWebTest {
     @Test
     public void shouldRegisterNewAdmin() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/account/register");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/admin/register");
         String request = buildNewAdminRegisterRequest();
 
         //when
