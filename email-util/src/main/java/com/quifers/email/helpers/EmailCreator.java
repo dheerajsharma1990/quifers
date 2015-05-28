@@ -33,17 +33,23 @@ public class EmailCreator {
         OrderWorkflow workflow = order.getOrderWorkflows().iterator().next();
         return "<html>\n" +
                 "<body>\n" +
-                "Hey " + order.getName() + ",\n" +
+                "Hello " + order.getName() + ",\n" +
                 "<br>\n" +
-                "Thanks for placing order with Quifers.Below are your order details.<br>\n" +
-                "Order Id: " + order.getOrderId() + "<br>\n" +
-                "Name: " + order.getName() + "<br>\n" +
-                "From: " + order.getFromAddress() + "<br>\n" +
-                "To: " + order.getToAddress() + "<br>\n" +
-                "Booking Time: " + workflow.getEffectiveTime() + "<br>\n" +
-                "Order State: " + workflow.getOrderState() + "<br>\n" +
-                "Thanks\n" +
-                "<strong>Team Quifers</strong>\n" +
+                "We are pleased to have you on-board, Below are the details of your booking that has been confirmed with us.<br>\n" +
+                "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
+                "<tr><td><strong>Order Id :</strong> </td><td>" + order.getOrderId() + "</td></tr>" +
+                "<tr><td><strong>Name :</strong> </td><td>" + order.getName() + "</td></tr>" +
+                "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getFromAddress() + "</td></tr>" +
+                "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getToAddress() + "</td></tr>" +
+                "<tr><td><strong>Booking Time :</strong> </td><td>" + workflow.getEffectiveTime() + "</td></tr>" +
+                "<tr><td><strong>Order State :</strong> </td><td>" + workflow.getOrderState() + "</td></tr>" +
+                "</table>" +
+                "<br/>Please note that loading & unloading is free for first <b>60 mins</b><br/>" +
+                "Extra waiting time to be charged at INR 50 for every 15 min.<br/>" +
+                "(Waiting Time = Total Engagement Time - Transit Time, Engagement Time starts as soon as the driver reports at the pick-up location)<br/><br/>" +
+                "<br/>For any kind of feedback or queries or complaints or cancellations, Please get back to us at +91-7709365614, 9987128614, 7506035366." +
+                "<br/>The Driver shall contact you well in advance to schedule your moving." +
+                "Wishing You a happy experience.<br/>Regards,<br/><strong>Team Quifers<strong>" +
                 "</body>\n" +
                 "</html>";
     }
@@ -57,7 +63,7 @@ public class EmailCreator {
     }
 
     private String getSubject(Order order) {
-        return "Thanks For Placing Order With Quifers.Order Id: " + order.getOrderId();
+        return "Confirmation for your Quifers Booking.Order Id [" + order.getOrderId() + "]";
     }
 
 }
