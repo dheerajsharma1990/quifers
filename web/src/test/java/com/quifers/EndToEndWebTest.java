@@ -4,6 +4,7 @@ import com.quifers.properties.Environment;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
 import com.quifers.utils.ParametersBuilder;
+import org.apache.commons.io.IOUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -99,6 +100,8 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
+        String response = IOUtils.toString(connection.getInputStream());
+        assertThat(response, is("{\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
     }
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
