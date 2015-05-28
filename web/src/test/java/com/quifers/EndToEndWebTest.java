@@ -75,6 +75,32 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
     }
 
+    @Test(dependsOnMethods = "shouldRegisterNewAdmin")
+    public void shouldSendInvalidAuthenticationOnAdminLogin() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/admin/login");
+        String request = buildInvalidAdminLoginRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(401));
+    }
+
+    @Test(dependsOnMethods = "shouldRegisterNewAdmin")
+    public void shouldSendValidAuthenticationOnAdminLogin() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/admin/login");
+        String request = buildValidAdminLoginRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+    }
+
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("userId", "dheerajsharma1990")
                 .add("password", "mypassword")
@@ -102,6 +128,16 @@ public class EndToEndWebTest {
                 .add("password", "mypassword")
                 .add("name", "Dheeraj Sharma")
                 .add("mobile_number", "9999770595").build();
+    }
+
+    private String buildInvalidAdminLoginRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("password", "mywrongpassword").build();
+    }
+
+    private String buildValidAdminLoginRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("password", "mypassword").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

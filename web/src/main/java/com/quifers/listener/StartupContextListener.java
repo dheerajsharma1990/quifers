@@ -1,5 +1,6 @@
 package com.quifers.listener;
 
+import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.dao.*;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
@@ -30,6 +31,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_ACCOUNT_REQUEST_VALIDATOR = "ADMIN_ACCOUNT_REQUEST_VALIDATOR";
     public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
     public static final String ADMIN_REGISTER_DAO = "ADMIN_REGISTER_DAO";
+    public static final String ADMIN_AUTHENTICATOR = "ADMIN_AUTHENTICATOR";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -81,6 +83,7 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REGISTER_DAO, new AdminRegisterDao(connection));
+        servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(new AdminAccountDao(connection)));
     }
 
     private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {

@@ -26,9 +26,10 @@ public class AdminAccount {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        AdminAccount that = (AdminAccount) o;
+        AdminAccount account = (AdminAccount) o;
 
-        if (!userId.equals(that.userId)) return false;
+        if (password != null ? !password.equals(account.password) : account.password != null) return false;
+        if (userId != null ? !userId.equals(account.userId) : account.userId != null) return false;
 
         return true;
     }
