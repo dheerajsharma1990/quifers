@@ -15,17 +15,20 @@ public class SqlFilesExecutor {
 
     private final Connection connection;
     private final SqlScriptParser parser;
+    private final SqlFilesSorter sqlFilesSorter;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlFilesExecutor.class);
 
-    public SqlFilesExecutor(Connection connection, SqlScriptParser parser) {
+    public SqlFilesExecutor(Connection connection, SqlFilesSorter sqlFilesSorter, SqlScriptParser parser) {
         this.connection = connection;
+        this.sqlFilesSorter = sqlFilesSorter;
         this.parser = parser;
     }
 
     public void execute(String dirName) throws IOException, SQLException {
         List<String> fileNames = getFileAsNamesFromDir(dirName);
-        for (String file : fileNames) {;
+        List<String> sqlFilesInOrder = sqlFilesSorter.getSqlFilesInOrder(fileNames);
+        for (String file : sqlFilesInOrder) {;
             List<String> sqls = parser.parseSqlFile(new File(dirName, file));
             for (String sql : sqls) {
                 LOGGER.info("Executing sql: [{}]", sql);

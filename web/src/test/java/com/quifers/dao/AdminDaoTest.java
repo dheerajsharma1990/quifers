@@ -1,6 +1,7 @@
 package com.quifers.dao;
 
 import com.quifers.domain.Admin;
+import com.quifers.domain.AdminAccount;
 import com.quifers.properties.Environment;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
@@ -15,10 +16,13 @@ import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 
 public class AdminDaoTest {
 
+    private final AdminAccount adminAccount = new AdminAccount("adminUserName", "adminPassword");
     private final Admin admin = new Admin("adminUserName", "adminName", 9988776655l);
+
     private AdminDao dao;
 
     @Test
@@ -44,6 +48,9 @@ public class AdminDaoTest {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
+        AdminAccountDao adminAccountDao = new AdminAccountDao(connection);
+        adminAccountDao.saveAccount(adminAccount);
+        assertThat("Admin account not saved", adminAccountDao.getAccount("adminUserName"), notNullValue());
         dao = new AdminDao(connection);
     }
 

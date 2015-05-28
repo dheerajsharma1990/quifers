@@ -1,6 +1,7 @@
 package com.quifers.runners;
 
 import com.quifers.db.SqlFilesExecutor;
+import com.quifers.db.SqlFilesSorter;
 import com.quifers.db.SqlScriptParser;
 import com.quifers.properties.Environment;
 import com.quifers.properties.PropertiesLoader;
@@ -23,7 +24,8 @@ public class DatabaseRunner {
         Class.forName(quifersProperties.getDriverClass());
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
         connection.prepareStatement("DROP ALL OBJECTS").execute();
-        SqlFilesExecutor executor = new SqlFilesExecutor(connection, new SqlScriptParser());
+        SqlFilesSorter sqlFilesSorter = new SqlFilesSorter();
+        SqlFilesExecutor executor = new SqlFilesExecutor(connection, sqlFilesSorter, new SqlScriptParser());
         executor.execute("./src/main/resources/sql");
     }
 
