@@ -1,6 +1,7 @@
-package com.quifers.servlet;
+package com.quifers.servlet.admin;
 
 import com.quifers.authentication.AdminAccessTokenGenerator;
+import com.quifers.authentication.AdminAuthenticationData;
 import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.domain.AdminAccount;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
@@ -21,9 +22,9 @@ import static com.quifers.listener.StartupContextListener.ADMIN_ACCOUNT_REQUEST_
 import static com.quifers.listener.StartupContextListener.ADMIN_AUTHENTICATOR;
 import static com.quifers.listener.StartupContextListener.ADMIN_TOKEN_GENERATOR;
 
-public class AdminServlet extends HttpServlet {
+public class AdminLoginServlet extends HttpServlet {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AdminLoginServlet.class);
 
     private AdminAccountRegisterRequestValidator adminAccountRegisterRequestValidator;
     private AdminAuthenticator adminAuthenticator;
@@ -45,6 +46,7 @@ public class AdminServlet extends HttpServlet {
                 return;
             } else {
                 String accessToken = tokenGenerator.generateAccessToken(account);
+                AdminAuthenticationData.putAccessToken(account.getUserId(), accessToken);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("access_token", accessToken);
                 response.setContentType("application/json");

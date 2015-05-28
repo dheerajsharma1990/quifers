@@ -5,6 +5,9 @@ import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
 import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -90,7 +93,7 @@ public class EndToEndWebTest {
     }
 
     @Test(dependsOnMethods = "shouldRegisterNewAdmin")
-    public void shouldSendValidAuthenticationOnAdminLogin() throws Exception {
+    public void shouldValidateAuthenticationOnAdminLogin() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/admin/login");
         String request = buildValidAdminLoginRequest();
@@ -102,6 +105,26 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
         String response = IOUtils.toString(connection.getInputStream());
         assertThat(response, is("{\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
+    }
+
+    @Test(dependsOnMethods = "shouldValidateAuthenticationOnAdminLogin")
+    public void shouldGetAllFieldExecutives() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/listAll");
+        String request = buildValidFieldExecutivesGetAllRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        String response = IOUtils.toString(connection.getInputStream());
+        JSONTokener jsonTokener = new JSONTokener(response);
+        JSONObject object = new JSONObject(jsonTokener);
+        JSONArray executives = object.getJSONArray("field_executives");
+        JSONObject executive = executives.getJSONObject(0);
+        assertThat(executive.get("name").toString(), is("Dheeraj Sharma"));
+
     }
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
@@ -141,6 +164,11 @@ public class EndToEndWebTest {
     private String buildValidAdminLoginRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("password", "mypassword").build();
+    }
+
+    private String buildValidFieldExecutivesGetAllRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

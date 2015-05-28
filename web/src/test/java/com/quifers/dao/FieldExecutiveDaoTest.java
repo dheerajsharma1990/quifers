@@ -12,6 +12,7 @@ import org.testng.annotations.Test;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.List;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
@@ -43,6 +44,15 @@ public class FieldExecutiveDaoTest {
 
         //then
         assertThat(fieldExecutiveFromDb, is(fieldExecutive));
+    }
+
+    @Test(dependsOnMethods = "shouldGetFieldExecutive")
+    public void shouldGetAllFieldExecutives() throws Exception {
+        //when
+        List<FieldExecutive> fieldExecutivesFromDb = dao.getAllFieldExecutives();
+
+        //then
+        assertThat(fieldExecutivesFromDb.size(), is(1));
     }
 
     @BeforeClass

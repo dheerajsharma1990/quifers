@@ -5,6 +5,12 @@
                 <listener-class>com.quifers.listener.StartupContextListener</listener-class>
         </listener>
 
+
+        <filter>
+                <filter-name>adminAuthenticationFilter</filter-name>
+                <filter-class>com.quifers.servlet.filters.AdminAuthenticationFilter</filter-class>
+        </filter>
+
         <servlet>
                 <servlet-name>orderServlet</servlet-name>
                 <servlet-class>com.quifers.servlet.OrderServlet</servlet-class>
@@ -12,12 +18,17 @@
 
         <servlet>
                 <servlet-name>adminRegisterServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.AdminRegisterServlet</servlet-class>
+                <servlet-class>com.quifers.servlet.admin.AdminRegisterServlet</servlet-class>
+        </servlet>
+
+        <servlet>
+                <servlet-name>adminLoginServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.admin.AdminLoginServlet</servlet-class>
         </servlet>
 
         <servlet>
                 <servlet-name>adminServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.AdminServlet</servlet-class>
+                <servlet-class>com.quifers.servlet.admin.AdminServlet</servlet-class>
         </servlet>
 
 
@@ -31,6 +42,12 @@
                 <servlet-class>com.quifers.servlet.AssignOrderToFieldManagerServlet</servlet-class>
         </servlet>
 
+        <filter-mapping>
+                <filter-name>adminAuthenticationFilter</filter-name>
+                <url-pattern>/api/v0/admin/*</url-pattern>
+                <dispatcher>REQUEST</dispatcher>
+        </filter-mapping>
+
         <servlet-mapping>
                 <servlet-name>orderServlet</servlet-name>
                 <url-pattern>/api/v0/guest/order/*</url-pattern>
@@ -42,8 +59,13 @@
         </servlet-mapping>
 
         <servlet-mapping>
-                <servlet-name>adminServlet</servlet-name>
+                <servlet-name>adminLoginServlet</servlet-name>
                 <url-pattern>/api/v0/guest/admin/login</url-pattern>
+        </servlet-mapping>
+
+        <servlet-mapping>
+                <servlet-name>adminServlet</servlet-name>
+                <url-pattern>/api/v0/admin/executives/listAll</url-pattern>
         </servlet-mapping>
 
         <servlet-mapping>

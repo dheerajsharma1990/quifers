@@ -1,4 +1,4 @@
-package com.quifers.servlet;
+package com.quifers.servlet.admin;
 
 import com.quifers.dao.AdminRegisterDao;
 import com.quifers.domain.Admin;

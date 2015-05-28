@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FieldExecutiveDao {
 
@@ -49,18 +51,32 @@ public class FieldExecutiveDao {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, userId);
         ResultSet resultSet = statement.executeQuery();
-        FieldExecutive fieldExecutive = mapToObject(resultSet);
-        return fieldExecutive;
+        List<FieldExecutive> fieldExecutives = mapToObject(resultSet);
+        return fieldExecutives.isEmpty() ? null : fieldExecutives.iterator().next();
     }
 
-    private FieldExecutive mapToObject(ResultSet resultSet) throws SQLException {
+    public List<FieldExecutive> getAllFieldExecutives() throws SQLException {
+        String sql = "SELECT" + " " +
+
+                USER_ID_COLUMN + "," +
+                NAME_COLUMN + "," +
+                MOBILE_NUMBER_COLUMN + " " +
+
+                "FROM" + " " + TABLE_NAME;
+
+        PreparedStatement statement = connection.prepareStatement(sql);
+        return mapToObject(statement.executeQuery());
+    }
+
+    private List<FieldExecutive> mapToObject(ResultSet resultSet) throws SQLException {
+        List<FieldExecutive> fieldExecutives = new ArrayList<>();
         while (resultSet.next()) {
             String userId = resultSet.getString(USER_ID_COLUMN);
             String name = resultSet.getString(NAME_COLUMN);
             long mobileNumber = resultSet.getLong(MOBILE_NUMBER_COLUMN);
-            return new FieldExecutive(userId, name, mobileNumber);
+            fieldExecutives.add(new FieldExecutive(userId, name, mobileNumber));
         }
-        return null;
+        return fieldExecutives;
     }
 
 

@@ -6,6 +6,7 @@ import com.quifers.dao.*;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
+import com.quifers.request.validators.AdminListAllExecutiveRequestValidator;
 import com.quifers.request.validators.AdminRegisterRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_REGISTER_DAO = "ADMIN_REGISTER_DAO";
     public static final String ADMIN_AUTHENTICATOR = "ADMIN_AUTHENTICATOR";
     public static final String ADMIN_TOKEN_GENERATOR = "ADMIN_TOKEN_GENERATOR";
+    public static final String ADMIN_LIST_ALL_REQUEST_VALIDATOR = "ADMIN_LIST_ALL_REQUEST_VALIDATOR";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -87,6 +89,7 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ADMIN_REGISTER_DAO, new AdminRegisterDao(connection));
         servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(new AdminAccountDao(connection)));
         servletContext.setAttribute(ADMIN_TOKEN_GENERATOR, new AdminAccessTokenGenerator());
+        servletContext.setAttribute(ADMIN_LIST_ALL_REQUEST_VALIDATOR, new AdminListAllExecutiveRequestValidator());
     }
 
     private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {
