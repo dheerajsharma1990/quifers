@@ -34,7 +34,7 @@ public class ActiveMqPublisher {
 
 
     public static void main(String[] args) throws JMSException {
-        Order order = new Order(10232l, "Dheeraj", 9988776655l, "katildheeraj@gmail.com", "237, Phase III",
+        Order order = new Order(10232l, "Dheeraj", 9988776655l, "mist_rock@rediffmail.com", "237, Phase III",
                 "456, Phase IV", null, Arrays.asList(new OrderWorkflow(10232l, OrderState.BOOKED, new Date())));
         new ActiveMqPublisher().publishOrder(order);
     }
