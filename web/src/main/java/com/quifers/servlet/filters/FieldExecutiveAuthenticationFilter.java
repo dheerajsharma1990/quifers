@@ -14,7 +14,7 @@ import static com.quifers.servlet.listener.StartupContextListener.AUTHENTICATION
 
 public class FieldExecutiveAuthenticationFilter implements Filter {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminAuthenticationFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveAuthenticationFilter.class);
 
     private AuthenticationRequestValidator validator;
 
