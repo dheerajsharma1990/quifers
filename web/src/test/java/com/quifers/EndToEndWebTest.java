@@ -165,15 +165,6 @@ public class EndToEndWebTest {
     }
 
 
-    private String buildRequest() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("client_name", "Dheeraj Sharma")
-                .add("mobile_number", "9999770595")
-                .add("email", "dheerajsharma1990@gmail.com")
-                .add("from_address", "House Number 1234, Faridabad")
-                .add("to_address", "House Number 4567, Gurgaon")
-                .add("booking_date", "22/09/1990 10:20:30").build();
-    }
-
     private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("password", "mypassword")
@@ -244,5 +235,28 @@ public class EndToEndWebTest {
     @AfterClass
     public void shutDownDatabase() {
         stopDatabaseServer();
+    }
+
+    private String buildRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("name_label", "Dheeraj Sharma")
+                .add("number_label", "9999770595")
+                .add("emailid", "dheerajsharma1990@gmail.com")
+                .add("vehicle_list_label","Tata 407")
+                .add("house_no_pick", "1234")
+                .add("society_name_pick","FROM Society")
+                .add("area_pick","Some Area")
+                .add("city_pick","Some City")
+                .add("house_no_drop", "4567")
+                .add("society_name_drop","To Society")
+                .add("area_drop","To Area")
+                .add("city_drop","To City")
+                .add("labour","0")
+                .add("estimate_label","12 Min")
+                .add("distance_label","12 Km")
+                .add("floor_no_pick","1")
+                .add("lift_pickup","false")
+                .add("floor_no_drop","2")
+                .add("lift_drop","true")
+                .add("date_time_label", "22/09/1990 10:20:30").build();
     }
 }

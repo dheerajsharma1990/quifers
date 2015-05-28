@@ -39,8 +39,8 @@ public class EmailCreator {
                 "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
                 "<tr><td><strong>Order Id :</strong> </td><td>" + order.getOrderId() + "</td></tr>" +
                 "<tr><td><strong>Name :</strong> </td><td>" + order.getName() + "</td></tr>" +
-                "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getFromAddress() + "</td></tr>" +
-                "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getToAddress() + "</td></tr>" +
+                "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getFromAddressHouseNumber() + "," + order.getFromAddressSociety() + "," + order.getFromAddressArea() + "," + order.getFromAddressCity() + "</td></tr>" +
+                "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getToAddressHouseNumber() + "," + order.getToAddressSociety() + "," + order.getToAddressArea() + "," + order.getToAddressCity() + "</td></tr>" +
                 "<tr><td><strong>Booking Time :</strong> </td><td>" + workflow.getEffectiveTime() + "</td></tr>" +
                 "<tr><td><strong>Order State :</strong> </td><td>" + workflow.getOrderState() + "</td></tr>" +
                 "</table>" +

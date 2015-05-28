@@ -32,7 +32,9 @@ public class OrderDaoTest {
     private final OrderWorkflow bookedWorkflow = new OrderWorkflow(ORDER_ID, OrderState.BOOKED, bookedDate);
     private final OrderWorkflow tripStartWorkflow = new OrderWorkflow(ORDER_ID, OrderState.TRIP_STARTED, tripStartDate);
     private final Collection<OrderWorkflow> orderWorkflows = new HashSet<>(Arrays.asList(bookedWorkflow, tripStartWorkflow));
-    private final Order order = new Order(ORDER_ID, "name", 9988776655l, "email", "fromAddress", "toAddress", null, orderWorkflows);
+    private final Order order = new Order(ORDER_ID, "name", 9988776655l, "email", "vehicle", "fromAddressHouseNumber",
+            "fromAddressSociety", "fromAddressArea", "fromAddressCity", "toAddressHouseNumber", "toAddressSociety", "toAddressArea",
+            "toAddressCity", 1, "estimate", "distance", 1, false, 2, true, null, orderWorkflows);
     private final FieldExecutiveAccount fieldExecutiveAccount = new FieldExecutiveAccount(USER_NAME, "password");
     private final FieldExecutive fieldExecutive = new FieldExecutive(USER_NAME, "name", 9988776655l);
 
