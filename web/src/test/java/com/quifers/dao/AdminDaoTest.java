@@ -1,6 +1,6 @@
 package com.quifers.dao;
 
-import com.quifers.domain.FieldExecutiveAccount;
+import com.quifers.domain.Admin;
 import com.quifers.properties.Environment;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
@@ -16,27 +16,27 @@ import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class FieldExecutiveAccountDaoTest {
+public class AdminDaoTest {
 
-    private final FieldExecutiveAccount account = new FieldExecutiveAccount("userName", "userPassword");
-    private FieldExecutiveAccountDao dao;
+    private final Admin admin = new Admin("adminUserName", "adminName", 9988776655l);
+    private AdminDao dao;
 
     @Test
-    public void shouldSaveFieldExecutive() throws Exception {
+    public void shouldSaveAdmin() throws Exception {
         //when
-        int rowsUpdated = dao.saveAccount(account);
+        int rowsUpdated = dao.saveAdmin(admin);
 
         //then
         assertThat(rowsUpdated, is(1));
     }
 
-    @Test(dependsOnMethods = "shouldSaveFieldExecutive")
-    public void shouldGetFieldExecutive() throws Exception {
+    @Test(dependsOnMethods = "shouldSaveAdmin")
+    public void shouldGetAdmin() throws Exception {
         //when
-        FieldExecutiveAccount accountFromDb = dao.getAccount(account.getUserId());
+        Admin adminFromDb = dao.getAdmin(admin.getUserId());
 
         //then
-        assertThat(accountFromDb, is(account));
+        assertThat(adminFromDb, is(admin));
     }
 
     @BeforeClass
@@ -44,7 +44,7 @@ public class FieldExecutiveAccountDaoTest {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
-        dao = new FieldExecutiveAccountDao(connection);
+        dao = new AdminDao(connection);
     }
 
     @AfterClass
