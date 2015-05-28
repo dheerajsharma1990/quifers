@@ -16,9 +16,10 @@ import java.util.List;
 
 import static com.quifers.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
 
-public class AdminServlet extends HttpServlet {
+public class FieldExecutiveListAllServlet extends HttpServlet {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveListAllServlet.class);
+
     private FieldExecutiveDao fieldExecutiveDao;
 
     @Override

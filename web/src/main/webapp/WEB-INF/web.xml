@@ -28,19 +28,19 @@
 
         <servlet>
                 <servlet-name>adminServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.admin.AdminServlet</servlet-class>
+                <servlet-class>com.quifers.servlet.admin.FieldExecutiveListAllServlet</servlet-class>
         </servlet>
 
+        <servlet>
+                <servlet-name>fieldExecutiveAssignServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.admin.FieldExecutiveAssignServlet</servlet-class>
+        </servlet>
 
         <servlet>
                 <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.FieldExecutiveRegisterServlet</servlet-class>
+                <servlet-class>com.quifers.servlet.admin.FieldExecutiveRegisterServlet</servlet-class>
         </servlet>
 
-        <servlet>
-                <servlet-name>assignFieldManagerServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.AssignOrderToFieldManagerServlet</servlet-class>
-        </servlet>
 
         <filter-mapping>
                 <filter-name>adminAuthenticationFilter</filter-name>
@@ -69,13 +69,14 @@
         </servlet-mapping>
 
         <servlet-mapping>
-                <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
-                <url-pattern>/admin/registerFieldExecutive</url-pattern>
+                <servlet-name>fieldExecutiveAssignServlet</servlet-name>
+                <url-pattern>/api/v0/admin/executives/assign</url-pattern>
         </servlet-mapping>
 
         <servlet-mapping>
-                <servlet-name>assignFieldManagerServlet</servlet-name>
-                <url-pattern>/assignFieldManager</url-pattern>
+                <servlet-name>fieldExecutiveRegisterServlet</servlet-name>
+                <url-pattern>/api/v0/admin/executives/register</url-pattern>
         </servlet-mapping>
+
 
 </web-app>

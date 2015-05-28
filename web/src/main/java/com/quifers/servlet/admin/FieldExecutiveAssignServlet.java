@@ -1,6 +1,9 @@
-package com.quifers.servlet;
+package com.quifers.servlet.admin;
 
 import com.quifers.dao.OrderDao;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,7 +14,9 @@ import java.sql.SQLException;
 
 import static com.quifers.listener.StartupContextListener.ORDER_DAO;
 
-public class AssignOrderToFieldManagerServlet extends HttpServlet {
+public class FieldExecutiveAssignServlet extends HttpServlet {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveAssignServlet.class);
 
     private OrderDao orderDao;
 
@@ -23,11 +28,16 @@ public class AssignOrderToFieldManagerServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            long orderId = Long.valueOf(request.getParameter("order_id"));
-            String fieldExecutiveId = request.getParameter("field_executive_id");
+            String fieldExecutiveId = request.getParameter("fieldExecutiveId");
+            long orderId = Long.valueOf(request.getParameter("orderId"));
             orderDao.assignFieldExecutiveToOrder(orderId, fieldExecutiveId);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("success", true);
+            response.setContentType("application/json");
+            response.getWriter().write(jsonObject.toString());
         } catch (SQLException e) {
-            e.printStackTrace();
+            LOGGER.error("Error occurred in field executives.", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
@@ -35,4 +45,5 @@ public class AssignOrderToFieldManagerServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         throw new UnsupportedOperationException("No Support of GET request type for this request.");
     }
+
 }

@@ -29,48 +29,23 @@ public class EndToEndWebTest {
     private static final String BASE_URL = "http://localhost:9111";
 
     @Test
-    public void shouldRegisterFieldExecutive() throws Exception {
-        //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/admin/registerFieldExecutive");
-        String request = buildFieldExecutiveAccount();
-
-        //when
-        int responseCode = sendRequest(connection, request);
-
-        assertThat(responseCode, is(200));
-    }
-
-    @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
-    public void shouldSaveOrder() throws Exception {
-        //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/order/book");
-        String request = buildRequest();
-
-        //when
-        int responseCode = sendRequest(connection, request);
-
-        //then
-        assertThat(responseCode, is(200));
-    }
-
-    @Test(dependsOnMethods = "shouldSaveOrder")
-    public void shouldAssignOrderToFieldManager() throws Exception {
-        //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/assignFieldManager");
-        String request = buildAssignFieldManagerRequest();
-
-        //when
-        int responseCode = sendRequest(connection, request);
-
-        //then
-        assertThat(responseCode, is(200));
-    }
-
-    @Test
     public void shouldRegisterNewAdmin() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/admin/register");
         String request = buildNewAdminRegisterRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+    }
+
+    @Test(dependsOnMethods = "shouldRegisterNewAdmin")
+    public void shouldSaveOrder() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/order/book");
+        String request = buildRequest();
 
         //when
         int responseCode = sendRequest(connection, request);
@@ -108,6 +83,18 @@ public class EndToEndWebTest {
     }
 
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnAdminLogin")
+    public void shouldRegisterFieldExecutive() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/register");
+        String request = buildFieldExecutiveAccount();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        assertThat(responseCode, is(200));
+    }
+
+    @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
     public void shouldGetAllFieldExecutives() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/listAll");
@@ -124,7 +111,19 @@ public class EndToEndWebTest {
         JSONArray executives = object.getJSONArray("field_executives");
         JSONObject executive = executives.getJSONObject(0);
         assertThat(executive.get("name").toString(), is("Dheeraj Sharma"));
+    }
 
+    @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
+    public void shouldAssignOrderToFieldExecutive() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/assign");
+        String request = buildAssignFieldExecutiveAssignRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
     }
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
@@ -132,6 +131,8 @@ public class EndToEndWebTest {
                 .add("password", "mypassword")
                 .add("name", "Dheeraj Sharma")
                 .add("mobileNumber", "9999770595")
+                .add("user_id", "dheerajsharma1990")
+                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c")
                 .build();
     }
 
@@ -144,17 +145,13 @@ public class EndToEndWebTest {
                 .add("booking_date", "22/09/1990 10:20:30").build();
     }
 
-    private String buildAssignFieldManagerRequest() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("order_id", "1")
-                .add("field_executive_id", "dheerajsharma1990").build();
-    }
-
     private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("password", "mypassword")
                 .add("name", "Dheeraj Sharma")
                 .add("mobile_number", "9999770595").build();
     }
+
 
     private String buildInvalidAdminLoginRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
@@ -168,6 +165,13 @@ public class EndToEndWebTest {
 
     private String buildValidFieldExecutivesGetAllRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c").build();
+    }
+
+    private String buildAssignFieldExecutiveAssignRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("orderId", "1")
+                .add("fieldExecutiveId", "dheerajsharma1990")
+                .add("user_id", "dheerajsharma1990")
                 .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c").build();
     }
 
