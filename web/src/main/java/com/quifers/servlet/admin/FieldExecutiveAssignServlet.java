@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.quifers.listener.StartupContextListener.ORDER_DAO;
+import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
 
 public class FieldExecutiveAssignServlet extends HttpServlet {
 

@@ -28,9 +28,10 @@ public class FieldExecutiveAccount implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FieldExecutiveAccount that = (FieldExecutiveAccount) o;
+        FieldExecutiveAccount account = (FieldExecutiveAccount) o;
 
-        if (!userId.equals(that.userId)) return false;
+        if (password != null ? !password.equals(account.password) : account.password != null) return false;
+        if (userId != null ? !userId.equals(account.userId) : account.userId != null) return false;
 
         return true;
     }

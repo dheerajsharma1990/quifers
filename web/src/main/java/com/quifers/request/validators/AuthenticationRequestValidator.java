@@ -2,15 +2,21 @@ package com.quifers.request.validators;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static com.quifers.authentication.AdminAuthenticationData.isValidAccessToken;
+import static com.quifers.authentication.AdminAuthenticationData.isValidAdminAccessToken;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class AdminListAllExecutiveRequestValidator {
+public class AuthenticationRequestValidator {
 
-    public boolean validateAdminListAllExecutiveRequest(HttpServletRequest request) throws InvalidRequestException {
+    public boolean validateAdmin(HttpServletRequest request) throws InvalidRequestException {
         String userId = validateAndGetUserId(request);
         String accessToken = validateAndGetAccessToken(request);
-        return isValidAccessToken(userId, accessToken);
+        return isValidAdminAccessToken(userId, accessToken);
+    }
+
+    public boolean validateFieldExecutve(HttpServletRequest request) throws InvalidRequestException {
+        String userId = validateAndGetUserId(request);
+        String accessToken = validateAndGetAccessToken(request);
+        return isValidAdminAccessToken(userId, accessToken);
     }
 
     private String validateAndGetUserId(HttpServletRequest request) throws InvalidRequestException {

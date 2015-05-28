@@ -42,6 +42,10 @@ public class OrderDao {
         connection.setAutoCommit(true);
     }
 
+    public void addOrderWorkflow(OrderWorkflow orderWorkflow) throws SQLException {
+        saveOrderWorkflows(Arrays.asList(orderWorkflow));
+    }
+
     public Order getOrder(long orderId) throws SQLException {
         String sql = "select orders.order_id as order_id,name,mobile_number,email,from_address,to_address,field_executive_id,order_state,effective_time " +
                 "from orders inner join orders_workflow on orders.order_id = orders_workflow.order_id where orders.order_id = ?";

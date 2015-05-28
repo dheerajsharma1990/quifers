@@ -126,6 +126,34 @@ public class EndToEndWebTest {
         assertThat(responseCode, is(200));
     }
 
+    @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
+    public void shouldValidateAuthenticationOnFieldExecutiveLogin() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/executive/login");
+        String request = buildValidFieldExecutiveLoginRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        String response = IOUtils.toString(connection.getInputStream());
+        assertThat(response, is("{\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
+    }
+
+    @Test(dependsOnMethods = "shouldValidateAuthenticationOnFieldExecutiveLogin")
+    public void shouldChangeOrderState() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/update/order/state");
+        String request = buildChangeOrderRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+    }
+
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("userId", "dheerajsharma1990")
                 .add("password", "mypassword")
@@ -135,6 +163,7 @@ public class EndToEndWebTest {
                 .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c")
                 .build();
     }
+
 
     private String buildRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("client_name", "Dheeraj Sharma")
@@ -173,6 +202,18 @@ public class EndToEndWebTest {
                 .add("fieldExecutiveId", "dheerajsharma1990")
                 .add("user_id", "dheerajsharma1990")
                 .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c").build();
+    }
+
+    private String buildValidFieldExecutiveLoginRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("userId", "dheerajsharma1990")
+                .add("password", "mypassword").build();
+    }
+
+    private String buildChangeOrderRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("orderId","1")
+                .add("state","TRIP_STARTED").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

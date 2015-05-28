@@ -1,14 +1,12 @@
-package com.quifers.listener;
+package com.quifers.servlet.listener;
 
-import com.quifers.authentication.AdminAccessTokenGenerator;
+import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticator;
+import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.dao.*;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
-import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
-import com.quifers.request.validators.AdminListAllExecutiveRequestValidator;
-import com.quifers.request.validators.AdminRegisterRequestValidator;
-import com.quifers.request.validators.OrderBookRequestValidator;
+import com.quifers.request.validators.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +33,9 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_REGISTER_DAO = "ADMIN_REGISTER_DAO";
     public static final String FIELD_EXECUTIVE_REGISTER_DAO = "FIELD_EXECUTIVE_REGISTER_DAO";
     public static final String ADMIN_AUTHENTICATOR = "ADMIN_AUTHENTICATOR";
+    public static final String FIELD_EXECUTIVE_AUTHENTICATOR = "FIELD_EXECUTIVE_AUTHENTICATOR";
     public static final String ADMIN_TOKEN_GENERATOR = "ADMIN_TOKEN_GENERATOR";
-    public static final String ADMIN_LIST_ALL_REQUEST_VALIDATOR = "ADMIN_LIST_ALL_REQUEST_VALIDATOR";
+    public static final String AUTHENTICATION_REQUEST_VALIDATOR = "AUTHENTICATION_REQUEST_VALIDATOR";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -90,8 +89,9 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ADMIN_REGISTER_DAO, new AdminRegisterDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_REGISTER_DAO, new FieldExecutiveRegisterDao(connection));
         servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(new AdminAccountDao(connection)));
-        servletContext.setAttribute(ADMIN_TOKEN_GENERATOR, new AdminAccessTokenGenerator());
-        servletContext.setAttribute(ADMIN_LIST_ALL_REQUEST_VALIDATOR, new AdminListAllExecutiveRequestValidator());
+        servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(new FieldExecutiveAccountDao(connection)));
+        servletContext.setAttribute(ADMIN_TOKEN_GENERATOR, new AccessTokenGenerator());
+        servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());
     }
 
     private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {

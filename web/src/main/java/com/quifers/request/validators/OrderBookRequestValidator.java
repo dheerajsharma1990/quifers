@@ -51,8 +51,7 @@ public class OrderBookRequestValidator {
             throw new InvalidRequestException("Mobile number must have 10 digits.");
         }
         try {
-            Long mobileNumber = Long.valueOf(mobile);
-            return mobileNumber;
+            return Long.valueOf(mobile);
         } catch (NumberFormatException e) {
             throw new InvalidRequestException("Mobile number must contain all digits.");
         }
@@ -85,8 +84,7 @@ public class OrderBookRequestValidator {
     private Date validateAndGetBookingDate(HttpServletRequest request) throws InvalidRequestException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
         try {
-            Date bookingDate = dateFormat.parse(request.getParameter("booking_date"));
-            return bookingDate;
+            return dateFormat.parse(request.getParameter("booking_date"));
         } catch (ParseException e) {
             throw new InvalidRequestException("Booking date is invalid.");
         }

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.quifers.listener.StartupContextListener.FIELD_EXECUTIVE_REGISTER_DAO;
+import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_REGISTER_DAO;
 import static com.quifers.request.validators.FieldExecutiveAccountValidator.*;
 
 public class FieldExecutiveRegisterServlet extends HttpServlet {

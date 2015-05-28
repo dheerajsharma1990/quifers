@@ -12,7 +12,7 @@ import java.io.IOException;
 
 import static com.quifers.servlet.listener.StartupContextListener.AUTHENTICATION_REQUEST_VALIDATOR;
 
-public class AdminAuthenticationFilter implements Filter {
+public class FieldExecutiveAuthenticationFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminAuthenticationFilter.class);
 
@@ -26,7 +26,7 @@ public class AdminAuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            boolean valid = validator.validateAdmin((HttpServletRequest) servletRequest);
+            boolean valid = validator.validateFieldExecutve((HttpServletRequest) servletRequest);
             if (!valid) {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Credentials.");
                 return;
@@ -40,6 +40,6 @@ public class AdminAuthenticationFilter implements Filter {
 
     @Override
     public void destroy() {
-        LOGGER.info("Destroying {}", AdminAuthenticationFilter.class);
+        LOGGER.info("Destroying {}", FieldExecutiveAuthenticationFilter.class);
     }
 }

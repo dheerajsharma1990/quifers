@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.quifers.listener.StartupContextListener.*;
+import static com.quifers.servlet.listener.StartupContextListener.*;
 
 public class AdminRegisterServlet extends HttpServlet {
 

@@ -6,9 +6,9 @@ import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class AdminAccessTokenGeneratorTest {
+public class AccessTokenGeneratorTest {
 
-    private final AdminAccessTokenGenerator tokenGenerator = new AdminAccessTokenGenerator();
+    private final AccessTokenGenerator tokenGenerator = new AccessTokenGenerator();
 
     @Test
     public void shouldGenerateAdminAccessToken() throws Exception {

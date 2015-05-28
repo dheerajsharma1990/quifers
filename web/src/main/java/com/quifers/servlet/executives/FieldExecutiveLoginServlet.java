@@ -1,10 +1,10 @@
-package com.quifers.servlet.admin;
+package com.quifers.servlet.executives;
 
 import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticationData;
-import com.quifers.authentication.AdminAuthenticator;
-import com.quifers.domain.AdminAccount;
-import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
+import com.quifers.authentication.FieldExecutiveAuthenticator;
+import com.quifers.domain.FieldExecutiveAccount;
+import com.quifers.request.validators.FieldExecutiveAccountValidator;
 import com.quifers.request.validators.InvalidRequestException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -18,35 +18,35 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
-import static com.quifers.servlet.listener.StartupContextListener.ADMIN_ACCOUNT_REQUEST_VALIDATOR;
-import static com.quifers.servlet.listener.StartupContextListener.ADMIN_AUTHENTICATOR;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_TOKEN_GENERATOR;
+import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_AUTHENTICATOR;
 
-public class AdminLoginServlet extends HttpServlet {
+public class FieldExecutiveLoginServlet extends HttpServlet {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AdminLoginServlet.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveLoginServlet.class);
 
-    private AdminAccountRegisterRequestValidator adminAccountRegisterRequestValidator;
-    private AdminAuthenticator adminAuthenticator;
+    private FieldExecutiveAuthenticator fieldExecutiveAuthenticator;
     private AccessTokenGenerator tokenGenerator;
 
     @Override
     public void init() throws ServletException {
-        adminAccountRegisterRequestValidator = (AdminAccountRegisterRequestValidator) getServletContext().getAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR);
-        adminAuthenticator = (AdminAuthenticator) getServletContext().getAttribute(ADMIN_AUTHENTICATOR);
+        fieldExecutiveAuthenticator = (FieldExecutiveAuthenticator) getServletContext().getAttribute(FIELD_EXECUTIVE_AUTHENTICATOR);
         tokenGenerator = (AccessTokenGenerator) getServletContext().getAttribute(ADMIN_TOKEN_GENERATOR);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            AdminAccount account = adminAccountRegisterRequestValidator.validateAdminAccountRequest(request);
-            if (!adminAuthenticator.isValidAdmin(account)) {
+            String userId = request.getParameter("userId");
+            FieldExecutiveAccountValidator.validateUserId(userId);
+            String password = request.getParameter("password");
+            FieldExecutiveAccountValidator.validatePassword(password);
+            FieldExecutiveAccount account = new FieldExecutiveAccount(userId, password);
+            if (!fieldExecutiveAuthenticator.isValidFieldExecutive(account)) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Credentials.");
-                return;
             } else {
                 String accessToken = tokenGenerator.generateAccessToken(account);
-                AdminAuthenticationData.putAdminAccessToken(account.getUserId(), accessToken);
+                AdminAuthenticationData.putFieldExecutiveToken(account.getUserId(), accessToken);
                 JSONObject jsonObject = new JSONObject();
                 jsonObject.put("access_token", accessToken);
                 response.setContentType("application/json");
