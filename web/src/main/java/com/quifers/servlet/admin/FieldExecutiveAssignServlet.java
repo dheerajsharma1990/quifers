@@ -1,7 +1,8 @@
 package com.quifers.servlet.admin;
 
 import com.quifers.dao.OrderDao;
-import org.json.JSONObject;
+import com.quifers.request.FieldExecutiveAssignRequest;
+import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,9 +11,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
+import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
+import static java.lang.Long.valueOf;
 
 public class FieldExecutiveAssignServlet extends HttpServlet {
 
@@ -28,14 +30,14 @@ public class FieldExecutiveAssignServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String fieldExecutiveId = request.getParameter("fieldExecutiveId");
-            long orderId = Long.valueOf(request.getParameter("orderId"));
-            orderDao.assignFieldExecutiveToOrder(orderId, fieldExecutiveId);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("success", true);
+            FieldExecutiveAssignRequest assignRequest = new FieldExecutiveAssignRequest(request);
+            orderDao.assignFieldExecutiveToOrder(valueOf(assignRequest.getOrderId()), assignRequest.getFieldExecutiveId());
             response.setContentType("application/json");
-            response.getWriter().write(jsonObject.toString());
-        } catch (SQLException e) {
+            response.getWriter().write(getSuccessResponse());
+        } catch (InvalidRequestException e) {
+            LOGGER.error("Error in validation.", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
             LOGGER.error("Error occurred in field executives.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }

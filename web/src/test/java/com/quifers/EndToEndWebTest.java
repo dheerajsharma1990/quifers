@@ -130,6 +130,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
@@ -195,8 +196,8 @@ public class EndToEndWebTest {
     }
 
     private String buildAssignFieldExecutiveAssignRequest() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("orderId", "1")
-                .add("fieldExecutiveId", "dheerajsharma1990")
+        return new ParametersBuilder().add("order_id", "1")
+                .add("field_executive_id", "dheerajsharma1990")
                 .add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
     }

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
@@ -33,7 +32,7 @@ public class FieldExecutiveListAllServlet extends HttpServlet {
             List<FieldExecutive> allFieldExecutives = fieldExecutiveDao.getAllFieldExecutives();
             response.setContentType("application/json");
             response.getWriter().write(new FieldExecutiveResponse().getAllFieldExecutivesResponse(allFieldExecutives));
-        } catch (SQLException e) {
+        } catch (Exception e) {
             LOGGER.error("Error occurred in field executives.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
