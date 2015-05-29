@@ -39,6 +39,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldRegisterNewAdmin")
