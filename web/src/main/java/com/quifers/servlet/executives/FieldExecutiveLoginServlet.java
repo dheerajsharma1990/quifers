@@ -4,9 +4,9 @@ import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticationData;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.domain.FieldExecutiveAccount;
-import com.quifers.request.validators.FieldExecutiveAccountValidator;
+import com.quifers.request.LoginRequest;
 import com.quifers.request.validators.InvalidRequestException;
-import org.json.JSONObject;
+import com.quifers.response.FieldExecutiveResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
+import static com.quifers.request.transformers.FieldExecutiveTransformer.transform;
+import static com.quifers.response.AdminLoginResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_TOKEN_GENERATOR;
 import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_AUTHENTICATOR;
 
@@ -37,21 +39,17 @@ public class FieldExecutiveLoginServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String userId = request.getParameter("userId");
-            FieldExecutiveAccountValidator.validateUserId(userId);
-            String password = request.getParameter("password");
-            FieldExecutiveAccountValidator.validatePassword(password);
-            FieldExecutiveAccount account = new FieldExecutiveAccount(userId, password);
+            LoginRequest loginRequest = new LoginRequest(request);
+            FieldExecutiveAccount account = transform(loginRequest);
+            String loginResponse;
             if (!fieldExecutiveAuthenticator.isValidFieldExecutive(account)) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Credentials.");
+                loginResponse = FieldExecutiveResponse.getInvalidLoginResponse();
             } else {
                 String accessToken = tokenGenerator.generateAccessToken(account);
                 AdminAuthenticationData.putFieldExecutiveToken(account.getUserId(), accessToken);
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("access_token", accessToken);
-                response.setContentType("application/json");
-                response.getWriter().write(jsonObject.toString());
+                loginResponse = getSuccessResponse(accessToken);
             }
+            response.getWriter().write(loginResponse);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

@@ -4,7 +4,7 @@ import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticationData;
 import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.domain.AdminAccount;
-import com.quifers.request.AdminLoginRequest;
+import com.quifers.request.LoginRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.AdminLoginResponse;
 import org.slf4j.Logger;
@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.quifers.request.transformers.AdminTransformer.transform;
-import static com.quifers.request.validators.admin.AdminLoginRequestValidator.validateAdminLoginRequest;
 import static com.quifers.response.AdminLoginResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_AUTHENTICATOR;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_TOKEN_GENERATOR;
@@ -38,9 +37,8 @@ public class AdminLoginServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            AdminLoginRequest adminLoginRequest = new AdminLoginRequest(request);
-            validateAdminLoginRequest(adminLoginRequest);
-            AdminAccount adminAccount = transform(adminLoginRequest);
+            LoginRequest loginRequest = new LoginRequest(request);
+            AdminAccount adminAccount = transform(loginRequest);
             response.setContentType("application/json");
             String loginResponse;
             if (!adminAuthenticator.isValidAdmin(adminAccount)) {

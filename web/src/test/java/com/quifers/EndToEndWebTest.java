@@ -145,7 +145,7 @@ public class EndToEndWebTest {
         //then
         assertThat(responseCode, is(200));
         String response = IOUtils.toString(connection.getInputStream());
-        assertThat(response, is("{\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
+        assertThat(response, is("{\"success\":\"true\",\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
     }
 
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnFieldExecutiveLogin")
@@ -203,7 +203,7 @@ public class EndToEndWebTest {
     }
 
     private String buildValidFieldExecutiveLoginRequest() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("userId", "dheerajsharma1990")
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("password", "mypassword").build();
     }
 

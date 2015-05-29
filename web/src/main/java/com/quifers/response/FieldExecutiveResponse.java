@@ -14,6 +14,12 @@ public class FieldExecutiveResponse {
         return object.toString();
     }
 
+    public static String getInvalidLoginResponse() {
+        JSONObject object = new JSONObject();
+        object.put("success", "false");
+        return object.toString();
+    }
+
     public String getAllFieldExecutivesResponse(List<FieldExecutive> fieldExecutives) {
         List<FieldExecutiveListAll> listAlls = new ArrayList<>();
         for (FieldExecutive fieldExecutive : fieldExecutives) {
