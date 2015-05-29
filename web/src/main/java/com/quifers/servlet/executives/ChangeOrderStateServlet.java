@@ -3,7 +3,8 @@ package com.quifers.servlet.executives;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
-import org.json.JSONObject;
+import com.quifers.request.ChangeOrderRequest;
+import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 
+import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
+import static java.lang.Long.valueOf;
 
 public class ChangeOrderStateServlet extends HttpServlet {
 
@@ -30,13 +33,13 @@ public class ChangeOrderStateServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            long orderId = Long.valueOf(request.getParameter("orderId"));
-            String state = request.getParameter("state");
-            orderDao.addOrderWorkflow(new OrderWorkflow(orderId, OrderState.valueOf(state.toUpperCase()), new Date()));
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("success", true);
+            ChangeOrderRequest changeOrderRequest = new ChangeOrderRequest(request);
+            orderDao.addOrderWorkflow(new OrderWorkflow(valueOf(changeOrderRequest.getOrderId()), OrderState.valueOf(changeOrderRequest.getOrderState().toUpperCase()), new Date()));
             response.setContentType("application/json");
-            response.getWriter().write(jsonObject.toString());
+            response.getWriter().write(getSuccessResponse());
+        } catch (InvalidRequestException e) {
+            LOGGER.error("Error in validation.", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (SQLException e) {
             LOGGER.error("Error occurred in registering field executive account.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());

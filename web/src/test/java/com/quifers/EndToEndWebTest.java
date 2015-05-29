@@ -159,6 +159,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
     }
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
@@ -210,8 +211,8 @@ public class EndToEndWebTest {
     private String buildChangeOrderRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("orderId","1")
-                .add("state","TRIP_STARTED").build();
+                .add("order_id","1")
+                .add("order_state","TRIP_STARTED").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

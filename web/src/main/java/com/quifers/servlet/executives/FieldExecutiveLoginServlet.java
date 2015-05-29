@@ -15,8 +15,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.sql.SQLException;
 
 import static com.quifers.request.transformers.FieldExecutiveTransformer.transform;
 import static com.quifers.response.AdminLoginResponse.getSuccessResponse;
@@ -53,11 +51,8 @@ public class FieldExecutiveLoginServlet extends HttpServlet {
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-        } catch (SQLException e) {
+        } catch (Throwable e) {
             LOGGER.error("Error occurred in validating admin account.", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("Error occurred in generating access token.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
