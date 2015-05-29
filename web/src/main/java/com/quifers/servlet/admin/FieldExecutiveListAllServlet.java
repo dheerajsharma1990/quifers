@@ -2,7 +2,7 @@ package com.quifers.servlet.admin;
 
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.domain.FieldExecutive;
-import org.json.JSONObject;
+import com.quifers.response.FieldExecutiveResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,10 +31,8 @@ public class FieldExecutiveListAllServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             List<FieldExecutive> allFieldExecutives = fieldExecutiveDao.getAllFieldExecutives();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("field_executives", allFieldExecutives);
             response.setContentType("application/json");
-            response.getWriter().write(jsonObject.toString());
+            response.getWriter().write(new FieldExecutiveResponse().getAllFieldExecutivesResponse(allFieldExecutives));
         } catch (SQLException e) {
             LOGGER.error("Error occurred in field executives.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());

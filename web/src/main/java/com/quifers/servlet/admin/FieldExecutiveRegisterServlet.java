@@ -40,7 +40,7 @@ public class FieldExecutiveRegisterServlet extends HttpServlet {
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-        } catch (SQLException e) {
+        } catch (Throwable e) {
             LOGGER.error("Error occurred in registering field executive account.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }

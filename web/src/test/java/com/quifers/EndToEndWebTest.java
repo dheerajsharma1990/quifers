@@ -95,6 +95,7 @@ public class EndToEndWebTest {
         int responseCode = sendRequest(connection, request);
 
         assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
@@ -113,7 +114,9 @@ public class EndToEndWebTest {
         JSONObject object = new JSONObject(jsonTokener);
         JSONArray executives = object.getJSONArray("field_executives");
         JSONObject executive = executives.getJSONObject(0);
+        assertThat(executive.get("userId").toString(), is("dheerajsharma1990"));
         assertThat(executive.get("name").toString(), is("Dheeraj Sharma"));
+        assertThat(executive.get("mobileNumber").toString(), is("9999770595"));
     }
 
     @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
