@@ -1,10 +1,10 @@
 package com.quifers.servlet.admin;
 
-import com.quifers.dao.FieldExecutiveRegisterDao;
+import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.domain.FieldExecutive;
-import com.quifers.domain.FieldExecutiveAccount;
+import com.quifers.request.FieldExecutiveRegisterRequest;
+import com.quifers.request.transformers.FieldExecutiveTransformer;
 import com.quifers.request.validators.InvalidRequestException;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,37 +15,28 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_REGISTER_DAO;
-import static com.quifers.request.validators.FieldExecutiveAccountValidator.*;
+import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
+import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
 
 public class FieldExecutiveRegisterServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveRegisterServlet.class);
-    private FieldExecutiveRegisterDao fieldExecutiveRegisterDao;
+    private FieldExecutiveDao fieldExecutiveDao;
 
     @Override
     public void init() throws ServletException {
-        fieldExecutiveRegisterDao = (FieldExecutiveRegisterDao) getServletContext().getAttribute(FIELD_EXECUTIVE_REGISTER_DAO);
+        fieldExecutiveDao = (FieldExecutiveDao) getServletContext().getAttribute(FIELD_EXECUTIVE_DAO);
     }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String userId = request.getParameter("userId");
-            String password = request.getParameter("password");
-            String name = request.getParameter("name");
-            String mobile = request.getParameter("mobileNumber");
-            validateUserId(userId);
-            validatePassword(password);
-            validateName(name);
-            validateMobileNumber(mobile);
-            FieldExecutiveAccount executiveAccount = new FieldExecutiveAccount(userId, password);
-            FieldExecutive fieldExecutive = new FieldExecutive(userId, name, Long.valueOf(mobile));
-            fieldExecutiveRegisterDao.saveFieldExecutive(executiveAccount, fieldExecutive);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("success", true);
+            FieldExecutiveRegisterRequest registerRequest = new FieldExecutiveRegisterRequest(request);
+            FieldExecutive fieldExecutive = FieldExecutiveTransformer.transform(registerRequest);
+            fieldExecutiveDao.saveFieldExecutive(fieldExecutive);
+            String successResponse = getSuccessResponse();
             response.setContentType("application/json");
-            response.getWriter().write(jsonObject.toString());
+            response.getWriter().write(successResponse);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

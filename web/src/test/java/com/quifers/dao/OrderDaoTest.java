@@ -36,10 +36,9 @@ public class OrderDaoTest {
             "fromAddressSociety", "fromAddressArea", "fromAddressCity", "toAddressHouseNumber", "toAddressSociety", "toAddressArea",
             "toAddressCity", 1, "estimate", "distance", 1, false, 2, true, null, orderWorkflows);
     private final FieldExecutiveAccount fieldExecutiveAccount = new FieldExecutiveAccount(USER_NAME, "password");
-    private final FieldExecutive fieldExecutive = new FieldExecutive(USER_NAME, "name", 9988776655l);
+    private final FieldExecutive fieldExecutive = new FieldExecutive(fieldExecutiveAccount, "name", 9988776655l);
 
     private OrderDao dao;
-    private FieldExecutiveAccountDao fieldExecutiveAccountDao;
     private FieldExecutiveDao fieldExecutiveDao;
 
     @Test
@@ -59,7 +58,7 @@ public class OrderDaoTest {
         fieldExecutiveExist();
 
         //when
-        int rowsUpdate = dao.assignFieldExecutiveToOrder(order.getOrderId(), fieldExecutive.getUserId());
+        int rowsUpdate = dao.assignFieldExecutiveToOrder(order.getOrderId(), fieldExecutive.getAccount().getUserId());
 
         //then
         assertThat(rowsUpdate, is(1));
@@ -67,17 +66,14 @@ public class OrderDaoTest {
 
     @Test(dependsOnMethods = "shouldAssignFieldExecutiveToOrder")
     public void shouldGetOrderByFieldExecutiveId() throws Exception {
-        List<Order> ordersFromDb = dao.getOrderByFieldExecutiveId(fieldExecutive.getUserId());
+        List<Order> ordersFromDb = dao.getOrderByFieldExecutiveId(fieldExecutive.getAccount().getUserId());
 
         assertThat(ordersFromDb.size(), is(1));
     }
 
     private void fieldExecutiveExist() throws SQLException {
-        fieldExecutiveAccountDao.saveAccount(fieldExecutiveAccount);
-        FieldExecutiveAccount account = fieldExecutiveAccountDao.getAccount(fieldExecutiveAccount.getUserId());
-        assertThat(account, notNullValue());
         fieldExecutiveDao.saveFieldExecutive(fieldExecutive);
-        FieldExecutive executive = fieldExecutiveDao.getFieldExecutive(fieldExecutive.getUserId());
+        FieldExecutive executive = fieldExecutiveDao.getFieldExecutive(fieldExecutive.getAccount().getUserId());
         assertThat(executive, notNullValue());
     }
 
@@ -87,7 +83,6 @@ public class OrderDaoTest {
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
         dao = new OrderDao(connection);
-        fieldExecutiveAccountDao = new FieldExecutiveAccountDao(connection);
         fieldExecutiveDao = new FieldExecutiveDao(connection);
     }
 

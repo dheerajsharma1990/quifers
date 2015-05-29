@@ -6,21 +6,20 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 
 public class FieldExecutive implements Serializable {
 
-    private String userId;
+    private FieldExecutiveAccount account;
 
     private String name;
 
     private long mobileNumber;
 
-
-    public FieldExecutive(String userId, String name, long mobileNumber) {
-        this.userId = userId;
+    public FieldExecutive(FieldExecutiveAccount account, String name, long mobileNumber) {
+        this.account = account;
         this.name = name;
         this.mobileNumber = mobileNumber;
     }
 
-    public String getUserId() {
-        return userId;
+    public FieldExecutiveAccount getAccount() {
+        return account;
     }
 
     public String getName() {
@@ -38,14 +37,16 @@ public class FieldExecutive implements Serializable {
 
         FieldExecutive that = (FieldExecutive) o;
 
-        if (!userId.equals(that.userId)) return false;
+        if (mobileNumber != that.mobileNumber) return false;
+        if (account != null ? !account.equals(that.account) : that.account != null) return false;
+        if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return userId.hashCode();
+        return account != null ? account.hashCode() : 0;
     }
 
     @Override

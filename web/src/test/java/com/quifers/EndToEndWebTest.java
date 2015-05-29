@@ -158,12 +158,12 @@ public class EndToEndWebTest {
     }
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("userId", "dheerajsharma1990")
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("field_executive_id", "dheerajsharma1990")
                 .add("password", "mypassword")
                 .add("name", "Dheeraj Sharma")
-                .add("mobileNumber", "9999770595")
-                .add("user_id", "dheerajsharma1990")
-                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("mobile_number", "9999770595")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .build();
     }
 
@@ -188,14 +188,14 @@ public class EndToEndWebTest {
 
     private String buildValidFieldExecutivesGetAllRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
-                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c").build();
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
     }
 
     private String buildAssignFieldExecutiveAssignRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("orderId", "1")
                 .add("fieldExecutiveId", "dheerajsharma1990")
                 .add("user_id", "dheerajsharma1990")
-                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c").build();
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
     }
 
     private String buildValidFieldExecutiveLoginRequest() throws UnsupportedEncodingException {
@@ -205,7 +205,7 @@ public class EndToEndWebTest {
 
     private String buildChangeOrderRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
-                .add("accessToken", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("orderId","1")
                 .add("state","TRIP_STARTED").build();
     }

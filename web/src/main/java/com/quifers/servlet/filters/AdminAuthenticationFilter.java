@@ -1,5 +1,6 @@
 package com.quifers.servlet.filters;
 
+import com.quifers.request.AdminFilterRequest;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
@@ -26,7 +27,8 @@ public class AdminAuthenticationFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            boolean valid = validator.validateAdmin((HttpServletRequest) servletRequest);
+            AdminFilterRequest adminFilterRequest = new AdminFilterRequest((HttpServletRequest) servletRequest);
+            boolean valid = validator.validateAdmin(adminFilterRequest);
             if (!valid) {
                 ((HttpServletResponse) servletResponse).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Credentials.");
                 return;

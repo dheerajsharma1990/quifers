@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class FieldExecutiveAccountDao {
 
@@ -41,17 +43,27 @@ public class FieldExecutiveAccountDao {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, userId);
         ResultSet resultSet = statement.executeQuery();
-        FieldExecutiveAccount fieldExecutiveAccount = mapToObject(resultSet);
-        return fieldExecutiveAccount;
+        Set<FieldExecutiveAccount> fieldExecutiveAccounts = mapToObjects(resultSet);
+        return fieldExecutiveAccounts.size() != 0 ? fieldExecutiveAccounts.iterator().next() : null;
     }
 
-    private FieldExecutiveAccount mapToObject(ResultSet resultSet) throws SQLException {
+    public Set<FieldExecutiveAccount> getAllAccounts() throws SQLException {
+        String sql = "SELECT" + " " +
+                USER_ID_COLUMN + "," + PASSWORD_COLUMN + " " +
+                "FROM" + " " + TABLE_NAME;
+        PreparedStatement statement = connection.prepareStatement(sql);
+        ResultSet resultSet = statement.executeQuery();
+        return mapToObjects(resultSet);
+    }
+
+    private Set<FieldExecutiveAccount> mapToObjects(ResultSet resultSet) throws SQLException {
+        Set<FieldExecutiveAccount> fieldExecutiveAccounts = new HashSet<>();
         while (resultSet.next()) {
             String userId = resultSet.getString(USER_ID_COLUMN);
             String password = resultSet.getString(PASSWORD_COLUMN);
-            return new FieldExecutiveAccount(userId, password);
+            fieldExecutiveAccounts.add(new FieldExecutiveAccount(userId, password));
         }
-        return null;
+        return fieldExecutiveAccounts;
     }
 
 
