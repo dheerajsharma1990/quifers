@@ -19,6 +19,7 @@ public class AdminRegisterRequestValidatorTest {
         //given
         HttpServletRequest request = mock(HttpServletRequest.class);
         when(request.getParameter("user_id")).thenReturn("user");
+        when(request.getParameter("password")).thenReturn("password");
         when(request.getParameter("name")).thenReturn("Some Name");
         when(request.getParameter("mobile")).thenReturn(null);
 

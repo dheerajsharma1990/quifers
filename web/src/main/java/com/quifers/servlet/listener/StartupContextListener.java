@@ -30,7 +30,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ORDER_BOOK_REQUEST_VALIDATOR = "ORDER_BOOK_REQUEST_VALIDATOR";
     public static final String ADMIN_ACCOUNT_REQUEST_VALIDATOR = "ADMIN_ACCOUNT_REQUEST_VALIDATOR";
     public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
-    public static final String ADMIN_REGISTER_DAO = "ADMIN_REGISTER_DAO";
+    public static final String ADMIN_DAO = "ADMIN_DAO";
     public static final String FIELD_EXECUTIVE_REGISTER_DAO = "FIELD_EXECUTIVE_REGISTER_DAO";
     public static final String ADMIN_AUTHENTICATOR = "ADMIN_AUTHENTICATOR";
     public static final String FIELD_EXECUTIVE_AUTHENTICATOR = "FIELD_EXECUTIVE_AUTHENTICATOR";
@@ -86,9 +86,9 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ORDER_DAO, new OrderDao(connection));
         servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
-        servletContext.setAttribute(ADMIN_REGISTER_DAO, new AdminRegisterDao(connection));
+        servletContext.setAttribute(ADMIN_DAO, new AdminDao(connection));
         servletContext.setAttribute(FIELD_EXECUTIVE_REGISTER_DAO, new FieldExecutiveRegisterDao(connection));
-        servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(new AdminAccountDao(connection)));
+        servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(new AdminDao(connection)));
         servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(new FieldExecutiveAccountDao(connection)));
         servletContext.setAttribute(ADMIN_TOKEN_GENERATOR, new AccessTokenGenerator());
         servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());

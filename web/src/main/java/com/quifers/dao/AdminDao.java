@@ -1,6 +1,7 @@
 package com.quifers.dao;
 
 import com.quifers.domain.Admin;
+import com.quifers.domain.AdminAccount;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,12 +16,17 @@ public class AdminDao {
     private final String USER_ID_COLUMN = "user_id";
     private final String NAME_COLUMN = "name";
     private final String MOBILE_NUMBER_COLUMN = "mobile_number";
+    private final AdminAccountDao adminAccountDao;
 
     public AdminDao(Connection connection) {
         this.connection = connection;
+        this.adminAccountDao = new AdminAccountDao(connection);
     }
 
     public int saveAdmin(Admin admin) throws SQLException {
+
+        adminAccountDao.saveAccount(admin.getAccount());
+
         String sql = "INSERT INTO " + TABLE_NAME + " " +
                 "(" +
                 USER_ID_COLUMN + "," +
@@ -30,7 +36,7 @@ public class AdminDao {
                 "VALUES(?,?,?)";
 
         PreparedStatement statement = connection.prepareStatement(sql);
-        statement.setString(1, admin.getUserId());
+        statement.setString(1, admin.getAccount().getUserId());
         statement.setString(2, admin.getName());
         statement.setLong(3, admin.getMobileNumber());
         return statement.executeUpdate();
@@ -49,16 +55,16 @@ public class AdminDao {
         PreparedStatement statement = connection.prepareStatement(sql);
         statement.setString(1, userId);
         ResultSet resultSet = statement.executeQuery();
-        Admin admin = mapToObject(resultSet);
+        AdminAccount account = adminAccountDao.getAccount(userId);
+        Admin admin = mapToObject(account,resultSet);
         return admin;
     }
 
-    private Admin mapToObject(ResultSet resultSet) throws SQLException {
+    private Admin mapToObject(AdminAccount account, ResultSet resultSet) throws SQLException {
         while (resultSet.next()) {
-            String userId = resultSet.getString(USER_ID_COLUMN);
             String name = resultSet.getString(NAME_COLUMN);
             long mobileNumber = resultSet.getLong(MOBILE_NUMBER_COLUMN);
-            return new Admin(userId, name, mobileNumber);
+            return new Admin(account, name, mobileNumber);
         }
         return null;
     }

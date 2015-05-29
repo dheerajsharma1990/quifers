@@ -4,21 +4,21 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 
 public class Admin {
 
-    private String userId;
+    private AdminAccount account;
 
     private String name;
 
     private long mobileNumber;
 
 
-    public Admin(String userId, String name, long mobileNumber) {
-        this.userId = userId;
+    public Admin(AdminAccount account, String name, long mobileNumber) {
+        this.account = account;
         this.name = name;
         this.mobileNumber = mobileNumber;
     }
 
-    public String getUserId() {
-        return userId;
+    public AdminAccount getAccount() {
+        return account;
     }
 
     public String getName() {
@@ -34,16 +34,18 @@ public class Admin {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Admin that = (Admin) o;
+        Admin admin = (Admin) o;
 
-        if (!userId.equals(that.userId)) return false;
+        if (mobileNumber != admin.mobileNumber) return false;
+        if (account != null ? !account.equals(admin.account) : admin.account != null) return false;
+        if (name != null ? !name.equals(admin.name) : admin.name != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return userId.hashCode();
+        return account != null ? account.hashCode() : 0;
     }
 
     @Override

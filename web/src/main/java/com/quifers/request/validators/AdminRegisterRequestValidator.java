@@ -1,6 +1,7 @@
 package com.quifers.request.validators;
 
 import com.quifers.domain.Admin;
+import com.quifers.domain.AdminAccount;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -10,9 +11,10 @@ public class AdminRegisterRequestValidator {
 
     public Admin validateAdminAccountRequest(HttpServletRequest request) throws InvalidRequestException {
         String userId = validateAndGetUserId(request);
+        String password = validateAndGetPassword(request);
         String name = validateAndGetName(request);
         long mobileNumber = validateAndGetMobileNumber(request);
-        return new Admin(userId, name, mobileNumber);
+        return new Admin(new AdminAccount(userId, password), name, mobileNumber);
     }
 
     private String validateAndGetUserId(HttpServletRequest request) throws InvalidRequestException {
@@ -21,6 +23,14 @@ public class AdminRegisterRequestValidator {
             throw new InvalidRequestException("User Id cannot be empty.");
         }
         return userId.trim();
+    }
+
+    private String validateAndGetPassword(HttpServletRequest request) throws InvalidRequestException {
+        String password = request.getParameter("password");
+        if (isEmpty(password)) {
+            throw new InvalidRequestException("Password cannot be empty.");
+        }
+        return password.trim();
     }
 
 

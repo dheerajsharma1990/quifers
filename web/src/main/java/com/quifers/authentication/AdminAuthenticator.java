@@ -1,20 +1,21 @@
 package com.quifers.authentication;
 
-import com.quifers.dao.AdminAccountDao;
+import com.quifers.dao.AdminDao;
+import com.quifers.domain.Admin;
 import com.quifers.domain.AdminAccount;
 
 import java.sql.SQLException;
 
 public class AdminAuthenticator {
 
-    private final AdminAccountDao adminAccountDao;
+    private final AdminDao adminDao;
 
-    public AdminAuthenticator(AdminAccountDao adminAccountDao) {
-        this.adminAccountDao = adminAccountDao;
+    public AdminAuthenticator(AdminDao adminDao) {
+        this.adminDao = adminDao;
     }
 
     public boolean isValidAdmin(AdminAccount adminAccount) throws SQLException {
-        AdminAccount accountFromDb = adminAccountDao.getAccount(adminAccount.getUserId());
-        return accountFromDb != null && accountFromDb.equals(adminAccount);
+        Admin accountFromDb = adminDao.getAdmin(adminAccount.getUserId());
+        return accountFromDb != null && accountFromDb.getAccount().equals(adminAccount);
     }
 }

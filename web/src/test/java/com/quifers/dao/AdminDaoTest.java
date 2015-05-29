@@ -21,25 +21,18 @@ import static org.hamcrest.core.IsNull.notNullValue;
 public class AdminDaoTest {
 
     private final AdminAccount adminAccount = new AdminAccount("adminUserName", "adminPassword");
-    private final Admin admin = new Admin("adminUserName", "adminName", 9988776655l);
+    private final Admin admin = new Admin(adminAccount, "adminName", 9988776655l);
 
     private AdminDao dao;
 
     @Test
-    public void shouldSaveAdmin() throws Exception {
+    public void shouldSaveAndGetAdmin() throws Exception {
         //when
-        int rowsUpdated = dao.saveAdmin(admin);
+        dao.saveAdmin(admin);
+        Admin adminFromDb = dao.getAdmin(adminAccount.getUserId());
 
         //then
-        assertThat(rowsUpdated, is(1));
-    }
-
-    @Test(dependsOnMethods = "shouldSaveAdmin")
-    public void shouldGetAdmin() throws Exception {
-        //when
-        Admin adminFromDb = dao.getAdmin(admin.getUserId());
-
-        //then
+        assertThat(adminFromDb, notNullValue());
         assertThat(adminFromDb, is(admin));
     }
 
@@ -48,9 +41,6 @@ public class AdminDaoTest {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
-        AdminAccountDao adminAccountDao = new AdminAccountDao(connection);
-        adminAccountDao.saveAccount(adminAccount);
-        assertThat("Admin account not saved", adminAccountDao.getAccount("adminUserName"), notNullValue());
         dao = new AdminDao(connection);
     }
 
