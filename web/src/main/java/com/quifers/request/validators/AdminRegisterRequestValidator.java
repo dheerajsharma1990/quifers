@@ -1,49 +1,37 @@
 package com.quifers.request.validators;
 
-import com.quifers.domain.Admin;
-import com.quifers.domain.AdminAccount;
-
-import javax.servlet.http.HttpServletRequest;
+import com.quifers.request.AdminRegisterRequest;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class AdminRegisterRequestValidator {
 
-    public Admin validateAdminAccountRequest(HttpServletRequest request) throws InvalidRequestException {
-        String userId = validateAndGetUserId(request);
-        String password = validateAndGetPassword(request);
-        String name = validateAndGetName(request);
-        long mobileNumber = validateAndGetMobileNumber(request);
-        return new Admin(new AdminAccount(userId, password), name, mobileNumber);
+    public void validateAdminRegisterRequest(AdminRegisterRequest registerRequest) throws InvalidRequestException {
+        validateUserId(registerRequest.getUserId());
+        validatePassword(registerRequest.getPassword());
+        validateName(registerRequest.getName());
+        validateName(registerRequest.getName());
     }
 
-    private String validateAndGetUserId(HttpServletRequest request) throws InvalidRequestException {
-        String userId = request.getParameter("user_id");
+    private void validateUserId(String userId) throws InvalidRequestException {
         if (isEmpty(userId)) {
             throw new InvalidRequestException("User Id cannot be empty.");
         }
-        return userId.trim();
     }
 
-    private String validateAndGetPassword(HttpServletRequest request) throws InvalidRequestException {
-        String password = request.getParameter("password");
+    private void validatePassword(String password) throws InvalidRequestException {
         if (isEmpty(password)) {
             throw new InvalidRequestException("Password cannot be empty.");
         }
-        return password.trim();
     }
 
-
-    private String validateAndGetName(HttpServletRequest request) throws InvalidRequestException {
-        String name = request.getParameter("name");
+    private void validateName(String name) throws InvalidRequestException {
         if (isEmpty(name)) {
             throw new InvalidRequestException("Name cannot be empty.");
         }
-        return name.trim();
     }
 
-    private long validateAndGetMobileNumber(HttpServletRequest request) throws InvalidRequestException {
-        String mobile = request.getParameter("mobile_number");
+    private void validateMobileNumber(String mobile) throws InvalidRequestException {
         if (isEmpty(mobile)) {
             throw new InvalidRequestException("Mobile number cannot be empty.");
         }
@@ -53,10 +41,13 @@ public class AdminRegisterRequestValidator {
         }
         try {
             Long mobileNumber = Long.valueOf(mobile);
-            return mobileNumber;
+            if (!(mobileNumber > 0)) {
+                throw new InvalidRequestException("Mobile number must contain all valid digits.");
+            }
         } catch (NumberFormatException e) {
-            throw new InvalidRequestException("Mobile number must contain all digits.");
+            throw new InvalidRequestException("Mobile number must contain all valid digits.");
         }
+
     }
 
 }

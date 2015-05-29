@@ -1,8 +1,7 @@
 package com.quifers.request.validators;
 
+import com.quifers.request.AdminRegisterRequest;
 import org.testng.annotations.Test;
-
-import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -17,15 +16,15 @@ public class AdminRegisterRequestValidatorTest {
     @Test
     public void shouldThrowInvalidRequestExceptionOnEmptyClientName() {
         //given
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getParameter("user_id")).thenReturn("user");
-        when(request.getParameter("password")).thenReturn("password");
-        when(request.getParameter("name")).thenReturn("Some Name");
-        when(request.getParameter("mobile")).thenReturn(null);
+        AdminRegisterRequest request = mock(AdminRegisterRequest.class);
+        when(request.getUserId()).thenReturn("user");
+        when(request.getPassword()).thenReturn("password");
+        when(request.getName()).thenReturn("Some Name");
+        when(request.getMobileNumber()).thenReturn(null);
 
         //when
         try {
-            validator.validateAdminAccountRequest(request);
+            validator.validateAdminRegisterRequest(request);
             fail();
         } catch (InvalidRequestException e) {
             assertThat(e.getMessage(), is("Mobile number cannot be empty."));

@@ -2,6 +2,7 @@ package com.quifers.servlet.admin;
 
 import com.quifers.dao.AdminDao;
 import com.quifers.domain.Admin;
+import com.quifers.request.AdminRegisterRequest;
 import com.quifers.request.validators.AdminRegisterRequestValidator;
 import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import static com.quifers.request.transformers.AdminTransformer.transform;
+import static com.quifers.response.AdminRegisterResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_REQUEST_VALIDATOR;
 
@@ -32,8 +35,13 @@ public class AdminRegisterServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Admin admin = adminRegisterRequestValidator.validateAdminAccountRequest(request);
+            AdminRegisterRequest registerRequest = new AdminRegisterRequest(request);
+            adminRegisterRequestValidator.validateAdminRegisterRequest(registerRequest);
+            Admin admin = transform(registerRequest);
             adminDao.saveAdmin(admin);
+            String successResponse = getSuccessResponse();
+            response.setContentType("application/json");
+            response.getWriter().write(successResponse);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
