@@ -7,6 +7,7 @@ import com.quifers.dao.*;
 import com.quifers.properties.Environment;
 import com.quifers.properties.QuifersProperties;
 import com.quifers.request.validators.*;
+import com.quifers.request.validators.admin.AdminRegisterRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

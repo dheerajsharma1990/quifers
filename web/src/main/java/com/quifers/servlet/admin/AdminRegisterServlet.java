@@ -3,7 +3,7 @@ package com.quifers.servlet.admin;
 import com.quifers.dao.AdminDao;
 import com.quifers.domain.Admin;
 import com.quifers.request.AdminRegisterRequest;
-import com.quifers.request.validators.AdminRegisterRequestValidator;
+import com.quifers.request.validators.admin.AdminRegisterRequestValidator;
 import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static com.quifers.request.transformers.AdminTransformer.transform;
+import static com.quifers.request.validators.admin.AdminRegisterRequestValidator.validateAdminRegisterRequest;
 import static com.quifers.response.AdminRegisterResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_REQUEST_VALIDATOR;
@@ -36,7 +36,7 @@ public class AdminRegisterServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             AdminRegisterRequest registerRequest = new AdminRegisterRequest(request);
-            adminRegisterRequestValidator.validateAdminRegisterRequest(registerRequest);
+            validateAdminRegisterRequest(registerRequest);
             Admin admin = transform(registerRequest);
             adminDao.saveAdmin(admin);
             String successResponse = getSuccessResponse();
@@ -45,7 +45,7 @@ public class AdminRegisterServlet extends HttpServlet {
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
-        } catch (SQLException e) {
+        } catch (Throwable e) {
             LOGGER.error("Error occurred in registering admin account.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }

@@ -1,37 +1,30 @@
-package com.quifers.request.validators;
+package com.quifers.request.validators.admin;
 
-import com.quifers.request.AdminRegisterRequest;
+import com.quifers.request.validators.InvalidRequestException;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class AdminRegisterRequestValidator {
+public class AdminValidator {
 
-    public void validateAdminRegisterRequest(AdminRegisterRequest registerRequest) throws InvalidRequestException {
-        validateUserId(registerRequest.getUserId());
-        validatePassword(registerRequest.getPassword());
-        validateName(registerRequest.getName());
-        validateName(registerRequest.getName());
-    }
-
-    private void validateUserId(String userId) throws InvalidRequestException {
+    public static void validateUserId(String userId) throws InvalidRequestException {
         if (isEmpty(userId)) {
             throw new InvalidRequestException("User Id cannot be empty.");
         }
     }
 
-    private void validatePassword(String password) throws InvalidRequestException {
+    public static void validatePassword(String password) throws InvalidRequestException {
         if (isEmpty(password)) {
             throw new InvalidRequestException("Password cannot be empty.");
         }
     }
 
-    private void validateName(String name) throws InvalidRequestException {
+    public static void validateName(String name) throws InvalidRequestException {
         if (isEmpty(name)) {
             throw new InvalidRequestException("Name cannot be empty.");
         }
     }
 
-    private void validateMobileNumber(String mobile) throws InvalidRequestException {
+    public static void validateMobileNumber(String mobile) throws InvalidRequestException {
         if (isEmpty(mobile)) {
             throw new InvalidRequestException("Mobile number cannot be empty.");
         }
@@ -49,5 +42,4 @@ public class AdminRegisterRequestValidator {
         }
 
     }
-
 }

@@ -65,7 +65,9 @@ public class EndToEndWebTest {
         int responseCode = sendRequest(connection, request);
 
         //then
-        assertThat(responseCode, is(401));
+        assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"false\"}"));
+
     }
 
     @Test(dependsOnMethods = "shouldRegisterNewAdmin")
@@ -80,7 +82,7 @@ public class EndToEndWebTest {
         //then
         assertThat(responseCode, is(200));
         String response = IOUtils.toString(connection.getInputStream());
-        assertThat(response, is("{\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
+        assertThat(response, is("{\"success\":\"true\",\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
     }
 
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnAdminLogin")
