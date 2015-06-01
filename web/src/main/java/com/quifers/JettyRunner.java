@@ -23,7 +23,9 @@ public class JettyRunner {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        context.setInitParameter("env", "LOCAL");
+        String envProperty = System.getProperty("env");
+        String env = envProperty == null ? "LOCAL" : envProperty.toUpperCase();
+        context.setInitParameter("env", env);
         context.addEventListener(new StartupContextListener());
         context.addServlet(new ServletHolder(new AdminLoginServlet()), "/api/v0/guest/admin/login");
         context.addServlet(new ServletHolder(new AdminRegisterServlet()), "/api/v0/guest/admin/register");

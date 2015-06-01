@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 dependencies {
     compile project(':domain')
@@ -8,6 +9,7 @@ dependencies {
 
 }
 
+mainClassName = 'com.quifers.JettyRunner'
 idea {
     module {
         downloadJavadoc = false
