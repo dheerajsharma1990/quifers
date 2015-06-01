@@ -1,15 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'war'
+apply plugin: 'application'
 
 dependencies {
     compile project(':domain')
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-    testCompile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.0.M2'
+    compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.0.M2'
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.187'
 
 }
 
+mainClassName = 'com.quifers.JettyRunner'
 
 idea {
     module {
