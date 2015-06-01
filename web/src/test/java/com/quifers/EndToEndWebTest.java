@@ -20,7 +20,7 @@ import java.net.URL;
 
 import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
-import static com.quifers.JettyRunner.runJettyServer;
+import static com.quifers.runners.JettyRunner.runJettyServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 

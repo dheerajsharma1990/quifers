@@ -17,12 +17,13 @@ public class DatabaseRunner {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseRunner.class);
     private static Server server;
+
     public static void runDatabaseServer(QuifersProperties quifersProperties) throws Exception {
         server = Server.createTcpServer("-tcpPort", "9092");
         LOGGER.info("Starting database sever...");
         server.start();
         Class.forName(quifersProperties.getDriverClass());
-        Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
+        Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl(), quifersProperties.getUsername(), quifersProperties.getPassword());
         connection.prepareStatement("DROP ALL OBJECTS").execute();
         SqlFilesSorter sqlFilesSorter = new SqlFilesSorter();
         SqlFilesExecutor executor = new SqlFilesExecutor(connection, sqlFilesSorter, new SqlScriptParser());

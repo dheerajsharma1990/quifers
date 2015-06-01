@@ -10,8 +10,6 @@ import java.util.Properties;
 
 public class PropertiesLoader {
 
-    private static final String DRIVER_CLASS = "DRIVER_CLASS";
-    private static final String QUIFERSDB_URL = "QUIFERSDB_URL";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesLoader.class);
 
@@ -21,7 +19,7 @@ public class PropertiesLoader {
         InputStream inputStream = PropertiesLoader.class.getClassLoader().getResourceAsStream(pathToProperties);
         Properties properties = new Properties();
         properties.load(inputStream);
-        return new QuifersProperties(properties.getProperty(DRIVER_CLASS), properties.getProperty(QUIFERSDB_URL));
+        return new QuifersProperties(properties);
     }
 
 }

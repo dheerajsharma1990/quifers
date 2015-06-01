@@ -57,7 +57,7 @@ public class StartupContextListener implements ServletContextListener {
     }
 
     private Connection getDatabaseConnection(QuifersProperties quifersProperties) throws SQLException {
-        return DriverManager.getConnection(quifersProperties.getDbUrl());
+        return DriverManager.getConnection(quifersProperties.getDbUrl(), quifersProperties.getUsername(), quifersProperties.getPassword());
     }
 
     private Environment getEnvironment(ServletContext servletContext) {
