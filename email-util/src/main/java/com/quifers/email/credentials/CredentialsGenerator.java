@@ -4,8 +4,8 @@ import com.quifers.email.credentials.servlet.AccessCodeRequestServlet;
 import com.quifers.email.credentials.servlet.AccessTokenRequestServlet;
 import com.quifers.email.credentials.servlet.StartupContextListener;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.webapp.WebAppContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,18 +14,16 @@ public class CredentialsGenerator {
     private static Logger LOGGER = LoggerFactory.getLogger(CredentialsGenerator.class);
 
     public static Server runJettyServer(int port) throws Exception {
+
         Server server = new Server(port);
-        String webappDirLocation = "src/main/webapp/";
 
-        WebAppContext contextHandler = new WebAppContext();
-
-        contextHandler.setResourceBase(webappDirLocation);
-        contextHandler.setParentLoaderPriority(true);
-        contextHandler.setInitParameter("env", "LOCAL");
-        contextHandler.addEventListener(new StartupContextListener());
-        contextHandler.addServlet(new ServletHolder(new AccessCodeRequestServlet()), "/accessCode");
-        contextHandler.addServlet(new ServletHolder(new AccessTokenRequestServlet()), "/callback");
-        server.setHandler(contextHandler);
+        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+        context.setContextPath("/");
+        context.setInitParameter("env", "LOCAL");
+        context.addEventListener(new StartupContextListener());
+        context.addServlet(new ServletHolder(new AccessCodeRequestServlet()), "/accessCode");
+        context.addServlet(new ServletHolder(new AccessTokenRequestServlet()), "/callback");
+        server.setHandler(context);
 
         server.start();
         LOGGER.info("Web App Started...");
