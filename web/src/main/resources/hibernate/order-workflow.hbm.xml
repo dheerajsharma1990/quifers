@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.quifers.domain.OrderWorkflow" table="orders_workflow">
+
+        <composite-id>
+            <key-property name="orderId" type="java.lang.Long">
+                <column name="order_id"/>
+            </key-property>
+            <key-property name="orderState">
+                <column name="order_state"/>
+                <type name="org.hibernate.type.EnumType">
+                    <param name="enumClass">com.quifers.domain.enums.OrderState</param>
+                </type>
+            </key-property>
+        </composite-id>
+
+        <property name="effectiveTime" type="date">
+            <column name="effective_time"/>
+        </property>
+
+    </class>
+</hibernate-mapping>

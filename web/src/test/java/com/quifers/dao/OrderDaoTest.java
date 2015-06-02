@@ -5,6 +5,8 @@ import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.hibernate.FieldExecutiveDaoImpl;
+import com.quifers.hibernate.SessionFactoryBuilder;
 import com.quifers.properties.Environment;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
@@ -82,8 +84,9 @@ public class OrderDaoTest {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
         runDatabaseServer(quifersProperties);
         Connection connection = DriverManager.getConnection(quifersProperties.getDbUrl());
+
         dao = new OrderDao(connection);
-        fieldExecutiveDao = new FieldExecutiveDao(connection);
+        fieldExecutiveDao = new FieldExecutiveDaoImpl(SessionFactoryBuilder.getSessionFactory(Environment.LOCAL));
     }
 
     @AfterClass

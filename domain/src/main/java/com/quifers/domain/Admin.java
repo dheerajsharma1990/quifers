@@ -4,17 +4,43 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 
 public class Admin {
 
+    private String userId;
+
     private AdminAccount account;
 
     private String name;
 
     private long mobileNumber;
 
+    public Admin() {
+    }
 
     public Admin(AdminAccount account, String name, long mobileNumber) {
+        this.userId = account.getUserId();
         this.account = account;
         this.name = name;
         this.mobileNumber = mobileNumber;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setAccount(AdminAccount account) {
+        this.account = account;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMobileNumber(long mobileNumber) {
+        this.mobileNumber = mobileNumber;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+
     }
 
     public AdminAccount getAccount() {

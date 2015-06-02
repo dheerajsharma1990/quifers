@@ -4,6 +4,7 @@ import com.quifers.domain.FieldExecutive;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class FieldExecutiveResponse {
@@ -20,7 +21,7 @@ public class FieldExecutiveResponse {
         return object.toString();
     }
 
-    public String getAllFieldExecutivesResponse(List<FieldExecutive> fieldExecutives) {
+    public String getAllFieldExecutivesResponse(Collection<FieldExecutive> fieldExecutives) {
         List<FieldExecutiveListAll> listAlls = new ArrayList<>();
         for (FieldExecutive fieldExecutive : fieldExecutives) {
             listAlls.add(new FieldExecutiveListAll(fieldExecutive.getAccount().getUserId(),fieldExecutive.getName(),fieldExecutive.getMobileNumber()));

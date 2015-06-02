@@ -3,7 +3,6 @@ package com.quifers.servlet.admin;
 import com.quifers.dao.AdminDao;
 import com.quifers.domain.Admin;
 import com.quifers.request.AdminRegisterRequest;
-import com.quifers.request.validators.admin.AdminRegisterRequestValidator;
 import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,17 +17,14 @@ import static com.quifers.request.transformers.AdminTransformer.transform;
 import static com.quifers.request.validators.admin.AdminRegisterRequestValidator.validateAdminRegisterRequest;
 import static com.quifers.response.AdminRegisterResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_DAO;
-import static com.quifers.servlet.listener.StartupContextListener.ADMIN_REQUEST_VALIDATOR;
 
 public class AdminRegisterServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminRegisterServlet.class);
-    private AdminRegisterRequestValidator adminRegisterRequestValidator;
     private AdminDao adminDao;
 
     @Override
     public void init() throws ServletException {
-        adminRegisterRequestValidator = (AdminRegisterRequestValidator) getServletContext().getAttribute(ADMIN_REQUEST_VALIDATOR);
         adminDao = (AdminDao) getServletContext().getAttribute(ADMIN_DAO);
     }
 

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Collection;
 
 import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
 
@@ -29,7 +29,7 @@ public class FieldExecutiveListAllServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            List<FieldExecutive> allFieldExecutives = fieldExecutiveDao.getAllFieldExecutives();
+            Collection<FieldExecutive> allFieldExecutives = fieldExecutiveDao.getAllFieldExecutives();
             response.setContentType("application/json");
             response.getWriter().write(new FieldExecutiveResponse().getAllFieldExecutivesResponse(allFieldExecutives));
         } catch (Exception e) {

@@ -6,13 +6,19 @@ import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToStrin
 
 public class FieldExecutive implements Serializable {
 
+    private String fieldExecutiveId;
+
     private FieldExecutiveAccount account;
 
     private String name;
 
     private long mobileNumber;
 
+    public FieldExecutive() {
+    }
+
     public FieldExecutive(FieldExecutiveAccount account, String name, long mobileNumber) {
+        setFieldExecutiveId(account.getUserId());
         this.account = account;
         this.name = name;
         this.mobileNumber = mobileNumber;
@@ -28,6 +34,18 @@ public class FieldExecutive implements Serializable {
 
     public long getMobileNumber() {
         return mobileNumber;
+    }
+
+    public void setAccount(FieldExecutiveAccount account) {
+        this.account = account;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMobileNumber(long mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 
     @Override
@@ -52,5 +70,13 @@ public class FieldExecutive implements Serializable {
     @Override
     public String toString() {
         return reflectionToString(this);
+    }
+
+    public String getFieldExecutiveId() {
+        return fieldExecutiveId;
+    }
+
+    public void setFieldExecutiveId(String fieldExecutiveId) {
+        this.fieldExecutiveId = fieldExecutiveId;
     }
 }
