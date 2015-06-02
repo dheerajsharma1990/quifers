@@ -15,6 +15,6 @@
         <property name="mobileNumber" type="java.lang.Long">
             <column name="mobile_number"/>
         </property>
-        <one-to-one name="account" class="com.quifers.domain.FieldExecutiveAccount" constrained="true"/>
+        <one-to-one name="account" class="com.quifers.domain.FieldExecutiveAccount" constrained="true" lazy="false" fetch="select" />
     </class>
 </hibernate-mapping>

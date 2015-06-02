@@ -16,7 +16,7 @@
             </key-property>
         </composite-id>
 
-        <property name="effectiveTime" type="date">
+        <property name="effectiveTime" type="timestamp">
             <column name="effective_time"/>
         </property>
 

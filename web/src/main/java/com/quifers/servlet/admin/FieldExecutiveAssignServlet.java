@@ -31,7 +31,7 @@ public class FieldExecutiveAssignServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             FieldExecutiveAssignRequest assignRequest = new FieldExecutiveAssignRequest(request);
-            orderDao.assignFieldExecutiveToOrder(valueOf(assignRequest.getOrderId()), assignRequest.getFieldExecutiveId());
+            orderDao.assignFieldExecutive(valueOf(assignRequest.getOrderId()), assignRequest.getFieldExecutiveId());
             response.setContentType("application/json");
             response.getWriter().write(getSuccessResponse());
         } catch (InvalidRequestException e) {

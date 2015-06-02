@@ -48,7 +48,7 @@ public class Order implements Serializable {
 
     private boolean dropOffLiftWorking;
 
-    private String fieldExecutiveId;
+    private FieldExecutive fieldExecutive;
 
     private Collection<OrderWorkflow> orderWorkflows;
 
@@ -60,7 +60,7 @@ public class Order implements Serializable {
                  String fromAddressSociety, String fromAddressArea, String fromAddressCity, String toAddressHouseNumber,
                  String toAddressSociety, String toAddressArea, String toAddressCity, int labours, String estimate,
                  String distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
-                 String fieldExecutiveId, Collection<OrderWorkflow> orderWorkflows) {
+                 FieldExecutive fieldExecutive, Collection<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
@@ -81,7 +81,7 @@ public class Order implements Serializable {
         this.pickupLiftWorking = pickupLiftWorking;
         this.dropOffFloors = dropOffFloors;
         this.dropOffLiftWorking = dropOffLiftWorking;
-        this.fieldExecutiveId = fieldExecutiveId;
+        this.fieldExecutive = fieldExecutive;
         this.orderWorkflows = orderWorkflows;
     }
 
@@ -165,8 +165,8 @@ public class Order implements Serializable {
         return dropOffLiftWorking;
     }
 
-    public String getFieldExecutiveId() {
-        return fieldExecutiveId;
+    public FieldExecutive getFieldExecutive() {
+        return fieldExecutive;
     }
 
     public Collection<OrderWorkflow> getOrderWorkflows() {
@@ -253,8 +253,8 @@ public class Order implements Serializable {
         this.dropOffLiftWorking = dropOffLiftWorking;
     }
 
-    public void setFieldExecutiveId(String fieldExecutiveId) {
-        this.fieldExecutiveId = fieldExecutiveId;
+    public void setFieldExecutive(FieldExecutive fieldExecutive) {
+        this.fieldExecutive = fieldExecutive;
     }
 
     public void setOrderWorkflows(Collection<OrderWorkflow> orderWorkflows) {
@@ -285,7 +285,7 @@ public class Order implements Serializable {
         if (distance != null ? !distance.equals(order.distance) : order.distance != null) return false;
         if (email != null ? !email.equals(order.email) : order.email != null) return false;
         if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
-        if (fieldExecutiveId != null ? !fieldExecutiveId.equals(order.fieldExecutiveId) : order.fieldExecutiveId != null)
+        if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
             return false;
         if (fromAddressArea != null ? !fromAddressArea.equals(order.fromAddressArea) : order.fromAddressArea != null)
             return false;

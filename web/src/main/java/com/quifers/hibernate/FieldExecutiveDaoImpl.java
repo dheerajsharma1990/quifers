@@ -16,23 +16,32 @@ public class FieldExecutiveDaoImpl implements FieldExecutiveDao {
         this.sessionFactory = sessionFactory;
     }
 
+    @Override
     public void saveFieldExecutive(FieldExecutive fieldExecutive) {
-        Session session = sessionFactory.openSession();
-        Transaction transaction = session.beginTransaction();
-        session.save(fieldExecutive.getAccount());
-        session.save(fieldExecutive);
-        transaction.commit();
-        session.close();
+        if (fieldExecutive != null) {
+            Session session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.save(fieldExecutive.getAccount());
+            session.save(fieldExecutive);
+            transaction.commit();
+            session.close();
+        }
     }
 
+    @Override
     public FieldExecutive getFieldExecutive(String userId) {
         Session session = sessionFactory.openSession();
-        return (FieldExecutive) session.get(FieldExecutive.class, userId);
+        FieldExecutive fieldExecutive = (FieldExecutive) session.get(FieldExecutive.class, userId);
+        session.close();
+        return fieldExecutive;
     }
 
+    @Override
     public Collection<FieldExecutive> getAllFieldExecutives() {
         Session session = sessionFactory.openSession();
-        return session.createCriteria(FieldExecutive.class).list();
+        Collection<FieldExecutive> fieldExecutives = session.createCriteria(FieldExecutive.class).list();
+        session.close();
+        return fieldExecutives;
     }
 
 }

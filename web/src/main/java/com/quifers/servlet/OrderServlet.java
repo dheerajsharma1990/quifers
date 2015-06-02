@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.SQLException;
 
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_BOOK_REQUEST_VALIDATOR;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
@@ -35,12 +34,12 @@ public class OrderServlet extends HttpServlet {
         try {
             Order order = requestValidator.validateRequest(request);
             orderDao.saveOrder(order);
-        } catch (SQLException e) {
-            LOGGER.error("Error in saving order.", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to book order.");
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("Error in saving order.", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Unable to book order.");
         }
     }
 

@@ -14,6 +14,7 @@ public class AdminDaoImpl implements AdminDao {
         this.sessionFactory = sessionFactory;
     }
 
+    @Override
     public void saveAdmin(Admin admin) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -23,6 +24,7 @@ public class AdminDaoImpl implements AdminDao {
         session.close();
     }
 
+    @Override
     public Admin getAdmin(String userId) {
         Session session = sessionFactory.openSession();
         return (Admin) session.get(Admin.class, userId);
