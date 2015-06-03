@@ -1,5 +1,8 @@
 package com.quifers.email.helpers;
 
+import com.quifers.dao.OrderDao;
+import com.quifers.dao.PriceDao;
+import com.quifers.domain.Order;
 import com.quifers.domain.Price;
 
 import javax.mail.Message;
@@ -13,16 +16,25 @@ import java.util.Properties;
 
 public class PriceEmailCreator implements EmailCreator {
 
+    private final PriceDao priceDao;
+    private final OrderDao orderDao;
+
+    public PriceEmailCreator(OrderDao orderDao, PriceDao priceDao) {
+        this.orderDao = orderDao;
+        this.priceDao = priceDao;
+    }
+
     @Override
-    public MimeMessage createEmail(Object object, String fromAddress) throws UnsupportedEncodingException, MessagingException {
-        Price price = (Price) object;
+    public MimeMessage createEmail(long orderId, String fromAddress) throws UnsupportedEncodingException, MessagingException {
+        Order order = orderDao.getOrder(orderId);
+        Price price = priceDao.getPrice(orderId);
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
         MimeMessage emailMessage = new MimeMessage(session);
 
         emailMessage.setFrom(getFromAddress(fromAddress));
-        emailMessage.addRecipient(Message.RecipientType.TO, getToAddress(price));
+        emailMessage.addRecipient(Message.RecipientType.TO, getToAddress(order.getEmail()));
         emailMessage.setSubject(getSubject(price));
         emailMessage.setContent(getBody(price), "text/html");
         emailMessage.addHeader("Content-Type", "text/html");
@@ -33,7 +45,7 @@ public class PriceEmailCreator implements EmailCreator {
     private String getBody(Price price) {
         return "<html>\n" +
                 "<body>\n" +
-                "Hello ,"+
+                "Hello ," +
                 "<br>\n" +
                 "We are pleased to have your order served by quifers.Below are the details.<br>\n" +
                 "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
@@ -55,8 +67,8 @@ public class PriceEmailCreator implements EmailCreator {
         return new InternetAddress(fromAddress, "Team Quifers");
     }
 
-    private InternetAddress getToAddress(Price price) throws AddressException {
-        return new InternetAddress("dheerajsharma1990@gmail.com");
+    private InternetAddress getToAddress(String address) throws AddressException {
+        return new InternetAddress(address);
     }
 
     private String getSubject(Price price) {

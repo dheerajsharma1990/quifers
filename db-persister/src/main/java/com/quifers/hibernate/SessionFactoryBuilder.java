@@ -18,6 +18,9 @@ public class SessionFactoryBuilder {
     }
 
     public static SessionFactory getSessionFactory(Environment environment) {
-        return sessionFactory == null ? buildSessionFactory(environment) : sessionFactory;
+        if(sessionFactory == null) {
+            sessionFactory = buildSessionFactory(environment);
+        }
+        return sessionFactory;
     }
 }

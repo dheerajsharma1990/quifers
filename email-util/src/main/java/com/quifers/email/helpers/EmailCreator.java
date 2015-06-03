@@ -5,5 +5,5 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 
 public interface EmailCreator {
-    MimeMessage createEmail(Object object,String fromAddress) throws UnsupportedEncodingException, MessagingException;
+    MimeMessage createEmail(long orderId,String fromAddress) throws UnsupportedEncodingException, MessagingException;
 }

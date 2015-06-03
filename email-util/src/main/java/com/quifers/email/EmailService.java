@@ -1,5 +1,8 @@
 package com.quifers.email;
 
+import com.quifers.dao.FieldExecutiveDao;
+import com.quifers.dao.OrderDao;
+import com.quifers.dao.PriceDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.*;
@@ -11,8 +14,13 @@ import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
+import com.quifers.hibernate.FieldExecutiveDaoImpl;
+import com.quifers.hibernate.OrderDaoImpl;
+import com.quifers.hibernate.PriceDaoImpl;
+import com.quifers.hibernate.SessionFactoryBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.io.FileUtils;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,26 +39,31 @@ public class EmailService {
 
     public static void main(String[] args) throws JMSException, IOException, MessagingException {
         LOGGER.info("Starting quifers email service... ");
-        EmailUtilProperties properties = loadEmailUtilProperties();
+        Environment environment = Environment.valueOf(System.getProperty("env"));
+        EmailUtilProperties properties = loadEmailUtilProperties(environment);
 
         initialiseCredentialsService(jsonParser);
+        SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
+
         CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
         scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
 
         MessageConsumer messageConsumer = connectToActiveMq(properties);
-        receiveOrders(properties, messageConsumer);
+        receiveOrders(properties, messageConsumer, sessionFactory);
     }
 
-    private static EmailUtilProperties loadEmailUtilProperties() throws IOException {
-        Environment environment = Environment.valueOf(System.getProperty("env"));
+    private static EmailUtilProperties loadEmailUtilProperties(Environment environment) throws IOException {
         return new PropertiesLoader().getEmailUtilProperties(environment);
     }
 
-    private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer) throws JMSException, IOException, MessagingException {
+    private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, SessionFactory sessionFactory) throws JMSException, IOException, MessagingException {
+        FieldExecutiveDao fieldExecutiveDao = new FieldExecutiveDaoImpl(sessionFactory);
+        OrderDao orderDao = new OrderDaoImpl(sessionFactory, fieldExecutiveDao);
+        PriceDao priceDao = new PriceDaoImpl(sessionFactory);
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE);
+        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE, new EmailCreatorFactory(orderDao, priceDao));
         orderReceiver.receiveOrders();
     }
 
