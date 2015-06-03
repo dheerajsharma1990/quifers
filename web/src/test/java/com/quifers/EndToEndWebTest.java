@@ -1,5 +1,6 @@
 package com.quifers;
 
+import com.quifers.domain.enums.OrderState;
 import com.quifers.properties.Environment;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
@@ -39,7 +40,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldRegisterNewAdmin")
@@ -66,7 +67,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"false\"}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"false\"}"));
 
     }
 
@@ -95,7 +96,7 @@ public class EndToEndWebTest {
         int responseCode = sendRequest(connection, request);
 
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
@@ -130,7 +131,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
@@ -151,15 +152,32 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnFieldExecutiveLogin")
     public void shouldChangeOrderState() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/update/order/state");
-        String request = buildChangeOrderRequest();
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/update/state");
+        String request = buildChangeOrderRequest(OrderState.TRIP_STARTED);
 
         //when
         int responseCode = sendRequest(connection, request);
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()),is("{\"success\":\"true\"}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
+    }
+
+    @Test(dependsOnMethods = "shouldChangeOrderState")
+    public void shouldGeneratePrice() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/create/price");
+        sendRequest(getConnection(BASE_URL + "/api/v0/executive/order/update/state"), buildChangeOrderRequest(OrderState.TRANSIT_STARTED));
+        sendRequest(getConnection(BASE_URL + "/api/v0/executive/order/update/state"), buildChangeOrderRequest(OrderState.TRANSIT_ENDED));
+        sendRequest(getConnection(BASE_URL + "/api/v0/executive/order/update/state"), buildChangeOrderRequest(OrderState.TRIP_ENDED));
+        String request = buildCreatePriceRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":600,\"labourCost\":0,\"waitingCost\":0}"));
     }
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
@@ -208,11 +226,17 @@ public class EndToEndWebTest {
                 .add("password", "mypassword").build();
     }
 
-    private String buildChangeOrderRequest() throws UnsupportedEncodingException {
+    private String buildChangeOrderRequest(OrderState state) throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("order_id","1")
-                .add("order_state","TRIP_STARTED").build();
+                .add("order_id", "1")
+                .add("order_state", state.name()).build();
+    }
+
+    private String buildCreatePriceRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("order_id", "1").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {
@@ -249,22 +273,22 @@ public class EndToEndWebTest {
         return new ParametersBuilder().add("name_label", "Dheeraj Sharma")
                 .add("number_label", "9999770595")
                 .add("emailid", "dheerajsharma1990@gmail.com")
-                .add("vehicle_list_label","Tata 407")
+                .add("vehicle_list_label", "Tata 407")
                 .add("house_no_pick", "1234")
-                .add("society_name_pick","FROM Society")
-                .add("area_pick","Some Area")
-                .add("city_pick","Some City")
+                .add("society_name_pick", "FROM Society")
+                .add("area_pick", "Some Area")
+                .add("city_pick", "Some City")
                 .add("house_no_drop", "4567")
-                .add("society_name_drop","To Society")
-                .add("area_drop","To Area")
-                .add("city_drop","To City")
-                .add("labour","0")
-                .add("estimate_label","12 Min")
-                .add("distance_label","12 Km")
-                .add("floor_no_pick","1")
-                .add("lift_pickup","false")
-                .add("floor_no_drop","2")
-                .add("lift_drop","true")
+                .add("society_name_drop", "To Society")
+                .add("area_drop", "To Area")
+                .add("city_drop", "To City")
+                .add("labour", "0")
+                .add("estimate_label", "12 Min")
+                .add("distance_label", "12")
+                .add("floor_no_pick", "1")
+                .add("lift_pickup", "false")
+                .add("floor_no_drop", "2")
+                .add("lift_drop", "true")
                 .add("date_time_label", "22/09/1990 10:20:30").build();
     }
 }

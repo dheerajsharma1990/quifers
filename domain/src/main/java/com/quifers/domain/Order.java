@@ -1,10 +1,12 @@
 package com.quifers.domain;
 
+import com.quifers.domain.enums.OrderState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Set;
 
 public class Order implements Serializable {
 
@@ -38,7 +40,7 @@ public class Order implements Serializable {
 
     private String estimate;
 
-    private String distance;
+    private int distance;
 
     private int pickupFloors;
 
@@ -50,7 +52,7 @@ public class Order implements Serializable {
 
     private FieldExecutive fieldExecutive;
 
-    private Collection<OrderWorkflow> orderWorkflows;
+    private Set<OrderWorkflow> orderWorkflows;
 
     public Order() {
 
@@ -59,8 +61,8 @@ public class Order implements Serializable {
     public Order(long orderId, String name, long mobileNumber, String email, String vehicle, String fromAddressHouseNumber,
                  String fromAddressSociety, String fromAddressArea, String fromAddressCity, String toAddressHouseNumber,
                  String toAddressSociety, String toAddressArea, String toAddressCity, int labours, String estimate,
-                 String distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
-                 FieldExecutive fieldExecutive, Collection<OrderWorkflow> orderWorkflows) {
+                 int distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
+                 FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
@@ -145,7 +147,7 @@ public class Order implements Serializable {
         return estimate;
     }
 
-    public String getDistance() {
+    public int getDistance() {
         return distance;
     }
 
@@ -233,7 +235,7 @@ public class Order implements Serializable {
         this.estimate = estimate;
     }
 
-    public void setDistance(String distance) {
+    public void setDistance(int distance) {
         this.distance = distance;
     }
 
@@ -257,7 +259,7 @@ public class Order implements Serializable {
         this.fieldExecutive = fieldExecutive;
     }
 
-    public void setOrderWorkflows(Collection<OrderWorkflow> orderWorkflows) {
+    public void setOrderWorkflows(Set<OrderWorkflow> orderWorkflows) {
         this.orderWorkflows = orderWorkflows;
     }
 
@@ -266,6 +268,41 @@ public class Order implements Serializable {
             orderWorkflows = new HashSet<>();
         }
         this.orderWorkflows.add(orderWorkflow);
+    }
+
+    public int getWaitingMinutes() {
+        OrderWorkflow tripStarted = getWorkflow(OrderState.TRIP_STARTED);
+        OrderWorkflow transitStarted = getWorkflow(OrderState.TRANSIT_STARTED);
+        OrderWorkflow transitEnded = getWorkflow(OrderState.TRANSIT_ENDED);
+        OrderWorkflow tripEnded = getWorkflow(OrderState.TRIP_ENDED);
+        long startTripTime = tripStarted.getEffectiveTime().getTime();
+        long startTransitTime = transitStarted.getEffectiveTime().getTime();
+        long endTransitTime = transitEnded.getEffectiveTime().getTime();
+        long endTripTime = tripEnded.getEffectiveTime().getTime();
+        return (int) (((startTransitTime - startTripTime) + (endTripTime - endTransitTime)) / (1000 * 60));
+    }
+
+    public OrderWorkflow getWorkflow(OrderState orderState) {
+        for (OrderWorkflow workflow : orderWorkflows) {
+            if (orderState.equals(workflow.getOrderState())) {
+                return workflow;
+            }
+        }
+        return null;
+    }
+
+    public int getNonWorkingPickUpFloors() {
+        if (pickupLiftWorking) {
+            return pickupFloors;
+        }
+        return 0;
+    }
+
+    public int getNonWorkingDropOffFloors() {
+        if (dropOffLiftWorking) {
+            return dropOffFloors;
+        }
+        return 0;
     }
 
     @Override
@@ -282,7 +319,7 @@ public class Order implements Serializable {
         if (orderId != order.orderId) return false;
         if (pickupFloors != order.pickupFloors) return false;
         if (pickupLiftWorking != order.pickupLiftWorking) return false;
-        if (distance != null ? !distance.equals(order.distance) : order.distance != null) return false;
+        if (distance != order.distance) return false;
         if (email != null ? !email.equals(order.email) : order.email != null) return false;
         if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
         if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)

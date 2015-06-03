@@ -63,7 +63,7 @@
             <column name="estimate" />
         </property>
 
-        <property name="distance" type="string">
+        <property name="distance" type="integer">
             <column name="distance" />
         </property>
 
@@ -85,7 +85,7 @@
 
         <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="all" lazy="false" fetch="select" />
 
-        <set name="orderWorkflows" table="orders_workflow" inverse="true" lazy="false" fetch="select">
+        <set name="orderWorkflows" table="orders_workflow" inverse="true" cascade="all" fetch="join">
             <key>
                 <column name="order_id" not-null="true"/>
             </key>

@@ -55,6 +55,11 @@
                 <servlet-class>com.quifers.servlet.executives.ChangeOrderStateServlet</servlet-class>
         </servlet>
 
+        <servlet>
+                <servlet-name>generatePriceServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.executives.GeneratePriceServlet</servlet-class>
+        </servlet>
+
         <filter-mapping>
                 <filter-name>adminAuthenticationFilter</filter-name>
                 <url-pattern>/api/v0/admin/*</url-pattern>
@@ -104,7 +109,12 @@
 
         <servlet-mapping>
                 <servlet-name>changeOrderStateServlet</servlet-name>
-                <url-pattern>/api/v0/executive/update/order/state</url-pattern>
+                <url-pattern>/api/v0/executive/order/update/state</url-pattern>
+        </servlet-mapping>
+
+        <servlet-mapping>
+                <servlet-name>generatePriceServlet</servlet-name>
+                <url-pattern>/api/v0/executive/order/create/price</url-pattern>
         </servlet-mapping>
 
 </web-app>

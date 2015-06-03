@@ -43,7 +43,7 @@ public class OrderBookRequestValidator {
         int labours = validateAndGetInteger(request, "labour");
 
         String estimate = emptyCheckValidator(request, "estimate_label", "Estimate");
-        String distance = emptyCheckValidator(request, "distance_label", "Distance");
+        int distance = validateAndGetInteger(request, "distance_label");
 
         int pickUpFloors = validateAndGetInteger(request, "floor_no_pick");
         boolean pickupLiftWorking = validateAndGetBoolean(request, "lift_pickup");
