@@ -5,7 +5,7 @@ import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.*;
 import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.properties.EmailUtilProperties;
-import com.quifers.email.properties.Environment;
+import com.quifers.Environment;
 import com.quifers.email.properties.PropertiesLoader;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;

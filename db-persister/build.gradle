@@ -1,0 +1,14 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+dependencies {
+    compile project(':domain')
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
+}
+
+idea {
+    module {
+        downloadJavadoc = false
+        downloadSources = false
+    }
+}

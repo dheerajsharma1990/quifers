@@ -1,6 +1,6 @@
 package com.quifers.hibernate;
 
-import com.quifers.properties.Environment;
+import com.quifers.Environment;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;

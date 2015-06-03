@@ -3,7 +3,7 @@ package com.quifers.runners;
 import com.quifers.db.SqlFilesExecutor;
 import com.quifers.db.SqlFilesSorter;
 import com.quifers.db.SqlScriptParser;
-import com.quifers.properties.Environment;
+import com.quifers.Environment;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
 import org.h2.tools.Server;
@@ -27,7 +27,7 @@ public class DatabaseRunner {
         connection.prepareStatement("DROP ALL OBJECTS").execute();
         SqlFilesSorter sqlFilesSorter = new SqlFilesSorter();
         SqlFilesExecutor executor = new SqlFilesExecutor(connection, sqlFilesSorter, new SqlScriptParser());
-        executor.execute("./src/main/resources/sql");
+        executor.execute("../db-persister/src/main/resources/sql");
     }
 
     public static void stopDatabaseServer() {

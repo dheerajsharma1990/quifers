@@ -7,7 +7,7 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.hibernate.FieldExecutiveDaoImpl;
 import com.quifers.hibernate.OrderDaoImpl;
 import com.quifers.hibernate.SessionFactoryBuilder;
-import com.quifers.properties.Environment;
+import com.quifers.Environment;
 import org.hibernate.SessionFactory;
 
 import java.io.UnsupportedEncodingException;

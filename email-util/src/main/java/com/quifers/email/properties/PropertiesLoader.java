@@ -1,5 +1,6 @@
 package com.quifers.email.properties;
 
+import com.quifers.Environment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
