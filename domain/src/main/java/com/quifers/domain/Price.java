@@ -56,6 +56,42 @@ public class Price implements Serializable {
         return orderId;
     }
 
+    public void setOrderId(long orderId) {
+        this.orderId = orderId;
+    }
+
+    public int getWaitingMinutes() {
+        return waitingMinutes;
+    }
+
+    public void setWaitingMinutes(int waitingMinutes) {
+        this.waitingMinutes = waitingMinutes;
+    }
+
+    public int getTransitKilometres() {
+        return transitKilometres;
+    }
+
+    public void setTransitKilometres(int transitKilometres) {
+        this.transitKilometres = transitKilometres;
+    }
+
+    public int getLabours() {
+        return labours;
+    }
+
+    public void setLabours(int labours) {
+        this.labours = labours;
+    }
+
+    public int getNonWorkingLifts() {
+        return nonWorkingLifts;
+    }
+
+    public void setNonWorkingLifts(int nonWorkingLifts) {
+        this.nonWorkingLifts = nonWorkingLifts;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

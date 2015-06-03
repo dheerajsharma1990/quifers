@@ -1,34 +1,33 @@
 package com.quifers.hibernate;
 
-import com.quifers.dao.AdminDao;
-import com.quifers.domain.Admin;
+import com.quifers.dao.PriceDao;
+import com.quifers.domain.Price;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
-public class AdminDaoImpl implements AdminDao {
+public class PriceDaoImpl implements PriceDao {
 
     private final SessionFactory sessionFactory;
 
-    public AdminDaoImpl(SessionFactory sessionFactory) {
+    public PriceDaoImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
     @Override
-    public void saveAdmin(Admin admin) {
+    public void savePrice(Price price) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
-        session.save(admin.getAccount());
-        session.save(admin);
+        session.save(price);
         transaction.commit();
         session.close();
     }
 
     @Override
-    public Admin getAdmin(String userId) {
+    public Price getPrice(long orderId) {
         Session session = sessionFactory.openSession();
-        Admin admin = (Admin) session.get(Admin.class, userId);
+        Price price = (Price) session.get(Price.class, orderId);
         session.close();
-        return admin;
+        return price;
     }
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="com.quifers.domain.Price" table="price">
+        <id name="orderId" type="long">
+            <column name="order_id" />
+        </id>
+        <property name="waitingMinutes" type="integer">
+            <column name="waiting_minutes" />
+        </property>
+
+        <property name="transitKilometres" type="integer">
+            <column name="transit_kilometres" />
+        </property>
+
+        <property name="labours" type="integer">
+            <column name="labours" />
+        </property>
+
+        <property name="nonWorkingLifts" type="integer">
+            <column name="non_working_lifts" />
+        </property>
+
+    </class>
+</hibernate-mapping>

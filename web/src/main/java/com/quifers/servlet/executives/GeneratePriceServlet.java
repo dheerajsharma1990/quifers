@@ -1,6 +1,7 @@
 package com.quifers.servlet.executives;
 
 import com.quifers.dao.OrderDao;
+import com.quifers.dao.PriceDao;
 import com.quifers.domain.Order;
 import com.quifers.domain.Price;
 import com.quifers.request.GeneratePriceRequest;
@@ -16,17 +17,20 @@ import java.io.IOException;
 
 import static com.quifers.response.PriceResponse.getPriceResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
+import static com.quifers.servlet.listener.StartupContextListener.PRICE_DAO;
 
 public class GeneratePriceServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneratePriceServlet.class);
 
     private OrderDao orderDao;
+    private PriceDao priceDao;
 
 
     @Override
     public void init() throws ServletException {
         this.orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
+        this.priceDao = (PriceDao) getServletContext().getAttribute(PRICE_DAO);
     }
 
     @Override
@@ -35,6 +39,7 @@ public class GeneratePriceServlet extends HttpServlet {
             GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
             Order order = orderDao.getOrder(priceRequest.getOrderId());
             Price price = new Price(order.getOrderId(), order.getWaitingMinutes(), order.getDistance(), order.getLabours(), order.getNonWorkingPickUpFloors() + order.getNonWorkingDropOffFloors());
+            priceDao.savePrice(price);
             response.setContentType("application/json");
             response.getWriter().write(getPriceResponse(price));
         } catch (InvalidRequestException e) {

@@ -6,10 +6,7 @@ import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.dao.AdminDao;
 import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.hibernate.AdminDaoImpl;
-import com.quifers.hibernate.FieldExecutiveDaoImpl;
-import com.quifers.hibernate.OrderDaoImpl;
-import com.quifers.hibernate.SessionFactoryBuilder;
+import com.quifers.hibernate.*;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
@@ -37,6 +34,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_DAO = "ADMIN_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
+    public static final String PRICE_DAO = "PRICE_DAO";
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
@@ -93,6 +91,7 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(adminDao));
         servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(fieldExecutiveDao));
         servletContext.setAttribute(ORDER_DAO, new OrderDaoImpl(sessionFactory, fieldExecutiveDao));
+        servletContext.setAttribute(PRICE_DAO, new PriceDaoImpl(sessionFactory));
     }
 
     @Override
