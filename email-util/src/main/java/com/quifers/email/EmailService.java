@@ -49,7 +49,7 @@ public class EmailService {
     private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer) throws JMSException, IOException, MessagingException {
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
-        EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder, new EmailCreator());
+        EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
         OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE);
         orderReceiver.receiveOrders();
     }

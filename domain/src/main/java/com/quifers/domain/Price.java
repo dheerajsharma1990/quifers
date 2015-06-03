@@ -52,6 +52,10 @@ public class Price implements Serializable {
         return 350 * (nonWorkingLifts - 2);
     }
 
+    public long getOrderId() {
+        return orderId;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
