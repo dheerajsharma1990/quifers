@@ -13,12 +13,17 @@ public class PropertiesLoader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesLoader.class);
 
-    public EmailUtilProperties getEmailUtilProperties(Environment environment) throws IOException {
+    public static EmailUtilProperties loadEmailUtilProperties(Environment environment) throws IOException {
         LOGGER.info("Loading email util properties for environment: [{}]", environment);
-        String pathToProperties = "properties" + File.separator + environment.name().toLowerCase() + File.separator + "email-util.properties";
+        String pathToProperties = getPropertyFileLocation(environment);
         InputStream inputStream = PropertiesLoader.class.getClassLoader().getResourceAsStream(pathToProperties);
         Properties properties = new Properties();
         properties.load(inputStream);
         return new EmailUtilProperties(properties);
     }
+
+    private static String getPropertyFileLocation(Environment environment) {
+        return "properties" + File.separator + environment.name().toLowerCase() + File.separator + "email-util.properties";
+    }
+
 }

@@ -1,10 +1,9 @@
 package com.quifers.email.credentials.servlet;
 
+import com.quifers.Environment;
 import com.quifers.email.builders.AccessCodeRequestBuilder;
 import com.quifers.email.builders.AccessTokenRequestBuilder;
 import com.quifers.email.properties.EmailUtilProperties;
-import com.quifers  .Environment;
-import com.quifers.email.properties.PropertiesLoader;
 import com.quifers.email.util.HttpRequestSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.IOException;
+
+import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
 
 public class StartupContextListener implements ServletContextListener {
 
@@ -35,9 +36,8 @@ public class StartupContextListener implements ServletContextListener {
 
     private void initialiseProperties(ServletContext servletContext) {
         try {
-            PropertiesLoader propertiesLoader = new PropertiesLoader();
             Environment environment = Environment.valueOf(servletContext.getInitParameter("env"));
-            EmailUtilProperties emailUtilProperties = propertiesLoader.getEmailUtilProperties(environment);
+            EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
             servletContext.setAttribute(EMAIL_UTIL_PROPERTIES, emailUtilProperties);
         } catch (IOException e) {
             e.printStackTrace();

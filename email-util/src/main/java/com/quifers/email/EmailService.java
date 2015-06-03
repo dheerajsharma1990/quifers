@@ -1,5 +1,6 @@
 package com.quifers.email;
 
+import com.quifers.Environment;
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.dao.PriceDao;
@@ -8,8 +9,6 @@ import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.*;
 import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.properties.EmailUtilProperties;
-import com.quifers.Environment;
-import com.quifers.email.properties.PropertiesLoader;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
@@ -31,29 +30,40 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Timer;
 
+import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
+
 public class EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
 
     private static JsonParser jsonParser = new JsonParser();
 
-    public static void main(String[] args) throws JMSException, IOException, MessagingException {
-        LOGGER.info("Starting quifers email service... ");
-        Environment environment = Environment.valueOf(System.getProperty("env"));
+    public static void main(String[] args) throws Exception {
+        LOGGER.info("Starting quifers email service...");
+        Environment environment = getEnvironment();
         EmailUtilProperties properties = loadEmailUtilProperties(environment);
 
         initialiseCredentialsService(jsonParser);
-        SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
 
         CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
         scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
 
+        SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
         MessageConsumer messageConsumer = connectToActiveMq(properties);
         receiveOrders(properties, messageConsumer, sessionFactory);
     }
 
-    private static EmailUtilProperties loadEmailUtilProperties(Environment environment) throws IOException {
-        return new PropertiesLoader().getEmailUtilProperties(environment);
+    private static Environment getEnvironment() throws Exception {
+        String env = System.getProperty("env");
+        if (env == null) {
+            throw new Exception("No environment specified.Kindly look at the Environment enum for possible values.");
+        }
+        try {
+            Environment environment = Environment.valueOf(env.toUpperCase());
+            return environment;
+        } catch (IllegalArgumentException e) {
+            throw new Exception("No such environment exists [" + env + "].");
+        }
     }
 
     private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, SessionFactory sessionFactory) throws JMSException, IOException, MessagingException {
@@ -88,7 +98,7 @@ public class EmailService {
     public static void initialiseCredentialsService(JsonParser jsonParser) throws IOException {
         File file = new File("./target/credentials.json");
         if (!file.exists()) {
-            throw new FileNotFoundException(file.getName());
+            throw new FileNotFoundException("Credentials file not present.Kindly generate it." + file.getName());
         }
         Credentials credentials = jsonParser.parse(FileUtils.readFileToString(file));
         CredentialsService credentialsService = CredentialsService.SERVICE;
