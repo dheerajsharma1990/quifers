@@ -2,6 +2,7 @@ package com.quifers.email.helpers;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.dao.PriceDao;
+import com.quifers.domain.enums.EmailType;
 
 public class EmailCreatorFactory {
 

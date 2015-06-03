@@ -3,7 +3,7 @@ package com.quifers.email.jms;
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailCreatorFactory;
 import com.quifers.email.helpers.EmailSender;
-import com.quifers.email.helpers.EmailType;
+import com.quifers.domain.enums.EmailType;
 import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;

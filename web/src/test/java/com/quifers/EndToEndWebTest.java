@@ -3,6 +3,7 @@ package com.quifers;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
+import com.quifers.runners.ActiveMqBroker;
 import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -259,6 +260,7 @@ public class EndToEndWebTest {
     public void startServerAndDatabase() throws Exception {
         QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
         runDatabaseServer(quifersProperties);
+        new ActiveMqBroker().startBroker();
         runJettyServer(9111);
 
     }

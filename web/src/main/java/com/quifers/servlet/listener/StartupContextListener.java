@@ -11,10 +11,12 @@ import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.request.validators.admin.AdminRegisterRequestValidator;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -36,6 +38,8 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ORDER_DAO = "ORDER_DAO";
     public static final String PRICE_DAO = "PRICE_DAO";
 
+    public static final String WEB_PUBLISHER = "WEB_PUBLISHER";
+
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
@@ -46,6 +50,7 @@ public class StartupContextListener implements ServletContextListener {
         Environment environment = getEnvironment(servletContext);
         initDaos(servletContext, environment);
         AtomicLong counter = initialiseOrderId(servletContext);
+        initialiseActiveMqPublisher(servletContext);
         initialiseDao(servletContext);
         initialiseValidators(servletContext, counter);
     }
@@ -77,9 +82,24 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());
     }
 
-
     private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {
         servletContext.setAttribute(ORDER_BOOK_REQUEST_VALIDATOR, new OrderBookRequestValidator(counter));
+    }
+
+
+    private void initialiseActiveMqPublisher(ServletContext servletContext) {
+        try {
+            ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+            Connection connection = connectionFactory.createConnection();
+            Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+            Destination queue = session.createQueue("QUIFERS.EMAIL.QUEUE");
+            MessageProducer producer = session.createProducer(queue);
+            producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+            connection.start();
+            servletContext.setAttribute(WEB_PUBLISHER, new WebPublisher(session, producer));
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initDaos(ServletContext servletContext, Environment environment) {

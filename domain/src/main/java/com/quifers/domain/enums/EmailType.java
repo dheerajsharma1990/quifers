@@ -1,4 +1,4 @@
-package com.quifers.email.helpers;
+package com.quifers.domain.enums;
 
 public enum EmailType {
     ORDER, PRICE
