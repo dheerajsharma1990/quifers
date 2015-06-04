@@ -34,7 +34,7 @@ public class PriceEmailCreator implements EmailCreator {
         MimeMessage emailMessage = new MimeMessage(session);
 
         emailMessage.setFrom(getFromAddress(fromAddress));
-        emailMessage.addRecipient(Message.RecipientType.TO, getToAddress(order.getEmail()));
+        emailMessage.addRecipient(Message.RecipientType.TO, getToAddress(order.getClient().getEmail()));
         emailMessage.setSubject(getSubject(price));
         emailMessage.setContent(getBody(price), "text/html");
         emailMessage.addHeader("Content-Type", "text/html");

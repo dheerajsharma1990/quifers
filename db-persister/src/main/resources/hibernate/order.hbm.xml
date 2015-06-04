@@ -9,70 +9,45 @@
             <column name="order_id"/>
         </id>
 
-        <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select" />
+        <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select"/>
 
         <property name="vehicle" type="string">
             <column name="vehicle"/>
         </property>
 
-        <property name="fromAddressHouseNumber" type="string">
-            <column name="from_address_house_number"/>
-        </property>
-
-        <property name="fromAddressSociety" type="string">
-            <column name="from_address_society"/>
-        </property>
-
-        <property name="fromAddressArea" type="string">
-            <column name="from_address_area"/>
-        </property>
-
-        <property name="fromAddressCity" type="string">
-            <column name="from_address_city"/>
-        </property>
-
-        <property name="toAddressHouseNumber" type="string">
-            <column name="to_address_house_number"/>
-        </property>
-
-        <property name="toAddressSociety" type="string">
-            <column name="to_address_society"/>
-        </property>
-
-        <property name="toAddressArea" type="string">
-            <column name="to_address_area"/>
-        </property>
-
-        <property name="toAddressCity" type="string">
-            <column name="to_address_city"/>
-        </property>
+        <set name="addresses" table="address" inverse="true" cascade="save-update" fetch="join">
+            <key>
+                <column name="order_id" not-null="true"/>
+            </key>
+            <one-to-many class="com.quifers.domain.Address"/>
+        </set>
 
         <property name="labours" type="integer">
-            <column name="labours" />
+            <column name="labours"/>
         </property>
 
         <property name="estimate" type="string">
-            <column name="estimate" />
+            <column name="estimate"/>
         </property>
 
         <property name="distance" type="integer">
-            <column name="distance" />
+            <column name="distance"/>
         </property>
 
         <property name="pickupFloors" type="integer">
-            <column name="pick_up_floors" />
+            <column name="pick_up_floors"/>
         </property>
 
         <property name="pickupLiftWorking" type="boolean">
-            <column name="pick_up_lift_working" />
+            <column name="pick_up_lift_working"/>
         </property>
 
         <property name="dropOffFloors" type="integer">
-            <column name="drop_off_floors" />
+            <column name="drop_off_floors"/>
         </property>
 
         <property name="dropOffLiftWorking" type="boolean">
-            <column name="drop_off_lift_working" />
+            <column name="drop_off_lift_working"/>
         </property>
 
         <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="save-update" lazy="false" fetch="select" />

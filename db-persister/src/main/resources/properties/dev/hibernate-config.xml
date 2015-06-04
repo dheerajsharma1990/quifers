@@ -19,5 +19,6 @@
         <mapping resource="hibernate/order-workflow.hbm.xml" />
         <mapping resource="hibernate/price.hbm.xml" />
         <mapping resource="hibernate/client.hbm.xml" />
+        <mapping resource="hibernate/address.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

@@ -1,5 +1,6 @@
 package com.quifers.domain;
 
+import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
@@ -16,21 +17,7 @@ public class Order implements Serializable {
 
     private String vehicle;
 
-    private String fromAddressHouseNumber;
-
-    private String fromAddressSociety;
-
-    private String fromAddressArea;
-
-    private String fromAddressCity;
-
-    private String toAddressHouseNumber;
-
-    private String toAddressSociety;
-
-    private String toAddressArea;
-
-    private String toAddressCity;
+    private Set<Address> addresses;
 
     private int labours;
 
@@ -54,22 +41,13 @@ public class Order implements Serializable {
 
     }
 
-    public Order(long orderId, Client client, String vehicle, String fromAddressHouseNumber,
-                 String fromAddressSociety, String fromAddressArea, String fromAddressCity, String toAddressHouseNumber,
-                 String toAddressSociety, String toAddressArea, String toAddressCity, int labours, String estimate,
+    public Order(long orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
                  int distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
         this.client = client;
         this.vehicle = vehicle;
-        this.fromAddressHouseNumber = fromAddressHouseNumber;
-        this.fromAddressSociety = fromAddressSociety;
-        this.fromAddressArea = fromAddressArea;
-        this.fromAddressCity = fromAddressCity;
-        this.toAddressHouseNumber = toAddressHouseNumber;
-        this.toAddressSociety = toAddressSociety;
-        this.toAddressArea = toAddressArea;
-        this.toAddressCity = toAddressCity;
+        this.addresses = addresses;
         this.labours = labours;
         this.estimate = estimate;
         this.distance = distance;
@@ -93,36 +71,8 @@ public class Order implements Serializable {
         return vehicle;
     }
 
-    public String getFromAddressHouseNumber() {
-        return fromAddressHouseNumber;
-    }
-
-    public String getFromAddressSociety() {
-        return fromAddressSociety;
-    }
-
-    public String getFromAddressArea() {
-        return fromAddressArea;
-    }
-
-    public String getFromAddressCity() {
-        return fromAddressCity;
-    }
-
-    public String getToAddressHouseNumber() {
-        return toAddressHouseNumber;
-    }
-
-    public String getToAddressSociety() {
-        return toAddressSociety;
-    }
-
-    public String getToAddressArea() {
-        return toAddressArea;
-    }
-
-    public String getToAddressCity() {
-        return toAddressCity;
+    public Set<Address> getAddresses() {
+        return addresses;
     }
 
     public int getLabours() {
@@ -173,36 +123,8 @@ public class Order implements Serializable {
         this.vehicle = vehicle;
     }
 
-    public void setFromAddressHouseNumber(String fromAddressHouseNumber) {
-        this.fromAddressHouseNumber = fromAddressHouseNumber;
-    }
-
-    public void setFromAddressSociety(String fromAddressSociety) {
-        this.fromAddressSociety = fromAddressSociety;
-    }
-
-    public void setFromAddressArea(String fromAddressArea) {
-        this.fromAddressArea = fromAddressArea;
-    }
-
-    public void setFromAddressCity(String fromAddressCity) {
-        this.fromAddressCity = fromAddressCity;
-    }
-
-    public void setToAddressHouseNumber(String toAddressHouseNumber) {
-        this.toAddressHouseNumber = toAddressHouseNumber;
-    }
-
-    public void setToAddressSociety(String toAddressSociety) {
-        this.toAddressSociety = toAddressSociety;
-    }
-
-    public void setToAddressArea(String toAddressArea) {
-        this.toAddressArea = toAddressArea;
-    }
-
-    public void setToAddressCity(String toAddressCity) {
-        this.toAddressCity = toAddressCity;
+    public void setAddresses(Set<Address> addresses) {
+        this.addresses = addresses;
     }
 
     public void setLabours(int labours) {
@@ -283,6 +205,24 @@ public class Order implements Serializable {
         return 0;
     }
 
+    public Address getPickUpAddress() {
+        for (Address address : addresses) {
+            if (AddressType.PICKUP.equals(address.getAddressType())) {
+                return address;
+            }
+        }
+        return null;
+    }
+
+    public Address getDropOffAddress() {
+        for (Address address : addresses) {
+            if (AddressType.DROP.equals(address.getAddressType())) {
+                return address;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -297,27 +237,12 @@ public class Order implements Serializable {
         if (orderId != order.orderId) return false;
         if (pickupFloors != order.pickupFloors) return false;
         if (pickupLiftWorking != order.pickupLiftWorking) return false;
+        if (addresses != null ? !addresses.equals(order.addresses) : order.addresses != null) return false;
         if (client != null ? !client.equals(order.client) : order.client != null) return false;
         if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
         if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
             return false;
-        if (fromAddressArea != null ? !fromAddressArea.equals(order.fromAddressArea) : order.fromAddressArea != null)
-            return false;
-        if (fromAddressCity != null ? !fromAddressCity.equals(order.fromAddressCity) : order.fromAddressCity != null)
-            return false;
-        if (fromAddressHouseNumber != null ? !fromAddressHouseNumber.equals(order.fromAddressHouseNumber) : order.fromAddressHouseNumber != null)
-            return false;
-        if (fromAddressSociety != null ? !fromAddressSociety.equals(order.fromAddressSociety) : order.fromAddressSociety != null)
-            return false;
         if (orderWorkflows != null ? !orderWorkflows.equals(order.orderWorkflows) : order.orderWorkflows != null)
-            return false;
-        if (toAddressArea != null ? !toAddressArea.equals(order.toAddressArea) : order.toAddressArea != null)
-            return false;
-        if (toAddressCity != null ? !toAddressCity.equals(order.toAddressCity) : order.toAddressCity != null)
-            return false;
-        if (toAddressHouseNumber != null ? !toAddressHouseNumber.equals(order.toAddressHouseNumber) : order.toAddressHouseNumber != null)
-            return false;
-        if (toAddressSociety != null ? !toAddressSociety.equals(order.toAddressSociety) : order.toAddressSociety != null)
             return false;
         if (vehicle != null ? !vehicle.equals(order.vehicle) : order.vehicle != null) return false;
 

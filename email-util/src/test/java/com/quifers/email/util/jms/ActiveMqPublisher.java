@@ -1,13 +1,10 @@
 package com.quifers.email.util.jms;
 
 import com.quifers.Environment;
-import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.PriceDao;
-import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
-import com.quifers.domain.Price;
+import com.quifers.domain.*;
+import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.hibernate.FieldExecutiveDaoImpl;
 import com.quifers.hibernate.PriceDaoImpl;
 import com.quifers.hibernate.SessionFactoryBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -45,8 +42,6 @@ public class ActiveMqPublisher {
 
     public static void main(String[] args) throws JMSException {
         SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(Environment.LOCAL);
-        FieldExecutiveDao fieldExecutiveDao = new FieldExecutiveDaoImpl(sessionFactory);
-
 
         long orderId = 100l;
         Set<OrderWorkflow> workflowSet = new HashSet<>();
@@ -56,11 +51,15 @@ public class ActiveMqPublisher {
         workflowSet.add(new OrderWorkflow(orderId, OrderState.TRANSIT_ENDED, new Date()));
         workflowSet.add(new OrderWorkflow(orderId, OrderState.TRIP_ENDED, new Date()));
 
-        Order order = new Order(orderId, "name", 9988776655l, "dheerajsharma1990@gmail.com", "vehicle", "fromAddressHouseNumber",
-                "fromAddressSociety", "fromAddressArea", "fromAddressCity", "toAddressHouseNumber", "toAddressSociety", "toAddressArea",
-                "toAddressCity", 1, "estimate", 2, 1, false, 2, true, null, workflowSet);
+        Client client = new Client(orderId, "name", 9988776655l, "dheerajsharma1990@gmail.com");
+        Address pickUpAddress = new Address(orderId, AddressType.PICKUP, "fromAddressHouseNumber", "fromAddressSociety", "fromAddressArea", "fromAddressCity");
+        Address dropOffAddress = new Address(orderId, AddressType.DROP, "toAddressHouseNumber", "toAddressSociety", "toAddressArea", "toAddressCity");
+        Set<Address> addresses = new HashSet<>();
+        addresses.add(pickUpAddress);
+        addresses.add(dropOffAddress);
+        Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 2, 1, false, 2, true, null, workflowSet);
         PriceDao priceDao = new PriceDaoImpl(sessionFactory);
-        Price price = new Price(orderId,40,34,2,3);
+        Price price = new Price(orderId, 40, 34, 2, 3);
         priceDao.savePrice(price);
 
         new ActiveMqPublisher().publish("PRICE", order);

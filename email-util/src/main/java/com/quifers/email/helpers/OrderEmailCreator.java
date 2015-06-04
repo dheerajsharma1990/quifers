@@ -43,14 +43,14 @@ public class OrderEmailCreator implements EmailCreator {
         OrderWorkflow workflow = order.getWorkflow(OrderState.BOOKED);
         return "<html>\n" +
                 "<body>\n" +
-                "Hello " + order.getName() + ",\n" +
+                "Hello " + order.getClient().getName() + ",\n" +
                 "<br>\n" +
                 "We are pleased to have you on-board, Below are the details of your booking that has been confirmed with us.<br>\n" +
                 "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
                 "<tr><td><strong>Order Id :</strong> </td><td>" + order.getOrderId() + "</td></tr>" +
-                "<tr><td><strong>Name :</strong> </td><td>" + order.getName() + "</td></tr>" +
-                "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getFromAddressHouseNumber() + "," + order.getFromAddressSociety() + "," + order.getFromAddressArea() + "," + order.getFromAddressCity() + "</td></tr>" +
-                "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getToAddressHouseNumber() + "," + order.getToAddressSociety() + "," + order.getToAddressArea() + "," + order.getToAddressCity() + "</td></tr>" +
+                "<tr><td><strong>Name :</strong> </td><td>" + order.getClient().getName() + "</td></tr>" +
+                "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getPickUpAddress().getAddressHouseNumber() + "," + order.getPickUpAddress().getAddressSociety() + "," + order.getPickUpAddress().getAddressArea() + "," + order.getPickUpAddress().getAddressCity() + "</td></tr>" +
+                "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getDropOffAddress().getAddressHouseNumber() + "," + order.getDropOffAddress().getAddressSociety() + "," + order.getDropOffAddress().getAddressArea() + "," + order.getDropOffAddress().getAddressCity() + "</td></tr>" +
                 "<tr><td><strong>Booking Time :</strong> </td><td>" + workflow.getEffectiveTime() + "</td></tr>" +
                 "<tr><td><strong>Order State :</strong> </td><td>" + workflow.getOrderState() + "</td></tr>" +
                 "</table>" +
@@ -69,7 +69,7 @@ public class OrderEmailCreator implements EmailCreator {
     }
 
     private InternetAddress getToAddress(Order order) throws AddressException {
-        return new InternetAddress(order.getEmail());
+        return new InternetAddress(order.getClient().getEmail());
     }
 
     private String getSubject(Order order) {

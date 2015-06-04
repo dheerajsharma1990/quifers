@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.quifers.domain.Address" table="address">
+
+        <composite-id>
+            <key-property name="orderId" type="long">
+                <column name="order_id"/>
+            </key-property>
+            <key-property name="addressType">
+                <column name="address_type"/>
+                <type name="org.hibernate.type.EnumType">
+                    <param name="enumClass">com.quifers.domain.enums.AddressType</param>
+                </type>
+            </key-property>
+        </composite-id>
+
+        <property name="addressHouseNumber" type="string">
+            <column name="address_house_number" length="255" />
+        </property>
+        <property name="addressSociety" type="string">
+            <column name="address_society" length="255" />
+        </property>
+        <property name="addressArea" type="string">
+            <column name="address_area" length="255" />
+        </property>
+        <property name="addressCity" type="string">
+            <column name="address_city" length="255" />
+        </property>
+    </class>
+</hibernate-mapping>

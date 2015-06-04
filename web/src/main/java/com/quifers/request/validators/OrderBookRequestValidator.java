@@ -1,8 +1,10 @@
 package com.quifers.request.validators;
 
+import com.quifers.domain.Address;
 import com.quifers.domain.Client;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -54,8 +57,12 @@ public class OrderBookRequestValidator {
 
         long orderId = orderIdCounter.getAndIncrement();
 
-        return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, fromAddressHouseNumber, fromAddressSociety,
-                fromAddressArea, fromAddressCity, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity, labours,
+        Address pickUpAddress = new Address(orderId, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
+        Address dropOffAddress = new Address(orderId, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);
+        Set<Address> addresses = new HashSet<>();
+        addresses.add(pickUpAddress);
+        addresses.add(dropOffAddress);
+        return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
                 estimate, distance, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
                 new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))));
 
