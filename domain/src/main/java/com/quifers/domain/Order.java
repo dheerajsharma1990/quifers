@@ -12,11 +12,7 @@ public class Order implements Serializable {
 
     private long orderId;
 
-    private String name;
-
-    private long mobileNumber;
-
-    private String email;
+    private Client client;
 
     private String vehicle;
 
@@ -58,15 +54,13 @@ public class Order implements Serializable {
 
     }
 
-    public Order(long orderId, String name, long mobileNumber, String email, String vehicle, String fromAddressHouseNumber,
+    public Order(long orderId, Client client, String vehicle, String fromAddressHouseNumber,
                  String fromAddressSociety, String fromAddressArea, String fromAddressCity, String toAddressHouseNumber,
                  String toAddressSociety, String toAddressArea, String toAddressCity, int labours, String estimate,
                  int distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
-        this.name = name;
-        this.mobileNumber = mobileNumber;
-        this.email = email;
+        this.client = client;
         this.vehicle = vehicle;
         this.fromAddressHouseNumber = fromAddressHouseNumber;
         this.fromAddressSociety = fromAddressSociety;
@@ -91,16 +85,8 @@ public class Order implements Serializable {
         return orderId;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public long getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public String getEmail() {
-        return email;
+    public Client getClient() {
+        return client;
     }
 
     public String getVehicle() {
@@ -179,16 +165,8 @@ public class Order implements Serializable {
         this.orderId = orderId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMobileNumber(long mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public void setVehicle(String vehicle) {
@@ -312,15 +290,14 @@ public class Order implements Serializable {
 
         Order order = (Order) o;
 
+        if (distance != order.distance) return false;
         if (dropOffFloors != order.dropOffFloors) return false;
         if (dropOffLiftWorking != order.dropOffLiftWorking) return false;
         if (labours != order.labours) return false;
-        if (mobileNumber != order.mobileNumber) return false;
         if (orderId != order.orderId) return false;
         if (pickupFloors != order.pickupFloors) return false;
         if (pickupLiftWorking != order.pickupLiftWorking) return false;
-        if (distance != order.distance) return false;
-        if (email != null ? !email.equals(order.email) : order.email != null) return false;
+        if (client != null ? !client.equals(order.client) : order.client != null) return false;
         if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
         if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
             return false;
@@ -332,7 +309,6 @@ public class Order implements Serializable {
             return false;
         if (fromAddressSociety != null ? !fromAddressSociety.equals(order.fromAddressSociety) : order.fromAddressSociety != null)
             return false;
-        if (name != null ? !name.equals(order.name) : order.name != null) return false;
         if (orderWorkflows != null ? !orderWorkflows.equals(order.orderWorkflows) : order.orderWorkflows != null)
             return false;
         if (toAddressArea != null ? !toAddressArea.equals(order.toAddressArea) : order.toAddressArea != null)

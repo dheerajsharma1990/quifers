@@ -2,22 +2,14 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
+
     <class name="com.quifers.domain.Order" table="orders">
+
         <id name="orderId" type="java.lang.Long">
             <column name="order_id"/>
         </id>
 
-        <property name="name" type="string">
-            <column name="name"/>
-        </property>
-
-        <property name="mobileNumber" type="java.lang.Long">
-            <column name="mobile_number"/>
-        </property>
-
-        <property name="email" type="string">
-            <column name="email"/>
-        </property>
+        <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select" />
 
         <property name="vehicle" type="string">
             <column name="vehicle"/>
