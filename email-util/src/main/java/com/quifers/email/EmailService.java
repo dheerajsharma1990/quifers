@@ -1,7 +1,6 @@
 package com.quifers.email;
 
 import com.quifers.Environment;
-import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.dao.PriceDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
@@ -13,7 +12,6 @@ import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
-import com.quifers.hibernate.FieldExecutiveDaoImpl;
 import com.quifers.hibernate.OrderDaoImpl;
 import com.quifers.hibernate.PriceDaoImpl;
 import com.quifers.hibernate.SessionFactoryBuilder;
@@ -67,8 +65,7 @@ public class EmailService {
     }
 
     private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, SessionFactory sessionFactory) throws JMSException, IOException, MessagingException {
-        FieldExecutiveDao fieldExecutiveDao = new FieldExecutiveDaoImpl(sessionFactory);
-        OrderDao orderDao = new OrderDaoImpl(sessionFactory, fieldExecutiveDao);
+        OrderDao orderDao = new OrderDaoImpl(sessionFactory);
         PriceDao priceDao = new PriceDaoImpl(sessionFactory);
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();

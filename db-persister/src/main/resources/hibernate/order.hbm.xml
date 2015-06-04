@@ -75,7 +75,7 @@
             <column name="drop_off_lift_working" />
         </property>
 
-        <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="all" lazy="false" fetch="select" />
+        <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="save-update" lazy="false" fetch="select" />
 
         <set name="orderWorkflows" table="orders_workflow" inverse="true" cascade="all" fetch="join">
             <key>

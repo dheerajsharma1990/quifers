@@ -110,7 +110,7 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(FIELD_EXECUTIVE_DAO, fieldExecutiveDao);
         servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(adminDao));
         servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(fieldExecutiveDao));
-        servletContext.setAttribute(ORDER_DAO, new OrderDaoImpl(sessionFactory, fieldExecutiveDao));
+        servletContext.setAttribute(ORDER_DAO, new OrderDaoImpl(sessionFactory));
         servletContext.setAttribute(PRICE_DAO, new PriceDaoImpl(sessionFactory));
     }
 
