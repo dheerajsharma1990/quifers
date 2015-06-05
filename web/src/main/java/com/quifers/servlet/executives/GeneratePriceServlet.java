@@ -1,9 +1,7 @@
 package com.quifers.servlet.executives;
 
 import com.quifers.dao.OrderDao;
-import com.quifers.dao.PriceDao;
 import com.quifers.domain.Order;
-import com.quifers.domain.Price;
 import com.quifers.domain.enums.EmailType;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
@@ -19,22 +17,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.quifers.response.PriceResponse.getPriceResponse;
-import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
-import static com.quifers.servlet.listener.StartupContextListener.PRICE_DAO;
-import static com.quifers.servlet.listener.StartupContextListener.WEB_PUBLISHER;
+import static com.quifers.servlet.listener.StartupContextListener.*;
 
 public class GeneratePriceServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GeneratePriceServlet.class);
 
     private OrderDao orderDao;
-    private PriceDao priceDao;
     private WebPublisher webPublisher;
 
     @Override
     public void init() throws ServletException {
         this.orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
-        this.priceDao = (PriceDao) getServletContext().getAttribute(PRICE_DAO);
         webPublisher = (WebPublisher) getServletContext().getAttribute(WEB_PUBLISHER);
     }
 
@@ -43,11 +37,9 @@ public class GeneratePriceServlet extends HttpServlet {
         try {
             GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
             Order order = orderDao.getOrder(priceRequest.getOrderId());
-            Price price = new Price(order.getOrderId(), order.getWaitingMinutes(), order.getDistance(), order.getLabours(), order.getNonWorkingPickUpFloors() + order.getNonWorkingDropOffFloors());
-            priceDao.savePrice(price);
             webPublisher.publishEmailMessage(EmailType.PRICE, order.getOrderId());
             response.setContentType("application/json");
-            response.getWriter().write(getPriceResponse(price));
+            response.getWriter().write(getPriceResponse(order));
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

@@ -36,7 +36,6 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_DAO = "ADMIN_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
-    public static final String PRICE_DAO = "PRICE_DAO";
 
     public static final String WEB_PUBLISHER = "WEB_PUBLISHER";
 
@@ -111,7 +110,6 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(adminDao));
         servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(fieldExecutiveDao));
         servletContext.setAttribute(ORDER_DAO, new OrderDaoImpl(sessionFactory));
-        servletContext.setAttribute(PRICE_DAO, new PriceDaoImpl(sessionFactory));
     }
 
     @Override

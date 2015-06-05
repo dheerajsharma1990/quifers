@@ -1,11 +1,12 @@
 package com.quifers.email.util.jms;
 
 import com.quifers.Environment;
-import com.quifers.dao.PriceDao;
-import com.quifers.domain.*;
+import com.quifers.domain.Address;
+import com.quifers.domain.Client;
+import com.quifers.domain.Order;
+import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.hibernate.PriceDaoImpl;
 import com.quifers.hibernate.SessionFactoryBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.hibernate.SessionFactory;
@@ -58,9 +59,6 @@ public class ActiveMqPublisher {
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
         Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 2, 1, false, 2, true, null, workflowSet);
-        PriceDao priceDao = new PriceDaoImpl(sessionFactory);
-        Price price = new Price(orderId, 40, 34, 2, 3);
-        priceDao.savePrice(price);
 
         new ActiveMqPublisher().publish("PRICE", order);
     }

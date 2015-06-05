@@ -2,7 +2,6 @@ package com.quifers.email;
 
 import com.quifers.Environment;
 import com.quifers.dao.OrderDao;
-import com.quifers.dao.PriceDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.*;
@@ -13,7 +12,6 @@ import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
 import com.quifers.hibernate.OrderDaoImpl;
-import com.quifers.hibernate.PriceDaoImpl;
 import com.quifers.hibernate.SessionFactoryBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.io.FileUtils;
@@ -66,11 +64,10 @@ public class EmailService {
 
     private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, SessionFactory sessionFactory) throws JMSException, IOException, MessagingException {
         OrderDao orderDao = new OrderDaoImpl(sessionFactory);
-        PriceDao priceDao = new PriceDaoImpl(sessionFactory);
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE, new EmailCreatorFactory(orderDao, priceDao));
+        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE, new EmailCreatorFactory(orderDao));
         orderReceiver.receiveOrders();
     }
 
