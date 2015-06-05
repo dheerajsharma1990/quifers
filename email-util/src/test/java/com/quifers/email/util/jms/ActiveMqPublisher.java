@@ -35,7 +35,7 @@ public class ActiveMqPublisher {
     public void publish(String type, Order order) throws JMSException {
         ObjectMessage objectMessage = session.createObjectMessage();
         objectMessage.setStringProperty("EMAIL_TYPE", type);
-        objectMessage.setLongProperty("ORDER_ID", order.getOrderId());
+        objectMessage.setStringProperty("ORDER_ID", order.getOrderId());
         objectMessage.setObject(order);
         producer.send(objectMessage);
     }
@@ -43,7 +43,7 @@ public class ActiveMqPublisher {
     public static void main(String[] args) throws JMSException {
         SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(Environment.LOCAL);
 
-        long orderId = 100l;
+        String orderId = "100";
         Set<OrderWorkflow> workflowSet = new HashSet<>();
         workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date()));
         workflowSet.add(new OrderWorkflow(orderId, OrderState.TRIP_STARTED, new Date()));

@@ -23,7 +23,7 @@ public class OrderEmailCreator implements EmailCreator {
     }
 
     @Override
-    public MimeMessage createEmail(long orderId, String fromAddress) throws UnsupportedEncodingException, MessagingException {
+    public MimeMessage createEmail(String orderId, String fromAddress) throws UnsupportedEncodingException, MessagingException {
         Order order = orderDao.getOrder(orderId);
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);

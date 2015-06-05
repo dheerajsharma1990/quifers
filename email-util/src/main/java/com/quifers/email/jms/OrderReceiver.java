@@ -34,14 +34,14 @@ public class OrderReceiver {
         while (true) {
             ActiveMQObjectMessage message = (ActiveMQObjectMessage) messageConsumer.receive();
             String emailType = message.getStringProperty("EMAIL_TYPE");
-            long orderId = message.getLongProperty("ORDER_ID");
+            String orderId = message.getStringProperty("ORDER_ID");
             EmailType type = EmailType.valueOf(emailType);
             emailOrder(credentialsService.getCredentials(), emailCreatorFactory.getEmailCreator(type), orderId);
             message.acknowledge();
         }
     }
 
-    private void emailOrder(Credentials credentials, EmailCreator emailCreator, long orderId) throws IOException, MessagingException {
+    private void emailOrder(Credentials credentials, EmailCreator emailCreator, String orderId) throws IOException, MessagingException {
         emailSender.sendEmail(credentials, emailCreator, orderId, properties.getEmailAccount());
     }
 

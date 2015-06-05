@@ -1,5 +1,5 @@
 create table price
-(order_id bigint,
+(order_id varchar(255),
 waiting_minutes integer,
 transit_kilometres integer,
 labours integer,

@@ -8,9 +8,9 @@ public interface OrderDao {
 
     void saveOrder(Order order);
 
-    Order getOrder(long orderId);
+    Order getOrder(String orderId);
 
     void addOrderWorkflow(OrderWorkflow orderWorkflow);
 
-    void assignFieldExecutive(long orderId, FieldExecutive fieldExecutive);
+    void assignFieldExecutive(String orderId, FieldExecutive fieldExecutive);
 }

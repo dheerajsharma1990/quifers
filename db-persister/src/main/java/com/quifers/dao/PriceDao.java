@@ -6,6 +6,6 @@ public interface PriceDao {
 
     void savePrice(Price price);
 
-    Price getPrice(long orderId);
+    Price getPrice(String orderId);
 
 }

@@ -56,15 +56,16 @@ public class OrderBookRequestValidator {
         boolean dropOffLiftWorking = validateAndGetBoolean(request, "lift_drop");
 
         long orderId = orderIdCounter.getAndIncrement();
+        String id = String.valueOf(orderId);
 
-        Address pickUpAddress = new Address(orderId, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
-        Address dropOffAddress = new Address(orderId, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);
+        Address pickUpAddress = new Address(id, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
+        Address dropOffAddress = new Address(id, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);
         Set<Address> addresses = new HashSet<>();
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
-        return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
+        return new Order(id, new Client(id, clientName, mobileNumber, email), vehicle, addresses, labours,
                 estimate, distance, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
-                new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))));
+                new HashSet<>(Arrays.asList(new OrderWorkflow(id, OrderState.BOOKED, bookingDate))));
 
     }
 

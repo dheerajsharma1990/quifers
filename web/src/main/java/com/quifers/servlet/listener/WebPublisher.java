@@ -17,10 +17,10 @@ public class WebPublisher {
         this.producer = producer;
     }
 
-    public void publishEmailMessage(EmailType emailType, long orderId) throws JMSException {
+    public void publishEmailMessage(EmailType emailType, String orderId) throws JMSException {
         ObjectMessage objectMessage = session.createObjectMessage();
         objectMessage.setStringProperty("EMAIL_TYPE", emailType.name());
-        objectMessage.setLongProperty("ORDER_ID", orderId);
+        objectMessage.setStringProperty("ORDER_ID", orderId);
         producer.send(objectMessage);
     }
 }

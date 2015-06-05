@@ -1,4 +1,4 @@
-create table orders (order_id bigint,
+create table orders (order_id varchar(255),
 vehicle varchar(100),
 from_address_house_number varchar(255),
 from_address_society varchar(255),

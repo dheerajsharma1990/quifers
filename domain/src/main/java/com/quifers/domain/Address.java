@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Address implements Serializable {
 
-    private long orderId;
+    private String orderId;
 
     private AddressType addressType;
 
@@ -22,7 +22,7 @@ public class Address implements Serializable {
     public Address() {
     }
 
-    public Address(long orderId, AddressType addressType, String addressHouseNumber, String addressSociety, String addressArea, String addressCity) {
+    public Address(String orderId, AddressType addressType, String addressHouseNumber, String addressSociety, String addressArea, String addressCity) {
         this.orderId = orderId;
         this.addressType = addressType;
         this.addressHouseNumber = addressHouseNumber;
@@ -31,7 +31,7 @@ public class Address implements Serializable {
         this.addressCity = addressCity;
     }
 
-    public long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
@@ -39,7 +39,7 @@ public class Address implements Serializable {
         return addressType;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -86,7 +86,6 @@ public class Address implements Serializable {
 
         Address address = (Address) o;
 
-        if (orderId != address.orderId) return false;
         if (addressArea != null ? !addressArea.equals(address.addressArea) : address.addressArea != null) return false;
         if (addressCity != null ? !addressCity.equals(address.addressCity) : address.addressCity != null) return false;
         if (addressHouseNumber != null ? !addressHouseNumber.equals(address.addressHouseNumber) : address.addressHouseNumber != null)
@@ -94,13 +93,14 @@ public class Address implements Serializable {
         if (addressSociety != null ? !addressSociety.equals(address.addressSociety) : address.addressSociety != null)
             return false;
         if (addressType != address.addressType) return false;
+        if (orderId != null ? !orderId.equals(address.orderId) : address.orderId != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (orderId ^ (orderId >>> 32));
+        int result = orderId != null ? orderId.hashCode() : 0;
         result = 31 * result + (addressType != null ? addressType.hashCode() : 0);
         return result;
     }

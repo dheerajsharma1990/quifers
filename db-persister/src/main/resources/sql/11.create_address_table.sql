@@ -1,5 +1,5 @@
 create table address
-(order_id bigint,
+(order_id varchar(255),
 address_type varchar(100),
 address_house_number varchar(255),
 address_society varchar(255),

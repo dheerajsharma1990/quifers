@@ -8,7 +8,7 @@ import java.util.Date;
 
 public class OrderWorkflow implements Serializable {
 
-    private long orderId;
+    private String orderId;
 
     private OrderState orderState;
 
@@ -17,13 +17,13 @@ public class OrderWorkflow implements Serializable {
     public OrderWorkflow() {
     }
 
-    public OrderWorkflow(long orderId, OrderState orderState, Date effectiveTime) {
+    public OrderWorkflow(String orderId, OrderState orderState, Date effectiveTime) {
         this.orderId = orderId;
         this.orderState = orderState;
         this.effectiveTime = effectiveTime;
     }
 
-    public long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
@@ -35,7 +35,7 @@ public class OrderWorkflow implements Serializable {
         return effectiveTime;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -52,19 +52,20 @@ public class OrderWorkflow implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrderWorkflow that = (OrderWorkflow) o;
+        OrderWorkflow workflow = (OrderWorkflow) o;
 
-        if (orderId != that.orderId) return false;
-        if (!effectiveTime.equals(that.effectiveTime)) return false;
-        if (orderState != that.orderState) return false;
+        if (effectiveTime != null ? !effectiveTime.equals(workflow.effectiveTime) : workflow.effectiveTime != null)
+            return false;
+        if (orderId != null ? !orderId.equals(workflow.orderId) : workflow.orderId != null) return false;
+        if (orderState != workflow.orderState) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (orderId ^ (orderId >>> 32));
-        result = 31 * result + orderState.hashCode();
+        int result = orderId != null ? orderId.hashCode() : 0;
+        result = 31 * result + (orderState != null ? orderState.hashCode() : 0);
         return result;
     }
 

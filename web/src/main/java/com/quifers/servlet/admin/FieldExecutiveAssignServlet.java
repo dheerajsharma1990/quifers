@@ -17,7 +17,6 @@ import java.io.IOException;
 import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
-import static java.lang.Long.valueOf;
 
 public class FieldExecutiveAssignServlet extends HttpServlet {
 
@@ -37,7 +36,7 @@ public class FieldExecutiveAssignServlet extends HttpServlet {
         try {
             FieldExecutiveAssignRequest assignRequest = new FieldExecutiveAssignRequest(request);
             FieldExecutive fieldExecutive = fieldExecutiveDao.getFieldExecutive(assignRequest.getFieldExecutiveId());
-            orderDao.assignFieldExecutive(valueOf(assignRequest.getOrderId()), fieldExecutive);
+            orderDao.assignFieldExecutive(assignRequest.getOrderId(), fieldExecutive);
             response.setContentType("application/json");
             response.getWriter().write(getSuccessResponse());
         } catch (InvalidRequestException e) {

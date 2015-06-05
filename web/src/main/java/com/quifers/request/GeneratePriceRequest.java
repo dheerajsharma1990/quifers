@@ -4,7 +4,6 @@ import com.quifers.request.validators.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static java.lang.Long.valueOf;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class GeneratePriceRequest {
@@ -16,8 +15,8 @@ public class GeneratePriceRequest {
         validate();
     }
 
-    public long getOrderId() {
-        return valueOf(orderId);
+    public String getOrderId() {
+        return orderId;
     }
 
     private void validate() throws InvalidRequestException {

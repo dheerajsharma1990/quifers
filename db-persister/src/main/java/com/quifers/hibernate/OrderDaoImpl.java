@@ -26,7 +26,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Order getOrder(long orderId) {
+    public Order getOrder(String orderId) {
         Session session = sessionFactory.openSession();
         Order order = (Order) session.get(Order.class, orderId);
         session.close();
@@ -41,7 +41,7 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public void assignFieldExecutive(long orderId, FieldExecutive fieldExecutive) {
+    public void assignFieldExecutive(String orderId, FieldExecutive fieldExecutive) {
         Order order = getOrder(orderId);
         order.setFieldExecutive(fieldExecutive);
         updateOrder(order);

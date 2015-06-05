@@ -20,7 +20,7 @@ public class EmailSender {
         this.builder = builder;
     }
 
-    public String sendEmail(Credentials credentials, EmailCreator emailCreator, long orderId, String fromAddress) throws IOException, MessagingException {
+    public String sendEmail(Credentials credentials, EmailCreator emailCreator, String orderId, String fromAddress) throws IOException, MessagingException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         MimeMessage mimeMessage = emailCreator.createEmail(orderId, fromAddress);
         mimeMessage.writeTo(out);

@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
 
-    private long orderId;
+    private String orderId;
 
     private String name;
 
@@ -15,21 +15,20 @@ public class Client implements Serializable {
     private String email;
 
     public Client() {
-
     }
 
-    public Client(long orderId, String name, long mobileNumber, String email) {
+    public Client(String orderId, String name, long mobileNumber, String email) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.email = email;
     }
 
-    public long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -65,16 +64,16 @@ public class Client implements Serializable {
         Client client = (Client) o;
 
         if (mobileNumber != client.mobileNumber) return false;
-        if (orderId != client.orderId) return false;
         if (email != null ? !email.equals(client.email) : client.email != null) return false;
         if (name != null ? !name.equals(client.name) : client.name != null) return false;
+        if (orderId != null ? !orderId.equals(client.orderId) : client.orderId != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return (int) (orderId ^ (orderId >>> 32));
+        return orderId != null ? orderId.hashCode() : 0;
     }
 
     @Override

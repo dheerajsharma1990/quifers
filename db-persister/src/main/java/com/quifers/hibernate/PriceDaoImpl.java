@@ -24,7 +24,7 @@ public class PriceDaoImpl implements PriceDao {
     }
 
     @Override
-    public Price getPrice(long orderId) {
+    public Price getPrice(String orderId) {
         Session session = sessionFactory.openSession();
         Price price = (Price) session.get(Price.class, orderId);
         session.close();

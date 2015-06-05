@@ -1,5 +1,5 @@
 create table client
-(order_id bigint,
+(order_id varchar(255),
 name varchar(255),
 mobile_number long,
 email varchar(255));

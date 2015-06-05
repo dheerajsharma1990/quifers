@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class Order implements Serializable {
 
-    private long orderId;
+    private String orderId;
 
     private Client client;
 
@@ -41,7 +41,7 @@ public class Order implements Serializable {
 
     }
 
-    public Order(long orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
+    public Order(String orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
                  int distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
@@ -59,7 +59,7 @@ public class Order implements Serializable {
         this.orderWorkflows = orderWorkflows;
     }
 
-    public long getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
@@ -111,7 +111,7 @@ public class Order implements Serializable {
         return orderWorkflows;
     }
 
-    public void setOrderId(long orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -198,6 +198,37 @@ public class Order implements Serializable {
         return 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Order order = (Order) o;
+
+        if (distance != order.distance) return false;
+        if (dropOffFloors != order.dropOffFloors) return false;
+        if (dropOffLiftWorking != order.dropOffLiftWorking) return false;
+        if (labours != order.labours) return false;
+        if (pickupFloors != order.pickupFloors) return false;
+        if (pickupLiftWorking != order.pickupLiftWorking) return false;
+        if (addresses != null ? !addresses.equals(order.addresses) : order.addresses != null) return false;
+        if (client != null ? !client.equals(order.client) : order.client != null) return false;
+        if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
+        if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
+            return false;
+        if (orderId != null ? !orderId.equals(order.orderId) : order.orderId != null) return false;
+        if (orderWorkflows != null ? !orderWorkflows.equals(order.orderWorkflows) : order.orderWorkflows != null)
+            return false;
+        if (vehicle != null ? !vehicle.equals(order.vehicle) : order.vehicle != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return orderId != null ? orderId.hashCode() : 0;
+    }
+
     public int getNonWorkingDropOffFloors() {
         if (dropOffLiftWorking) {
             return dropOffFloors;
@@ -223,36 +254,7 @@ public class Order implements Serializable {
         return null;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
 
-        Order order = (Order) o;
-
-        if (distance != order.distance) return false;
-        if (dropOffFloors != order.dropOffFloors) return false;
-        if (dropOffLiftWorking != order.dropOffLiftWorking) return false;
-        if (labours != order.labours) return false;
-        if (orderId != order.orderId) return false;
-        if (pickupFloors != order.pickupFloors) return false;
-        if (pickupLiftWorking != order.pickupLiftWorking) return false;
-        if (addresses != null ? !addresses.equals(order.addresses) : order.addresses != null) return false;
-        if (client != null ? !client.equals(order.client) : order.client != null) return false;
-        if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
-        if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
-            return false;
-        if (orderWorkflows != null ? !orderWorkflows.equals(order.orderWorkflows) : order.orderWorkflows != null)
-            return false;
-        if (vehicle != null ? !vehicle.equals(order.vehicle) : order.vehicle != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return (int) (orderId ^ (orderId >>> 32));
-    }
 
     @Override
     public String toString() {

@@ -5,7 +5,7 @@
     <class name="com.quifers.domain.OrderWorkflow" table="orders_workflow">
 
         <composite-id>
-            <key-property name="orderId" type="java.lang.Long">
+            <key-property name="orderId" type="string">
                 <column name="order_id"/>
             </key-property>
             <key-property name="orderState">

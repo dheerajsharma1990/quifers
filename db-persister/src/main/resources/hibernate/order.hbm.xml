@@ -5,7 +5,7 @@
 
     <class name="com.quifers.domain.Order" table="orders">
 
-        <id name="orderId" type="java.lang.Long">
+        <id name="orderId" type="string">
             <column name="order_id"/>
         </id>
 

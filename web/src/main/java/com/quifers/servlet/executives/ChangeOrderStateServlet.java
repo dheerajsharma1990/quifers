@@ -17,7 +17,6 @@ import java.util.Date;
 
 import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
-import static java.lang.Long.valueOf;
 
 public class ChangeOrderStateServlet extends HttpServlet {
 
@@ -33,7 +32,7 @@ public class ChangeOrderStateServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             ChangeOrderRequest changeOrderRequest = new ChangeOrderRequest(request);
-            orderDao.addOrderWorkflow(new OrderWorkflow(valueOf(changeOrderRequest.getOrderId()), OrderState.valueOf(changeOrderRequest.getOrderState().toUpperCase()), new Date()));
+            orderDao.addOrderWorkflow(new OrderWorkflow(changeOrderRequest.getOrderId(), OrderState.valueOf(changeOrderRequest.getOrderState().toUpperCase()), new Date()));
             response.setContentType("application/json");
             response.getWriter().write(getSuccessResponse());
         } catch (InvalidRequestException e) {

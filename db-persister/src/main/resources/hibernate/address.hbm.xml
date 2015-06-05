@@ -6,7 +6,7 @@
     <class name="com.quifers.domain.Address" table="address">
 
         <composite-id>
-            <key-property name="orderId" type="long">
+            <key-property name="orderId" type="string">
                 <column name="order_id"/>
             </key-property>
             <key-property name="addressType">
