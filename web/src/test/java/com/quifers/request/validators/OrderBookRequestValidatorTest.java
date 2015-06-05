@@ -1,9 +1,9 @@
 package com.quifers.request.validators;
 
+import com.quifers.service.OrderIdGeneratorService;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -13,8 +13,8 @@ import static org.testng.Assert.fail;
 
 public class OrderBookRequestValidatorTest {
 
-    private AtomicLong counter = new AtomicLong(1);
-    private final OrderBookRequestValidator validator = new OrderBookRequestValidator(counter);
+    private OrderIdGeneratorService orderIdGeneratorService = mock(OrderIdGeneratorService.class);
+    private final OrderBookRequestValidator validator = new OrderBookRequestValidator(orderIdGeneratorService);
 
     @Test
     public void shouldThrowInvalidRequestExceptionOnEmptyClientName() {

@@ -6,6 +6,7 @@ import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.service.OrderIdGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -14,16 +15,15 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class OrderBookRequestValidator {
 
-    private final AtomicLong orderIdCounter;
+    private final OrderIdGeneratorService orderIdGeneratorService;
 
-    public OrderBookRequestValidator(AtomicLong orderIdCounter) {
-        this.orderIdCounter = orderIdCounter;
+    public OrderBookRequestValidator(OrderIdGeneratorService orderIdGeneratorService) {
+        this.orderIdGeneratorService = orderIdGeneratorService;
     }
 
     public Order validateRequest(HttpServletRequest request) throws InvalidRequestException {
@@ -55,17 +55,16 @@ public class OrderBookRequestValidator {
         int dropOffFloors = validateAndGetInteger(request, "floor_no_drop");
         boolean dropOffLiftWorking = validateAndGetBoolean(request, "lift_drop");
 
-        long orderId = orderIdCounter.getAndIncrement();
-        String id = String.valueOf(orderId);
+        String orderId = orderIdGeneratorService.getNewOrderId();
 
-        Address pickUpAddress = new Address(id, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
-        Address dropOffAddress = new Address(id, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);
+        Address pickUpAddress = new Address(orderId, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
+        Address dropOffAddress = new Address(orderId, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);
         Set<Address> addresses = new HashSet<>();
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
-        return new Order(id, new Client(id, clientName, mobileNumber, email), vehicle, addresses, labours,
+        return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
                 estimate, distance, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
-                new HashSet<>(Arrays.asList(new OrderWorkflow(id, OrderState.BOOKED, bookingDate))));
+                new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))));
 
     }
 

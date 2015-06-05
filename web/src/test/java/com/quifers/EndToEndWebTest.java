@@ -4,7 +4,7 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
 import com.quifers.runners.ActiveMqBroker;
-import com.quifers.utils.ParametersBuilder;
+import com.quifers.service.OrderIdGeneratorService;import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -28,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 public class EndToEndWebTest {
 
     private static final String BASE_URL = "http://localhost:9111";
+    private static String ORDER_ID = OrderIdGeneratorService.ORDER_ID_PREFIX + "00001";
 
     @Test
     public void shouldRegisterNewAdmin() throws Exception {
@@ -215,7 +216,7 @@ public class EndToEndWebTest {
     }
 
     private String buildAssignFieldExecutiveAssignRequest() throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("order_id", "1")
+        return new ParametersBuilder().add("order_id", ORDER_ID)
                 .add("field_executive_id", "dheerajsharma1990")
                 .add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
@@ -229,14 +230,14 @@ public class EndToEndWebTest {
     private String buildChangeOrderRequest(OrderState state) throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("order_id", "1")
+                .add("order_id", ORDER_ID)
                 .add("order_state", state.name()).build();
     }
 
     private String buildCreatePriceRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("order_id", "1").build();
+                .add("order_id", ORDER_ID).build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

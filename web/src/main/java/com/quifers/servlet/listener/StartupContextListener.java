@@ -11,6 +11,7 @@ import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.request.validators.admin.AdminRegisterRequestValidator;
+import com.quifers.service.OrderIdGeneratorService;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -20,7 +21,6 @@ import javax.jms.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class StartupContextListener implements ServletContextListener {
 
@@ -49,10 +49,10 @@ public class StartupContextListener implements ServletContextListener {
         ServletContext servletContext = servletContextEvent.getServletContext();
         Environment environment = getEnvironment(servletContext);
         initDaos(servletContext, environment);
-        AtomicLong counter = initialiseOrderId(servletContext);
+        OrderIdGeneratorService service = initialiseOrderIdCounter(servletContext);
         initialiseActiveMqPublisher(servletContext);
         initialiseDao(servletContext);
-        initialiseValidators(servletContext, counter);
+        initialiseValidators(servletContext, service);
     }
 
     private Environment getEnvironment(ServletContext servletContext) {
@@ -69,10 +69,10 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-    public AtomicLong initialiseOrderId(ServletContext servletContext) {
-        AtomicLong counter = new AtomicLong(1L);
-        servletContext.setAttribute(ORDER_ID_COUNTER, counter);
-        return counter;
+    public OrderIdGeneratorService initialiseOrderIdCounter(ServletContext servletContext) {
+        OrderIdGeneratorService service = new OrderIdGeneratorService(0L);
+        servletContext.setAttribute(ORDER_ID_COUNTER, service);
+        return service;
     }
 
     public void initialiseDao(ServletContext servletContext) {
@@ -82,8 +82,8 @@ public class StartupContextListener implements ServletContextListener {
         servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());
     }
 
-    private void initialiseValidators(ServletContext servletContext, AtomicLong counter) {
-        servletContext.setAttribute(ORDER_BOOK_REQUEST_VALIDATOR, new OrderBookRequestValidator(counter));
+    private void initialiseValidators(ServletContext servletContext, OrderIdGeneratorService service) {
+        servletContext.setAttribute(ORDER_BOOK_REQUEST_VALIDATOR, new OrderBookRequestValidator(service));
     }
 
 
