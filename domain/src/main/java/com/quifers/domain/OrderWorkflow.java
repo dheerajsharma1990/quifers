@@ -2,6 +2,7 @@ package com.quifers.domain;
 
 import com.quifers.domain.enums.OrderState;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -71,6 +72,6 @@ public class OrderWorkflow implements Serializable {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.reflectionToString(this);
+        return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
     }
 }

@@ -5,6 +5,7 @@ import com.quifers.servlet.admin.*;
 import com.quifers.servlet.executives.ChangeOrderStateServlet;
 import com.quifers.servlet.executives.FieldExecutiveLoginServlet;
 import com.quifers.servlet.executives.GeneratePriceServlet;
+import com.quifers.servlet.executives.OrderByOrderIdServlet;
 import com.quifers.servlet.filters.AdminAuthenticationFilter;
 import com.quifers.servlet.filters.FieldExecutiveAuthenticationFilter;
 import com.quifers.servlet.listener.StartupContextListener;
@@ -37,6 +38,7 @@ public class JettyRunner {
         context.addServlet(new ServletHolder(new FieldExecutiveLoginServlet()), "/api/v0/guest/executive/login");
         context.addServlet(new ServletHolder(new OrderServlet()), "/api/v0/guest/order/*");
         context.addServlet(new ServletHolder(new GeneratePriceServlet()), "/api/v0/executive/order/create/price");
+        context.addServlet(new ServletHolder(new OrderByOrderIdServlet()), "/api/v0/executive/order/get/orderId");
         context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(new FilterHolder(new FieldExecutiveAuthenticationFilter()), "/api/v0/executive/*", EnumSet.of(DispatcherType.REQUEST));
         server.setHandler(context);

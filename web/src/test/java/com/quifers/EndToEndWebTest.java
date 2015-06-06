@@ -24,6 +24,7 @@ import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
 import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class EndToEndWebTest {
 
@@ -181,6 +182,20 @@ public class EndToEndWebTest {
         assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":600,\"labourCost\":0,\"waitingCost\":0}"));
     }
 
+    @Test(dependsOnMethods = "shouldGeneratePrice")
+    public void shouldGetOrderByOrderId() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/get/orderId");
+        String request = buildOrderByOrderIDRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()), notNullValue());
+    }
+
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("field_executive_id", "dheerajsharma1990")
@@ -190,7 +205,6 @@ public class EndToEndWebTest {
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .build();
     }
-
 
     private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
@@ -235,6 +249,12 @@ public class EndToEndWebTest {
     }
 
     private String buildCreatePriceRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("order_id", ORDER_ID).build();
+    }
+
+    private String buildOrderByOrderIDRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("order_id", ORDER_ID).build();

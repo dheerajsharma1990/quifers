@@ -1,8 +1,10 @@
 package com.quifers.domain;
 
-import java.io.Serializable;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
-import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
+import java.io.Serializable;
+import java.lang.reflect.Field;
 
 public class FieldExecutive implements Serializable {
 
@@ -69,7 +71,11 @@ public class FieldExecutive implements Serializable {
 
     @Override
     public String toString() {
-        return reflectionToString(this);
+        return (new ReflectionToStringBuilder(this, ToStringStyle.SIMPLE_STYLE) {
+            protected boolean accept(Field f) {
+                return super.accept(f) && !f.getName().equals("account");
+            }
+        }).toString();
     }
 
     public String getFieldExecutiveId() {

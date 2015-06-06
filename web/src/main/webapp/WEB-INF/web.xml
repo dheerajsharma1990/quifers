@@ -60,6 +60,11 @@
                 <servlet-class>com.quifers.servlet.executives.GeneratePriceServlet</servlet-class>
         </servlet>
 
+        <servlet>
+                <servlet-name>orderByOrderIdServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.executives.OrderByOrderIdServlet</servlet-class>
+        </servlet>
+
         <filter-mapping>
                 <filter-name>adminAuthenticationFilter</filter-name>
                 <url-pattern>/api/v0/admin/*</url-pattern>
@@ -115,6 +120,11 @@
         <servlet-mapping>
                 <servlet-name>generatePriceServlet</servlet-name>
                 <url-pattern>/api/v0/executive/order/create/price</url-pattern>
+        </servlet-mapping>
+
+        <servlet-mapping>
+                <servlet-name>orderByOrderIdServlet</servlet-name>
+                <url-pattern>/api/v0/executive/order/get/orderId</url-pattern>
         </servlet-mapping>
 
 </web-app>

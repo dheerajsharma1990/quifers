@@ -1,5 +1,7 @@
 package com.quifers.domain;
 
+import org.apache.commons.lang3.builder.ToStringStyle;
+
 import java.io.Serializable;
 
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
@@ -54,6 +56,6 @@ public class FieldExecutiveAccount implements Serializable {
 
     @Override
     public String toString() {
-        return reflectionToString(this);
+        return reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
     }
 }

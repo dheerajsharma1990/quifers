@@ -1,6 +1,9 @@
 package com.quifers.response;
 
 import com.quifers.domain.FieldExecutive;
+import com.quifers.domain.Order;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -24,11 +27,15 @@ public class FieldExecutiveResponse {
     public String getAllFieldExecutivesResponse(Collection<FieldExecutive> fieldExecutives) {
         List<FieldExecutiveListAll> listAlls = new ArrayList<>();
         for (FieldExecutive fieldExecutive : fieldExecutives) {
-            listAlls.add(new FieldExecutiveListAll(fieldExecutive.getAccount().getUserId(),fieldExecutive.getName(),fieldExecutive.getMobileNumber()));
+            listAlls.add(new FieldExecutiveListAll(fieldExecutive.getAccount().getUserId(), fieldExecutive.getName(), fieldExecutive.getMobileNumber()));
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("field_executives", listAlls);
         return jsonObject.toString();
+    }
+
+    public static String getOrderResponse(Order order) {
+        return ReflectionToStringBuilder.toString(order, ToStringStyle.JSON_STYLE);
     }
 
 
