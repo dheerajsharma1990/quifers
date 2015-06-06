@@ -2,6 +2,7 @@ package com.quifers.hibernate;
 
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.domain.FieldExecutive;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -39,7 +40,9 @@ public class FieldExecutiveDaoImpl implements FieldExecutiveDao {
     @Override
     public Collection<FieldExecutive> getAllFieldExecutives() {
         Session session = sessionFactory.openSession();
-        Collection<FieldExecutive> fieldExecutives = session.createCriteria(FieldExecutive.class).list();
+        Criteria criteria = session.createCriteria(FieldExecutive.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        Collection<FieldExecutive> fieldExecutives = criteria.list();
         session.close();
         return fieldExecutives;
     }

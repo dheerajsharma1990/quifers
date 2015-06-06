@@ -56,6 +56,6 @@ public class FieldExecutiveAccount implements Serializable {
 
     @Override
     public String toString() {
-        return reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+        return reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

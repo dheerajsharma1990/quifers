@@ -183,10 +183,10 @@ public class EndToEndWebTest {
     }
 
     @Test(dependsOnMethods = "shouldGeneratePrice")
-    public void shouldGetOrderByOrderId() throws Exception {
+    public void shouldGetOrdersOfFieldExecutive() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/get/orderId");
-        String request = buildOrderByOrderIDRequest();
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/get/all");
+        String request = buildAllOrdersOfFieldExecutiveRequest();
 
         //when
         int responseCode = sendRequest(connection, request);
@@ -255,10 +255,9 @@ public class EndToEndWebTest {
                 .add("order_id", ORDER_ID).build();
     }
 
-    private String buildOrderByOrderIDRequest() throws UnsupportedEncodingException {
+    private String buildAllOrdersOfFieldExecutiveRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
-                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("order_id", ORDER_ID).build();
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

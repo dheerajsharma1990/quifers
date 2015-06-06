@@ -4,9 +4,11 @@ import com.quifers.dao.OrderDao;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
+import org.hibernate.criterion.Restrictions;
+
+import java.util.Collection;
+import java.util.List;
 
 public class OrderDaoImpl implements OrderDao {
 
@@ -54,6 +56,17 @@ public class OrderDaoImpl implements OrderDao {
         session.update(order);
         transaction.commit();
         session.close();
+    }
+
+    @Override
+    public Collection<Order> getOrders(FieldExecutive fieldExecutive) {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(Order.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.eq("fieldExecutive", fieldExecutive));
+        List list = criteria.list();
+        session.close();
+        return list;
     }
 
 }

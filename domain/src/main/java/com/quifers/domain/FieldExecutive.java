@@ -71,7 +71,7 @@ public class FieldExecutive implements Serializable {
 
     @Override
     public String toString() {
-        return (new ReflectionToStringBuilder(this, ToStringStyle.SIMPLE_STYLE) {
+        return (new ReflectionToStringBuilder(this, ToStringStyle.JSON_STYLE) {
             protected boolean accept(Field f) {
                 return super.accept(f) && !f.getName().equals("account");
             }

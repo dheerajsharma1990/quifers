@@ -62,7 +62,7 @@
 
         <servlet>
                 <servlet-name>orderByOrderIdServlet</servlet-name>
-                <servlet-class>com.quifers.servlet.executives.OrderByOrderIdServlet</servlet-class>
+                <servlet-class>com.quifers.servlet.executives.AllOrdersOfFieldExecutiveServlet</servlet-class>
         </servlet>
 
         <filter-mapping>
@@ -124,7 +124,7 @@
 
         <servlet-mapping>
                 <servlet-name>orderByOrderIdServlet</servlet-name>
-                <url-pattern>/api/v0/executive/order/get/orderId</url-pattern>
+                <url-pattern>/api/v0/executive/order/get/all</url-pattern>
         </servlet-mapping>
 
 </web-app>

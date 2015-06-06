@@ -6,7 +6,6 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -108,7 +107,7 @@ public class Order implements Serializable {
         return fieldExecutive;
     }
 
-    public Collection<OrderWorkflow> getOrderWorkflows() {
+    public Set<OrderWorkflow> getOrderWorkflows() {
         return orderWorkflows;
     }
 
@@ -284,6 +283,6 @@ public class Order implements Serializable {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+        return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }

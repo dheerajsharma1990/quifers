@@ -72,6 +72,6 @@ public class OrderWorkflow implements Serializable {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.SIMPLE_STYLE);
+        return ReflectionToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
     }
 }
