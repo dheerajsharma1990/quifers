@@ -179,7 +179,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":600,\"labourCost\":0,\"waitingCost\":0}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"labourCost\":0,\"waitingCost\":0}"));
     }
 
     @Test(dependsOnMethods = "shouldGeneratePrice")
@@ -251,6 +251,7 @@ public class EndToEndWebTest {
     private String buildCreatePriceRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("distance", "14")
                 .add("order_id", ORDER_ID).build();
     }
 

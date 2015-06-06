@@ -13,4 +13,6 @@ public interface OrderDao {
     void addOrderWorkflow(OrderWorkflow orderWorkflow);
 
     void assignFieldExecutive(String orderId, FieldExecutive fieldExecutive);
+
+    void updateOrder(Order order);
 }

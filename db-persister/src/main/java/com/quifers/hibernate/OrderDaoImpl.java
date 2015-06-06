@@ -47,7 +47,8 @@ public class OrderDaoImpl implements OrderDao {
         updateOrder(order);
     }
 
-    private void updateOrder(Order order) {
+    @Override
+    public void updateOrder(Order order) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
         session.update(order);

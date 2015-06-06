@@ -2,7 +2,9 @@ package com.quifers.servlet.executives;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
+import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.EmailType;
+import com.quifers.domain.enums.OrderState;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.listener.WebPublisher;
@@ -15,6 +17,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 import static com.quifers.response.PriceResponse.getPriceResponse;
 import static com.quifers.servlet.listener.StartupContextListener.*;
@@ -37,6 +40,9 @@ public class GeneratePriceServlet extends HttpServlet {
         try {
             GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
             Order order = orderDao.getOrder(priceRequest.getOrderId());
+            order.setDistance(priceRequest.getDistance());
+            order.addOrderWorkflow(new OrderWorkflow(order.getOrderId(), OrderState.COMPLETED,new Date()));
+            orderDao.updateOrder(order);
             webPublisher.publishEmailMessage(EmailType.PRICE, order.getOrderId());
             response.setContentType("application/json");
             response.getWriter().write(getPriceResponse(order));
