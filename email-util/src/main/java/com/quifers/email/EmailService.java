@@ -67,7 +67,7 @@ public class EmailService {
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, CredentialsService.SERVICE, new EmailCreatorFactory(orderDao));
+        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, new EmailCreatorFactory(orderDao));
         orderReceiver.receiveOrders();
     }
 
@@ -95,8 +95,7 @@ public class EmailService {
             throw new FileNotFoundException("Credentials file not present.Kindly generate it." + file.getName());
         }
         Credentials credentials = jsonParser.parse(FileUtils.readFileToString(file));
-        CredentialsService credentialsService = CredentialsService.SERVICE;
-        credentialsService.setCredentials(credentials);
+        CredentialsService.setCredentials(credentials);
         LOGGER.info("Successfully loaded api credentials.");
     }
 }

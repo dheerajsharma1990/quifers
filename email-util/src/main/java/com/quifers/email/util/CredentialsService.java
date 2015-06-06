@@ -2,18 +2,16 @@ package com.quifers.email.util;
 
 public class CredentialsService {
 
-    private Credentials credentials;
-
-    public static CredentialsService SERVICE = new CredentialsService();
+    private static Credentials credentials;
 
     private CredentialsService() {
     }
 
-    public Credentials getCredentials() {
+    public static Credentials getCredentials() {
         return credentials;
     }
 
-    public void setCredentials(Credentials credentials) {
-        this.credentials = credentials;
+    public static void setCredentials(Credentials newCredentials) {
+        credentials = newCredentials;
     }
 }

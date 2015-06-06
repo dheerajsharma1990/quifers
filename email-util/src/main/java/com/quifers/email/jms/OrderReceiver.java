@@ -19,14 +19,12 @@ public class OrderReceiver {
     private final EmailUtilProperties properties;
     private final MessageConsumer messageConsumer;
     private final EmailSender emailSender;
-    private final CredentialsService credentialsService;
     private final EmailCreatorFactory emailCreatorFactory;
 
-    public OrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, EmailSender emailSender, CredentialsService credentialsService, EmailCreatorFactory emailCreatorFactory) throws JMSException {
+    public OrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, EmailSender emailSender, EmailCreatorFactory emailCreatorFactory) throws JMSException {
         this.properties = properties;
         this.messageConsumer = messageConsumer;
         this.emailSender = emailSender;
-        this.credentialsService = credentialsService;
         this.emailCreatorFactory = emailCreatorFactory;
     }
 
@@ -36,7 +34,7 @@ public class OrderReceiver {
             String emailType = message.getStringProperty("EMAIL_TYPE");
             String orderId = message.getStringProperty("ORDER_ID");
             EmailType type = EmailType.valueOf(emailType);
-            emailOrder(credentialsService.getCredentials(), emailCreatorFactory.getEmailCreator(type), orderId);
+            emailOrder(CredentialsService.getCredentials(), emailCreatorFactory.getEmailCreator(type), orderId);
             message.acknowledge();
         }
     }

@@ -24,7 +24,7 @@ import javax.servlet.ServletContextListener;
 
 public class StartupContextListener implements ServletContextListener {
 
-    public static final String ORDER_ID_COUNTER = "ORDER_ID_COUNTER";
+    public static final String ORDER_ID_SERVICE = "ORDER_ID_SERVICE";
     public static final String ORDER_BOOK_REQUEST_VALIDATOR = "ORDER_BOOK_REQUEST_VALIDATOR";
     public static final String ADMIN_ACCOUNT_REQUEST_VALIDATOR = "ADMIN_ACCOUNT_REQUEST_VALIDATOR";
     public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
@@ -48,7 +48,7 @@ public class StartupContextListener implements ServletContextListener {
         ServletContext servletContext = servletContextEvent.getServletContext();
         Environment environment = getEnvironment(servletContext);
         initDaos(servletContext, environment);
-        OrderIdGeneratorService service = initialiseOrderIdCounter(servletContext);
+        OrderIdGeneratorService service = initialiseOrderIdService(servletContext);
         initialiseActiveMqPublisher(servletContext);
         initialiseDao(servletContext);
         initialiseValidators(servletContext, service);
@@ -68,9 +68,9 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-    public OrderIdGeneratorService initialiseOrderIdCounter(ServletContext servletContext) {
+    public OrderIdGeneratorService initialiseOrderIdService(ServletContext servletContext) {
         OrderIdGeneratorService service = new OrderIdGeneratorService(0L);
-        servletContext.setAttribute(ORDER_ID_COUNTER, service);
+        servletContext.setAttribute(ORDER_ID_SERVICE, service);
         return service;
     }
 

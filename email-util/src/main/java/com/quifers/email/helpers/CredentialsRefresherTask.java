@@ -21,10 +21,10 @@ public class CredentialsRefresherTask extends TimerTask {
     @Override
     public void run() {
         try {
-            Credentials credentials = CredentialsService.SERVICE.getCredentials();
+            Credentials credentials = CredentialsService.getCredentials();
             Credentials newCredentials = refresher.getRefreshedCredentials(credentials);
             LOGGER.info("Refreshed New Credentials : {}", credentials);
-            CredentialsService.SERVICE.setCredentials(newCredentials);
+            CredentialsService.setCredentials(newCredentials);
         } catch (IOException e) {
             e.printStackTrace();
         }
