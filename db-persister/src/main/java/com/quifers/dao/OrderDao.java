@@ -20,4 +20,6 @@ public interface OrderDao {
 
     Collection<Order> getOrders(FieldExecutive fieldExecutive);
 
+    Collection<Order> getAllOrders();
+
 }

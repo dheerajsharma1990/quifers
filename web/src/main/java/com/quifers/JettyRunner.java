@@ -39,6 +39,7 @@ public class JettyRunner {
         context.addServlet(new ServletHolder(new OrderServlet()), "/api/v0/guest/order/*");
         context.addServlet(new ServletHolder(new GeneratePriceServlet()), "/api/v0/executive/order/create/price");
         context.addServlet(new ServletHolder(new AllOrdersOfFieldExecutiveServlet()), "/api/v0/executive/order/get/all");
+        context.addServlet(new ServletHolder(new AllOrdersServlet()), "/api/v0/admin/order/get/all");
         context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(new FilterHolder(new FieldExecutiveAuthenticationFilter()), "/api/v0/executive/*", EnumSet.of(DispatcherType.REQUEST));
         server.setHandler(context);

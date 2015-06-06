@@ -105,7 +105,7 @@ public class EndToEndWebTest {
     public void shouldGetAllFieldExecutives() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/listAll");
-        String request = buildValidFieldExecutivesGetAllRequest();
+        String request = buildValidAdminAccessTokenRequest();
 
         //when
         int responseCode = sendRequest(connection, request);
@@ -196,6 +196,20 @@ public class EndToEndWebTest {
         assertThat(IOUtils.toString(connection.getInputStream()), notNullValue());
     }
 
+    @Test(dependsOnMethods = "shouldGetOrdersOfFieldExecutive")
+    public void shouldGetAllOrders() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order/get/all");
+        String request = buildValidAdminAccessTokenRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()), notNullValue());
+    }
+
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("field_executive_id", "dheerajsharma1990")
@@ -224,7 +238,7 @@ public class EndToEndWebTest {
                 .add("password", "mypassword").build();
     }
 
-    private String buildValidFieldExecutivesGetAllRequest() throws UnsupportedEncodingException {
+    private String buildValidAdminAccessTokenRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
     }

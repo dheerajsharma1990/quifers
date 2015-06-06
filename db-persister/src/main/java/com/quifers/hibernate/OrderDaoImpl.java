@@ -69,4 +69,14 @@ public class OrderDaoImpl implements OrderDao {
         return list;
     }
 
+    @Override
+    public Collection<Order> getAllOrders() {
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(Order.class);
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        List list = criteria.list();
+        session.close();
+        return list;
+    }
+
 }

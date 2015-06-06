@@ -65,6 +65,11 @@
                 <servlet-class>com.quifers.servlet.executives.AllOrdersOfFieldExecutiveServlet</servlet-class>
         </servlet>
 
+        <servlet>
+                <servlet-name>allOrdersServlet</servlet-name>
+                <servlet-class>com.quifers.servlet.admin.AllOrdersServlet</servlet-class>
+        </servlet>
+
         <filter-mapping>
                 <filter-name>adminAuthenticationFilter</filter-name>
                 <url-pattern>/api/v0/admin/*</url-pattern>
@@ -125,6 +130,11 @@
         <servlet-mapping>
                 <servlet-name>orderByOrderIdServlet</servlet-name>
                 <url-pattern>/api/v0/executive/order/get/all</url-pattern>
+        </servlet-mapping>
+
+        <servlet-mapping>
+                <servlet-name>allOrdersServlet</servlet-name>
+                <url-pattern>/api/v0/admin/order/get/all</url-pattern>
         </servlet-mapping>
 
 </web-app>
