@@ -13,6 +13,7 @@
                 <column name="address_type"/>
                 <type name="org.hibernate.type.EnumType">
                     <param name="enumClass">com.quifers.domain.enums.AddressType</param>
+                    <param name="useNamed">true</param>
                 </type>
             </key-property>
         </composite-id>

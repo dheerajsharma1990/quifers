@@ -50,7 +50,7 @@ public class JettyRunner {
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = runJettyServer(9111);
+        Server server = runJettyServer(80);
         server.join();
     }
 

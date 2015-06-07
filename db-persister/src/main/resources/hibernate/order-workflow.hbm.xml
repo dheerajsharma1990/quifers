@@ -12,6 +12,7 @@
                 <column name="order_state"/>
                 <type name="org.hibernate.type.EnumType">
                     <param name="enumClass">com.quifers.domain.enums.OrderState</param>
+                    <param name="useNamed">true</param>
                 </type>
             </key-property>
         </composite-id>
