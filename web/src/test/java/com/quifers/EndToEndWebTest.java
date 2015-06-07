@@ -4,7 +4,8 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.QuifersProperties;
 import com.quifers.runners.ActiveMqBroker;
-import com.quifers.service.OrderIdGeneratorService;import com.quifers.utils.ParametersBuilder;
+import com.quifers.service.OrderIdGeneratorService;
+import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -321,7 +322,7 @@ public class EndToEndWebTest {
                 .add("estimate_label", "12 Min")
                 .add("distance_label", "12")
                 .add("floor_no_pick", "1")
-                .add("lift_pickp", "false")
+                .add("lift_pickup", "false")
                 .add("floor_no_drop", "2")
                 .add("lift_drop", "true")
                 .add("date_time_label", "22/09/1990 10:20:30").build();

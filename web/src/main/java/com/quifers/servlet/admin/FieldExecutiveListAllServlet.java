@@ -31,7 +31,7 @@ public class FieldExecutiveListAllServlet extends HttpServlet {
         try {
             Collection<FieldExecutive> allFieldExecutives = fieldExecutiveDao.getAllFieldExecutives();
             response.setContentType("application/json");
-            response.getWriter().write(new FieldExecutiveResponse().getAllFieldExecutivesResponse(allFieldExecutives));
+            response.getWriter().write(FieldExecutiveResponse.getAllFieldExecutivesResponse(allFieldExecutives));
         } catch (Exception e) {
             LOGGER.error("Error occurred in field executives.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());

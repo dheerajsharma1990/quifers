@@ -20,7 +20,7 @@ public class FieldExecutiveResponse {
         return object.toString();
     }
 
-    public String getAllFieldExecutivesResponse(Collection<FieldExecutive> fieldExecutives) {
+    public static String getAllFieldExecutivesResponse(Collection<FieldExecutive> fieldExecutives) {
         List<FieldExecutiveListAll> listAlls = new ArrayList<>();
         for (FieldExecutive fieldExecutive : fieldExecutives) {
             listAlls.add(new FieldExecutiveListAll(fieldExecutive.getAccount().getUserId(), fieldExecutive.getName(), fieldExecutive.getMobileNumber()));

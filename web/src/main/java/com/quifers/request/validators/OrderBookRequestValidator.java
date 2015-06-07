@@ -47,7 +47,7 @@ public class OrderBookRequestValidator {
         int labours = validateAndGetInteger(request, "labour");
 
         String estimate = emptyCheckValidator(request, "estimate_label", "Estimate");
-        int distance = validateAndGetInteger(request, "distance_label");
+
 
         int pickUpFloors = validateAndGetInteger(request, "floor_no_pick");
         boolean pickupLiftWorking = validateAndGetBoolean(request, "lift_pickup");
@@ -63,7 +63,7 @@ public class OrderBookRequestValidator {
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
         return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
-                estimate, distance, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
+                estimate, 0, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
                 new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))));
 
     }

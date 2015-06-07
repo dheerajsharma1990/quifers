@@ -34,19 +34,27 @@ public class EmailService {
 
     private static JsonParser jsonParser = new JsonParser();
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         LOGGER.info("Starting quifers email service...");
-        Environment environment = getEnvironment();
-        EmailUtilProperties properties = loadEmailUtilProperties(environment);
+        SessionFactory sessionFactory = null;
+        try {
+            Environment environment = getEnvironment();
+            EmailUtilProperties properties = loadEmailUtilProperties(environment);
 
-        initialiseCredentialsService(jsonParser);
+            initialiseCredentialsService(jsonParser);
 
-        CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
-        scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
+            CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
+            scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
 
-        SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
-        MessageConsumer messageConsumer = connectToActiveMq(properties);
-        receiveOrders(properties, messageConsumer, sessionFactory);
+            sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
+            MessageConsumer messageConsumer = connectToActiveMq(properties);
+            receiveOrders(properties, messageConsumer, sessionFactory);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sessionFactory.close();
+        }
+
     }
 
     private static Environment getEnvironment() throws Exception {

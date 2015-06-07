@@ -42,6 +42,7 @@ public class OrderResponse {
         for(Address address : order.getAddresses()) {
             addressResponses.add(new AddressResponse(address));
         }
+        this.addresses = addressResponses;
         this.labours = order.getLabours();
         this.distance = order.getDistance();
         this.pickupFloors = order.getPickupFloors();
@@ -52,6 +53,7 @@ public class OrderResponse {
         for(OrderWorkflow orderWorkflow : order.getOrderWorkflows()) {
             orderWorkflowResponses.add(new OrderWorkflowResponse(orderWorkflow));
         }
+        this.orderWorkflows = orderWorkflowResponses;
 
     }
 

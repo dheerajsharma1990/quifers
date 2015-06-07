@@ -6,6 +6,7 @@ import com.quifers.domain.enums.EmailType;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,10 @@ public class OrderServlet extends HttpServlet {
             Order order = requestValidator.validateRequest(request);
             orderDao.saveOrder(order);
             webPublisher.publishEmailMessage(EmailType.ORDER, order.getOrderId());
+            JSONObject object = new JSONObject();
+            object.put("success", "true");
+            response.setContentType("application/json");
+            response.getWriter().write(object.toString());
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
