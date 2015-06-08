@@ -39,16 +39,14 @@ public class EmailService {
         try {
             Environment environment = getEnvironment();
             EmailUtilProperties properties = loadEmailUtilProperties(environment);
+            daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
 
             initialiseCredentialsService(jsonParser);
+            scheduleCredentialsRefreshingTask(properties);
 
-            CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
-            scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
-
-            daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
             MessageConsumer messageConsumer = connectToActiveMq(properties);
             receiveOrders(properties, messageConsumer, daoFactory);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             e.printStackTrace();
         } finally {
             if (daoFactory != null) {
@@ -79,11 +77,12 @@ public class EmailService {
         orderReceiver.receiveOrders();
     }
 
-    private static void scheduleCredentialsRefreshingTask(CredentialsRefresher credentialsRefresher, int delay) {
+    private static void scheduleCredentialsRefreshingTask(EmailUtilProperties properties) {
         LOGGER.info("Scheduling credential refresher task with delay of {} milliseconds...");
+        CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
         CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsRefresher);
         Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(refresherTask, 0, delay * 1000);
+        timer.scheduleAtFixedRate(refresherTask, 0, properties.getCredentialsRefreshDelayInSeconds() * 1000);
     }
 
     private static MessageConsumer connectToActiveMq(EmailUtilProperties properties) throws JMSException {
