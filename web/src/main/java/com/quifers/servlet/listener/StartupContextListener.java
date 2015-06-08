@@ -19,6 +19,7 @@ import javax.jms.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.IOException;
 
 public class StartupContextListener implements ServletContextListener {
 
@@ -100,13 +101,17 @@ public class StartupContextListener implements ServletContextListener {
     }
 
     private void initDaos(ServletContext servletContext, Environment environment) {
-        DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
-
-        servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
-        servletContext.setAttribute(FIELD_EXECUTIVE_DAO, daoFactory.getFieldExecutiveDao());
-        servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminDao()));
-        servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(daoFactory.getFieldExecutiveDao()));
-        servletContext.setAttribute(ORDER_DAO, daoFactory.getOrderDao());
+        DaoFactory daoFactory = null;
+        try {
+            daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
+            servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
+            servletContext.setAttribute(FIELD_EXECUTIVE_DAO, daoFactory.getFieldExecutiveDao());
+            servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminDao()));
+            servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(daoFactory.getFieldExecutiveDao()));
+            servletContext.setAttribute(ORDER_DAO, daoFactory.getOrderDao());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
