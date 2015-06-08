@@ -6,21 +6,22 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-public class SessionFactoryBuilder {
+public class DaoFactoryBuilder {
 
-    private static SessionFactory sessionFactory;
+    private static DaoFactory daoFactory;
 
-    private static SessionFactory buildSessionFactory(Environment environment) {
+    private static DaoFactory buildDaoFactory(Environment environment) {
         Configuration configuration = new Configuration();
         configuration.configure("properties" + "/" + environment.name().toLowerCase() + "/hibernate-config.xml");
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
-        return configuration.buildSessionFactory(serviceRegistry);
+        SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        return new DaoFactory(sessionFactory);
     }
 
-    public static SessionFactory getSessionFactory(Environment environment) {
-        if(sessionFactory == null) {
-            sessionFactory = buildSessionFactory(environment);
+    public static DaoFactory getDaoFactory(Environment environment) {
+        if (daoFactory == null) {
+            daoFactory = buildDaoFactory(environment);
         }
-        return sessionFactory;
+        return daoFactory;
     }
 }

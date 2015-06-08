@@ -1,15 +1,12 @@
 package com.quifers.email.util.jms;
 
-import com.quifers.Environment;
 import com.quifers.domain.Address;
 import com.quifers.domain.Client;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.hibernate.SessionFactoryBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.hibernate.SessionFactory;
 
 import javax.jms.*;
 import java.util.Date;
@@ -42,8 +39,6 @@ public class ActiveMqPublisher {
     }
 
     public static void main(String[] args) throws JMSException {
-        SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(Environment.LOCAL);
-
         String orderId = "100";
         Set<OrderWorkflow> workflowSet = new HashSet<>();
         workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date()));

@@ -1,19 +1,17 @@
 package com.quifers.servlet.listener;
 
+import com.quifers.hibernate.DaoFactory;
 import com.quifers.Environment;
 import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
-import com.quifers.dao.AdminDao;
-import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.hibernate.*;
+import com.quifers.hibernate.DaoFactoryBuilder;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.request.validators.admin.AdminRegisterRequestValidator;
 import com.quifers.service.OrderIdGeneratorService;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,14 +100,13 @@ public class StartupContextListener implements ServletContextListener {
     }
 
     private void initDaos(ServletContext servletContext, Environment environment) {
-        SessionFactory sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
-        AdminDao adminDao = new AdminDaoImpl(sessionFactory);
-        FieldExecutiveDao fieldExecutiveDao = new FieldExecutiveDaoImpl(sessionFactory);
-        servletContext.setAttribute(ADMIN_DAO, adminDao);
-        servletContext.setAttribute(FIELD_EXECUTIVE_DAO, fieldExecutiveDao);
-        servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(adminDao));
-        servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(fieldExecutiveDao));
-        servletContext.setAttribute(ORDER_DAO, new OrderDaoImpl(sessionFactory));
+        DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
+
+        servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
+        servletContext.setAttribute(FIELD_EXECUTIVE_DAO, daoFactory.getFieldExecutiveDao());
+        servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminDao()));
+        servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(daoFactory.getFieldExecutiveDao()));
+        servletContext.setAttribute(ORDER_DAO, daoFactory.getOrderDao());
     }
 
     @Override

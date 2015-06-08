@@ -1,5 +1,6 @@
 package com.quifers.email;
 
+import com.quifers.hibernate.DaoFactory;
 import com.quifers.Environment;
 import com.quifers.dao.OrderDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
@@ -11,11 +12,9 @@ import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
-import com.quifers.hibernate.OrderDaoImpl;
-import com.quifers.hibernate.SessionFactoryBuilder;
+import com.quifers.hibernate.DaoFactoryBuilder;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.io.FileUtils;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +35,7 @@ public class EmailService {
 
     public static void main(String[] args) {
         LOGGER.info("Starting quifers email service...");
-        SessionFactory sessionFactory = null;
+        DaoFactory daoFactory = null;
         try {
             Environment environment = getEnvironment();
             EmailUtilProperties properties = loadEmailUtilProperties(environment);
@@ -46,13 +45,15 @@ public class EmailService {
             CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
             scheduleCredentialsRefreshingTask(credentialsRefresher, properties.getCredentialsRefreshDelayInSeconds());
 
-            sessionFactory = SessionFactoryBuilder.getSessionFactory(environment);
+            daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
             MessageConsumer messageConsumer = connectToActiveMq(properties);
-            receiveOrders(properties, messageConsumer, sessionFactory);
+            receiveOrders(properties, messageConsumer, daoFactory);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            sessionFactory.close();
+            if (daoFactory != null) {
+                daoFactory.closeDaoFactory();
+            }
         }
 
     }
@@ -63,15 +64,14 @@ public class EmailService {
             throw new Exception("No environment specified.Kindly look at the Environment enum for possible values.");
         }
         try {
-            Environment environment = Environment.valueOf(env.toUpperCase());
-            return environment;
+            return Environment.valueOf(env.toUpperCase());
         } catch (IllegalArgumentException e) {
             throw new Exception("No such environment exists [" + env + "].");
         }
     }
 
-    private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, SessionFactory sessionFactory) throws JMSException, IOException, MessagingException {
-        OrderDao orderDao = new OrderDaoImpl(sessionFactory);
+    private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, DaoFactory daoFactory) throws JMSException, IOException, MessagingException {
+        OrderDao orderDao = daoFactory.getOrderDao();
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
