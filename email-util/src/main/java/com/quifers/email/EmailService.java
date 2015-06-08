@@ -78,7 +78,7 @@ public class EmailService {
     }
 
     private static void scheduleCredentialsRefreshingTask(EmailUtilProperties properties) {
-        LOGGER.info("Scheduling credential refresher task with delay of {} milliseconds...");
+        LOGGER.info("Scheduling credential refresher task with delay of {} milliseconds...", properties.getCredentialsRefreshDelayInSeconds());
         CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
         CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsRefresher);
         Timer timer = new Timer(true);
