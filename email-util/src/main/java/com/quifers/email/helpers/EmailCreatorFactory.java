@@ -16,7 +16,7 @@ public class EmailCreatorFactory {
         } else if (EmailType.BILL_DETAILS.equals(emailType)) {
             return new BillDetailsEmailCreator(fromAddress);
         }
-        throw new IllegalArgumentException("No email of type: " + emailType);
+        throw new IllegalArgumentException("No email creator of type: " + emailType);
     }
 
 }

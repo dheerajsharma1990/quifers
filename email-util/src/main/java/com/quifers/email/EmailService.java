@@ -45,7 +45,7 @@ public class EmailService {
             OrderReceiver orderReceiver = getOrderReceiver(properties, messageConsumer.getMessageConsumer(), credentialsService, daoFactory.getOrderDao());
             receiveOrders(orderReceiver);
         } catch (Throwable e) {
-            e.printStackTrace();
+            LOGGER.error("It's all over.Something terrible has happened.Email Service Is Shutting Down..{}", e);
         } finally {
             if (daoFactory != null) {
                 daoFactory.closeDaoFactory();

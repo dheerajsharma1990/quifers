@@ -28,6 +28,7 @@ public class EmailHttpRequestSender {
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod("POST");
         connection.setDoOutput(true);
+        connection.setDoInput(true);
         return connection;
     }
 }
