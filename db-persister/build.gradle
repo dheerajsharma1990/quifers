@@ -15,13 +15,13 @@ configurations {
 }
 
 
-task jarTest (type: Jar, dependsOn: testClasses) {
+task testJar (type: Jar, dependsOn: testClasses) {
     from sourceSets.test.output
     classifier = 'test'
 }
 
 artifacts {
-    testOutput jarTest
+    testOutput testJar
 }
 
 idea {

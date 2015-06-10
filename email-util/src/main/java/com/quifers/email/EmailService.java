@@ -1,24 +1,25 @@
 package com.quifers.email;
 
-import com.quifers.hibernate.DaoFactory;
 import com.quifers.Environment;
 import com.quifers.dao.OrderDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.*;
+import com.quifers.email.jms.EmailMessageConsumer;
 import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
+import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
-import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jms.*;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
 import javax.mail.MessagingException;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ public class EmailService {
     public static void main(String[] args) {
         LOGGER.info("Starting quifers email service...");
         DaoFactory daoFactory = null;
+        EmailMessageConsumer messageConsumer = null;
         try {
             Environment environment = getEnvironment();
             EmailUtilProperties properties = loadEmailUtilProperties(environment);
@@ -44,13 +46,16 @@ public class EmailService {
             initialiseCredentialsService(jsonParser);
             scheduleCredentialsRefreshingTask(properties);
 
-            MessageConsumer messageConsumer = connectToActiveMq(properties);
-            receiveOrders(properties, messageConsumer, daoFactory);
+            messageConsumer = new EmailMessageConsumer(properties);
+            receiveOrders(properties, messageConsumer.getMessageConsumer(), daoFactory);
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
             if (daoFactory != null) {
                 daoFactory.closeDaoFactory();
+            }
+            if (messageConsumer != null) {
+                messageConsumer.close();
             }
         }
 
@@ -85,16 +90,6 @@ public class EmailService {
         timer.scheduleAtFixedRate(refresherTask, 0, properties.getCredentialsRefreshDelayInSeconds() * 1000);
     }
 
-    private static MessageConsumer connectToActiveMq(EmailUtilProperties properties) throws JMSException {
-        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(properties.getActiveMqUrl());
-        Connection connection = connectionFactory.createConnection();
-        Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
-        Queue queue = session.createQueue(properties.getEmailQueueName());
-        MessageConsumer messageConsumer = session.createConsumer(queue);
-        connection.start();
-        LOGGER.info("Started listening for orders on active-mq...");
-        return messageConsumer;
-    }
 
     public static void initialiseCredentialsService(JsonParser jsonParser) throws IOException {
         File file = new File("./target/credentials.json");

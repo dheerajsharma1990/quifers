@@ -24,6 +24,8 @@ dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
 
 
+    testCompile project(path: ':db-persister', configuration: 'testOutput')
+
 }
 
 mainClassName = 'com.quifers.email.EmailService'
