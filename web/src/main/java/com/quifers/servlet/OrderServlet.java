@@ -39,7 +39,7 @@ public class OrderServlet extends HttpServlet {
         try {
             Order order = requestValidator.validateRequest(request);
             orderDao.saveOrder(order);
-            webPublisher.publishEmailMessage(EmailType.ORDER, order.getOrderId());
+            webPublisher.publishEmailMessage(EmailType.NEW_ORDER, order.getOrderId());
             JSONObject object = new JSONObject();
             object.put("success", "true");
             response.setContentType("application/json");

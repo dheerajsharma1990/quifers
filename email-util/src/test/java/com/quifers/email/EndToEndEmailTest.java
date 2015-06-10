@@ -1,8 +1,5 @@
 package com.quifers.email;
 
-import com.quifers.Environment;
-import com.quifers.dao.OrderDao;
-import com.quifers.db.LocalDatabaseRunner;
 import com.quifers.domain.Address;
 import com.quifers.domain.Client;
 import com.quifers.domain.Order;
@@ -12,11 +9,10 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.EmailHttpRequestSender;
 import com.quifers.email.helpers.EmailSender;
-import com.quifers.email.helpers.OrderEmailCreator;
+import com.quifers.email.helpers.NewOrderEmailCreator;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
-import com.quifers.hibernate.DaoFactoryBuilder;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -27,8 +23,8 @@ import java.util.Set;
 @Test(enabled = false)
 public class EndToEndEmailTest {
 
-    private OrderDao orderDao;
     private CredentialsService credentialsService;
+
     /**
      * Kindly generate credentials from CredentialsGenerator.java before running this test..
      */
@@ -37,10 +33,9 @@ public class EndToEndEmailTest {
         //given
         EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
         Order order = getOrder();
-        orderDao.saveOrder(order);
 
         //when
-        emailSender.sendEmail(credentialsService.getCredentials(), new OrderEmailCreator(orderDao), order.getOrderId(), "quifersdev@gmail.com");
+        emailSender.sendEmail(credentialsService.getCredentials(), new NewOrderEmailCreator("quifersdev@gmail.com"), order);
 
         //then
     }
@@ -48,8 +43,6 @@ public class EndToEndEmailTest {
     @BeforeClass
     public void initialiseEmailService() throws Exception {
         System.setProperty("env", "local");
-        new LocalDatabaseRunner().runDatabaseServer();
-        orderDao = DaoFactoryBuilder.getDaoFactory(Environment.LOCAL).getOrderDao();
         credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
     }
 

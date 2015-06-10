@@ -1,21 +1,20 @@
 package com.quifers.email.helpers;
 
-import com.quifers.dao.OrderDao;
 import com.quifers.domain.enums.EmailType;
 
 public class EmailCreatorFactory {
 
-    private final OrderDao orderDao;
+    private final String fromAddress;
 
-    public EmailCreatorFactory(OrderDao orderDao) {
-        this.orderDao = orderDao;
+    public EmailCreatorFactory(String fromAddress) {
+        this.fromAddress = fromAddress;
     }
 
     public EmailCreator getEmailCreator(EmailType emailType) {
-        if (EmailType.ORDER.equals(emailType)) {
-            return new OrderEmailCreator(orderDao);
-        } else if (EmailType.PRICE.equals(emailType)) {
-            return new PriceEmailCreator(orderDao);
+        if (EmailType.NEW_ORDER.equals(emailType)) {
+            return new NewOrderEmailCreator(fromAddress);
+        } else if (EmailType.BILL_DETAILS.equals(emailType)) {
+            return new BillDetailsEmailCreator(fromAddress);
         }
         throw new IllegalArgumentException("No email of type: " + emailType);
     }

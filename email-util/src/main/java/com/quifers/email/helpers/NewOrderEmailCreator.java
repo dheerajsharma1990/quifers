@@ -1,6 +1,5 @@
 package com.quifers.email.helpers;
 
-import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
@@ -14,17 +13,16 @@ import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-public class OrderEmailCreator implements EmailCreator {
+public class NewOrderEmailCreator implements EmailCreator {
 
-    private final OrderDao orderDao;
+    private final String fromAddress;
 
-    public OrderEmailCreator(OrderDao orderDao) {
-        this.orderDao = orderDao;
+    public NewOrderEmailCreator(String fromAddress) {
+        this.fromAddress = fromAddress;
     }
 
     @Override
-    public MimeMessage createEmail(String orderId, String fromAddress) throws UnsupportedEncodingException, MessagingException {
-        Order order = orderDao.getOrder(orderId);
+    public MimeMessage createEmail(Order order) throws UnsupportedEncodingException, MessagingException {
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 

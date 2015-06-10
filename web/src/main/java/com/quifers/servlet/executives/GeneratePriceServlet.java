@@ -43,7 +43,7 @@ public class GeneratePriceServlet extends HttpServlet {
             order.setDistance(priceRequest.getDistance());
             order.addOrderWorkflow(new OrderWorkflow(order.getOrderId(), OrderState.COMPLETED,new Date()));
             orderDao.updateOrder(order);
-            webPublisher.publishEmailMessage(EmailType.PRICE, order.getOrderId());
+            webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, order.getOrderId());
             response.setContentType("application/json");
             response.getWriter().write(getPriceResponse(order));
         } catch (InvalidRequestException e) {

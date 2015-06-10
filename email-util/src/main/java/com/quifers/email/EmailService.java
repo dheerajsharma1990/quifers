@@ -42,7 +42,7 @@ public class EmailService {
             scheduleCredentialsRefreshingTask(credentialsService, properties);
 
             messageConsumer = new EmailMessageConsumer(properties);
-            OrderReceiver orderReceiver = getOrderReceiver(properties, messageConsumer.getMessageConsumer(), daoFactory, credentialsService);
+            OrderReceiver orderReceiver = getOrderReceiver(properties, messageConsumer.getMessageConsumer(), credentialsService, daoFactory.getOrderDao());
             receiveOrders(orderReceiver);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -75,12 +75,11 @@ public class EmailService {
         }
     }
 
-    private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, DaoFactory daoFactory, CredentialsService credentialsService) throws JMSException, IOException, MessagingException {
-        OrderDao orderDao = daoFactory.getOrderDao();
+    private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, CredentialsService credentialsService, OrderDao orderDao) throws JMSException, IOException, MessagingException {
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        return new OrderReceiver(properties, messageConsumer, emailSender, new EmailCreatorFactory(orderDao), credentialsService);
+        return new OrderReceiver(messageConsumer, emailSender, new EmailCreatorFactory(properties.getEmailAccount()), credentialsService, orderDao);
     }
 
     private static void scheduleCredentialsRefreshingTask(CredentialsService credentialsService, EmailUtilProperties properties) {

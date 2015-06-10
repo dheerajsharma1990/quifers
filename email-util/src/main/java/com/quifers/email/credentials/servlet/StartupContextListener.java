@@ -36,7 +36,7 @@ public class StartupContextListener implements ServletContextListener {
 
     private void initialiseProperties(ServletContext servletContext) {
         try {
-            Environment environment = Environment.valueOf(servletContext.getInitParameter("env"));
+            Environment environment = Environment.valueOf(servletContext.getInitParameter("env").toUpperCase());
             EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
             servletContext.setAttribute(EMAIL_UTIL_PROPERTIES, emailUtilProperties);
         } catch (IOException e) {

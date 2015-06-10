@@ -1,5 +1,6 @@
 package com.quifers.email.helpers;
 
+import com.quifers.domain.Order;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.util.Credentials;
 
@@ -20,9 +21,9 @@ public class EmailSender {
         this.builder = builder;
     }
 
-    public String sendEmail(Credentials credentials, EmailCreator emailCreator, String orderId, String fromAddress) throws IOException, MessagingException {
+    public String sendEmail(Credentials credentials, EmailCreator emailCreator, Order order) throws IOException, MessagingException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        MimeMessage mimeMessage = emailCreator.createEmail(orderId, fromAddress);
+        MimeMessage mimeMessage = emailCreator.createEmail(order);
         mimeMessage.writeTo(out);
         byte[] binaryData = out.toByteArray();
         String encode = encodeBase64URLSafeString(binaryData);
