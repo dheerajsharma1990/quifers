@@ -29,6 +29,10 @@ public class EndToEndEmailTest {
 
     private OrderDao orderDao;
 
+    /**
+     *
+     * Kindly generate credentials from CredentialsGenerator.java before running this test..
+     */
     @Test(enabled = false)
     public void shouldSendEmailSuccessfully() throws Exception {
         //given
