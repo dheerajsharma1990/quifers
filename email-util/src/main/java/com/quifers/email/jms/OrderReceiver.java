@@ -20,23 +20,23 @@ public class OrderReceiver {
     private final MessageConsumer messageConsumer;
     private final EmailSender emailSender;
     private final EmailCreatorFactory emailCreatorFactory;
+    private final CredentialsService credentialsService;
 
-    public OrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, EmailSender emailSender, EmailCreatorFactory emailCreatorFactory) throws JMSException {
+    public OrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, EmailSender emailSender, EmailCreatorFactory emailCreatorFactory, CredentialsService credentialsService) throws JMSException {
         this.properties = properties;
         this.messageConsumer = messageConsumer;
         this.emailSender = emailSender;
         this.emailCreatorFactory = emailCreatorFactory;
+        this.credentialsService = credentialsService;
     }
 
     public void receiveOrders() throws JMSException, IOException, MessagingException {
-        while (true) {
-            ActiveMQObjectMessage message = (ActiveMQObjectMessage) messageConsumer.receive();
-            String emailType = message.getStringProperty("EMAIL_TYPE");
-            String orderId = message.getStringProperty("ORDER_ID");
-            EmailType type = EmailType.valueOf(emailType);
-            emailOrder(CredentialsService.getCredentials(), emailCreatorFactory.getEmailCreator(type), orderId);
-            message.acknowledge();
-        }
+        ActiveMQObjectMessage message = (ActiveMQObjectMessage) messageConsumer.receive();
+        String emailType = message.getStringProperty("EMAIL_TYPE");
+        String orderId = message.getStringProperty("ORDER_ID");
+        EmailType type = EmailType.valueOf(emailType);
+        emailOrder(credentialsService.getCredentials(), emailCreatorFactory.getEmailCreator(type), orderId);
+        message.acknowledge();
     }
 
     private void emailOrder(Credentials credentials, EmailCreator emailCreator, String orderId) throws IOException, MessagingException {

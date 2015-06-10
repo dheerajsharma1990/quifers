@@ -2,6 +2,7 @@ package com.quifers.email.credentials.servlet;
 
 import com.quifers.email.builders.AccessTokenRequestBuilder;
 import com.quifers.email.properties.EmailUtilProperties;
+import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import org.apache.commons.io.FileUtils;
 
@@ -9,12 +10,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.io.IOException;
 
-import static com.quifers.email.credentials.servlet.StartupContextListener.ACCESS_TOKEN_REQUEST_BUILDER;
-import static com.quifers.email.credentials.servlet.StartupContextListener.EMAIL_UTIL_PROPERTIES;
-import static com.quifers.email.credentials.servlet.StartupContextListener.HTTP_REQUEST_SENDER;
+import static com.quifers.email.credentials.servlet.StartupContextListener.*;
 
 public class AccessTokenRequestServlet extends HttpServlet {
 
@@ -43,7 +41,7 @@ public class AccessTokenRequestServlet extends HttpServlet {
         String accessCode = request.getParameter("code");
         String requestParams = requestBuilder.buildAccessTokenRequest(accessCode, properties.getCallbackUrl(), properties.getClientId(), properties.getClientSecretKey());
         String responseString = httpRequestSender.sendRequestAndGetResponse(ACCESS_TOKEN_URL, "POST", requestParams);
-        FileUtils.writeStringToFile(new File("./target/credentials.json"), responseString);
+        FileUtils.writeStringToFile(CredentialsService.DEFAULT_DIR, responseString);
         response.getWriter().write("Credentials successfully written to file ./target/credentials.json.\n\n" + responseString);
     }
 

@@ -8,21 +8,17 @@ import com.quifers.email.helpers.*;
 import com.quifers.email.jms.EmailMessageConsumer;
 import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.properties.EmailUtilProperties;
-import com.quifers.email.util.Credentials;
 import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
-import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.mail.MessagingException;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Timer;
 
@@ -42,12 +38,12 @@ public class EmailService {
             Environment environment = getEnvironment();
             EmailUtilProperties properties = loadEmailUtilProperties(environment);
             daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
-
-            initialiseCredentialsService(jsonParser);
-            scheduleCredentialsRefreshingTask(properties);
+            CredentialsService credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
+            scheduleCredentialsRefreshingTask(credentialsService, properties);
 
             messageConsumer = new EmailMessageConsumer(properties);
-            receiveOrders(properties, messageConsumer.getMessageConsumer(), daoFactory);
+            OrderReceiver orderReceiver = getOrderReceiver(properties, messageConsumer.getMessageConsumer(), daoFactory, credentialsService);
+            receiveOrders(orderReceiver);
         } catch (Throwable e) {
             e.printStackTrace();
         } finally {
@@ -59,6 +55,12 @@ public class EmailService {
             }
         }
 
+    }
+
+    private static void receiveOrders(OrderReceiver orderReceiver) throws JMSException, MessagingException, IOException {
+        while (true) {
+            orderReceiver.receiveOrders();
+        }
     }
 
     private static Environment getEnvironment() throws Exception {
@@ -73,31 +75,20 @@ public class EmailService {
         }
     }
 
-    private static void receiveOrders(EmailUtilProperties properties, MessageConsumer messageConsumer, DaoFactory daoFactory) throws JMSException, IOException, MessagingException {
+    private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, DaoFactory daoFactory, CredentialsService credentialsService) throws JMSException, IOException, MessagingException {
         OrderDao orderDao = daoFactory.getOrderDao();
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        OrderReceiver orderReceiver = new OrderReceiver(properties, messageConsumer, emailSender, new EmailCreatorFactory(orderDao));
-        orderReceiver.receiveOrders();
+        return new OrderReceiver(properties, messageConsumer, emailSender, new EmailCreatorFactory(orderDao), credentialsService);
     }
 
-    private static void scheduleCredentialsRefreshingTask(EmailUtilProperties properties) {
+    private static void scheduleCredentialsRefreshingTask(CredentialsService credentialsService, EmailUtilProperties properties) {
         LOGGER.info("Scheduling credential refresher task with delay of {} milliseconds...", properties.getCredentialsRefreshDelayInSeconds());
         CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
-        CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsRefresher);
+        CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsService, credentialsRefresher);
         Timer timer = new Timer(true);
         timer.scheduleAtFixedRate(refresherTask, 0, properties.getCredentialsRefreshDelayInSeconds() * 1000);
     }
 
-
-    public static void initialiseCredentialsService(JsonParser jsonParser) throws IOException {
-        File file = new File("./target/credentials.json");
-        if (!file.exists()) {
-            throw new FileNotFoundException("Credentials file not present.Kindly generate it." + file.getName());
-        }
-        Credentials credentials = jsonParser.parse(FileUtils.readFileToString(file));
-        CredentialsService.setCredentials(credentials);
-        LOGGER.info("Successfully loaded api credentials.");
-    }
 }

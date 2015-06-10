@@ -12,19 +12,21 @@ public class CredentialsRefresherTask extends TimerTask {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CredentialsRefresherTask.class);
 
+    private final CredentialsService credentialsService;
     private final CredentialsRefresher refresher;
 
-    public CredentialsRefresherTask(CredentialsRefresher refresher) {
+    public CredentialsRefresherTask(CredentialsService credentialsService, CredentialsRefresher refresher) {
+        this.credentialsService = credentialsService;
         this.refresher = refresher;
     }
 
     @Override
     public void run() {
         try {
-            Credentials credentials = CredentialsService.getCredentials();
+            LOGGER.info("Refreshing credentials...");
+            Credentials credentials = credentialsService.getCredentials();
             Credentials newCredentials = refresher.getRefreshedCredentials(credentials);
-            LOGGER.info("Refreshed New Credentials : {}", credentials);
-            CredentialsService.setCredentials(newCredentials);
+            credentialsService.setCredentials(newCredentials);
         } catch (IOException e) {
             e.printStackTrace();
         }

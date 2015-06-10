@@ -28,9 +28,8 @@ import java.util.Set;
 public class EndToEndEmailTest {
 
     private OrderDao orderDao;
-
+    private CredentialsService credentialsService;
     /**
-     *
      * Kindly generate credentials from CredentialsGenerator.java before running this test..
      */
     @Test(enabled = false)
@@ -41,7 +40,7 @@ public class EndToEndEmailTest {
         orderDao.saveOrder(order);
 
         //when
-        emailSender.sendEmail(CredentialsService.getCredentials(), new OrderEmailCreator(orderDao),order.getOrderId(),"quifersdev@gmail.com");
+        emailSender.sendEmail(credentialsService.getCredentials(), new OrderEmailCreator(orderDao), order.getOrderId(), "quifersdev@gmail.com");
 
         //then
     }
@@ -51,7 +50,7 @@ public class EndToEndEmailTest {
         System.setProperty("env", "local");
         new LocalDatabaseRunner().runDatabaseServer();
         orderDao = DaoFactoryBuilder.getDaoFactory(Environment.LOCAL).getOrderDao();
-        EmailService.initialiseCredentialsService(new JsonParser());
+        credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
     }
 
     private Order getOrder() {
