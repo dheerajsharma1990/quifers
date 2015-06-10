@@ -37,6 +37,7 @@ public class HttpRequestSender {
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
         connection.setRequestMethod(method);
         connection.setDoOutput(true);
+        connection.setDoInput(true);
         return connection;
     }
 

@@ -9,6 +9,7 @@ import com.quifers.domain.enums.OrderState;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
 import javax.jms.*;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,7 +39,7 @@ public class ActiveMqPublisher {
         producer.send(objectMessage);
     }
 
-    public static void main(String[] args) throws JMSException {
+    public static void main(String[] args) throws JMSException, IOException {
         String orderId = "100";
         Set<OrderWorkflow> workflowSet = new HashSet<>();
         workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date()));
@@ -55,7 +56,9 @@ public class ActiveMqPublisher {
         addresses.add(dropOffAddress);
         Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 2, 1, false, 2, true, null, workflowSet);
 
-        new ActiveMqPublisher().publish("PRICE", order);
+
+
+        new ActiveMqPublisher().publish("ORDER", order);
     }
 
 

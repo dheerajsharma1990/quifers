@@ -19,7 +19,7 @@ public class CredentialsGenerator {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        context.setInitParameter("env", "LOCAL");
+        context.setInitParameter("env", "DEV");
         context.addEventListener(new StartupContextListener());
         context.addServlet(new ServletHolder(new AccessCodeRequestServlet()), "/accessCode");
         context.addServlet(new ServletHolder(new AccessTokenRequestServlet()), "/callback");

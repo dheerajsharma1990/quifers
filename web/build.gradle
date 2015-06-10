@@ -17,8 +17,8 @@ dependencies {
         exclude group: 'org.slf4j'
     }
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
-
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.187'
+    testCompile project(path: ':db-persister', configuration: 'testOutput')
 
 }
 

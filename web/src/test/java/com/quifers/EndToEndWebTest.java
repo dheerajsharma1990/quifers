@@ -1,8 +1,7 @@
 package com.quifers;
 
+import com.quifers.db.LocalDatabaseRunner;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.properties.PropertiesLoader;
-import com.quifers.properties.QuifersProperties;
 import com.quifers.runners.ActiveMqBroker;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.utils.ParametersBuilder;
@@ -21,8 +20,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.quifers.JettyRunner.runJettyServer;
-import static com.quifers.runners.DatabaseRunner.runDatabaseServer;
-import static com.quifers.runners.DatabaseRunner.stopDatabaseServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -293,16 +290,14 @@ public class EndToEndWebTest {
 
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
-        QuifersProperties quifersProperties = PropertiesLoader.loadProperties(Environment.LOCAL);
-        runDatabaseServer(quifersProperties);
+        new LocalDatabaseRunner().runDatabaseServer();
         new ActiveMqBroker().startBroker();
         runJettyServer(9111);
-
     }
 
     @AfterClass
     public void shutDownDatabase() {
-        stopDatabaseServer();
+        new LocalDatabaseRunner().stopDatabaseServer();
     }
 
     private String buildRequest() throws UnsupportedEncodingException {
