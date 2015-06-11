@@ -5,6 +5,8 @@
 
 <hibernate-configuration>
     <session-factory>
+        <property name="hibernate.connection.autocommit">true</property>
+        <property name="show_sql">true</property>
         <mapping resource="hibernate/admin-account.hbm.xml" />
         <mapping resource="hibernate/admin.hbm.xml" />
         <mapping resource="hibernate/field-executive-account.hbm.xml" />

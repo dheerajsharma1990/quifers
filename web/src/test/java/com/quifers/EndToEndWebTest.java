@@ -1,8 +1,6 @@
 package com.quifers;
 
-import com.quifers.db.LocalDatabaseRunner;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.runners.ActiveMqBroker;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
@@ -19,14 +17,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.quifers.JettyRunner.runJettyServer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class EndToEndWebTest {
 
-    private static final String BASE_URL = "http://localhost:9111";
+    private static final String BASE_URL = "http://52.74.237.216:80";
     private static String ORDER_ID = OrderIdGeneratorService.ORDER_ID_PREFIX + "00001";
 
     @Test
@@ -290,14 +287,14 @@ public class EndToEndWebTest {
 
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
-        new LocalDatabaseRunner().runDatabaseServer();
-        new ActiveMqBroker().startBroker();
-        runJettyServer(9111);
+        //new LocalDatabaseRunner().runDatabaseServer();
+        //new ActiveMqBroker().startBroker();
+        //runJettyServer(9111);
     }
 
     @AfterClass
     public void shutDownDatabase() {
-        new LocalDatabaseRunner().stopDatabaseServer();
+        //new LocalDatabaseRunner().stopDatabaseServer();
     }
 
     private String buildRequest() throws UnsupportedEncodingException {
