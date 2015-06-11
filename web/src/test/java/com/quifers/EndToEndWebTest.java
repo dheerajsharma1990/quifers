@@ -320,6 +320,6 @@ public class EndToEndWebTest {
                 .add("lift_pickup", "false")
                 .add("floor_no_drop", "2")
                 .add("lift_drop", "true")
-                .add("date_time_label", "22/09/1990 10:20:30").build();
+                .add("date_time_label", "22/09/1990 10:20").build();
     }
 }
