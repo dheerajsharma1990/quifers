@@ -2,6 +2,27 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'application'
 
+task credentialFile {
+    outputs.dir file("target/credentials.json")
+}
+
+mainClassName = 'com.quifers.email.EmailService'
+
+distZip {
+    startScripts.defaultJvmOpts = ["-Denv=${env}"]
+}
+
+distributions {
+    main {
+        contents {
+                from(credentialFile) {
+                    into "bin/target"
+                }
+        }
+    }
+}
+
+
 dependencies {
     compile project(':domain')
     compile project(':db-persister')
@@ -27,8 +48,6 @@ dependencies {
     testCompile project(path: ':db-persister', configuration: 'testOutput')
 
 }
-
-mainClassName = 'com.quifers.email.EmailService'
 
 idea {
     module {
