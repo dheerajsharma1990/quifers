@@ -19,6 +19,7 @@ public class AdminDaoImpl implements AdminDao {
         session.save(admin.getAccount());
         session.save(admin);
         transaction.commit();
+        session.flush();
     }
 
     @Override

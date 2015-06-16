@@ -23,6 +23,7 @@ public class FieldExecutiveDaoImpl implements FieldExecutiveDao {
             session.save(fieldExecutive.getAccount());
             session.save(fieldExecutive);
             transaction.commit();
+            session.flush();
         }
     }
 

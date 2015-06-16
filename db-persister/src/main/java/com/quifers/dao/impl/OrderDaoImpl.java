@@ -24,6 +24,7 @@ public class OrderDaoImpl implements OrderDao {
         Transaction transaction = session.beginTransaction();
         session.save(order);
         transaction.commit();
+        session.flush();
     }
 
     @Override
@@ -50,6 +51,7 @@ public class OrderDaoImpl implements OrderDao {
         Transaction transaction = session.beginTransaction();
         session.update(order);
         transaction.commit();
+        session.flush();
     }
 
     @Override
