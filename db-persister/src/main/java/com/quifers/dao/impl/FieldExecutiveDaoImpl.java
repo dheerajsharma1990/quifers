@@ -22,8 +22,8 @@ public class FieldExecutiveDaoImpl implements FieldExecutiveDao {
             Transaction transaction = session.beginTransaction();
             session.save(fieldExecutive.getAccount());
             session.save(fieldExecutive);
-            transaction.commit();
             session.flush();
+            transaction.commit();
         }
     }
 

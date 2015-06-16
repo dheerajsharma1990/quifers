@@ -23,8 +23,8 @@ public class OrderDaoImpl implements OrderDao {
     public void saveOrder(Order order) {
         Transaction transaction = session.beginTransaction();
         session.save(order);
-        transaction.commit();
         session.flush();
+        transaction.commit();
     }
 
     @Override
@@ -50,8 +50,8 @@ public class OrderDaoImpl implements OrderDao {
     public void updateOrder(Order order) {
         Transaction transaction = session.beginTransaction();
         session.update(order);
-        transaction.commit();
         session.flush();
+        transaction.commit();
     }
 
     @Override
