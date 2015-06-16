@@ -5,31 +5,26 @@ import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
 
 import java.util.Collection;
 
 public class OrderDaoImpl implements OrderDao {
 
-    private final Session session;
+    private final DaoWrapper wrapper;
 
-    public OrderDaoImpl(Session session) {
-        this.session = session;
+    public OrderDaoImpl(DaoWrapper wrapper) {
+        this.wrapper = wrapper;
     }
 
     @Override
     public void saveOrder(Order order) {
-        Transaction transaction = session.beginTransaction();
-        session.save(order);
-        session.flush();
-        transaction.commit();
+        wrapper.save(order);
     }
 
     @Override
     public Order getOrder(String orderId) {
-        return  (Order) session.get(Order.class, orderId);
+        return (Order) wrapper.get(Order.class, orderId);
     }
 
     @Override
@@ -48,25 +43,22 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public void updateOrder(Order order) {
-        Transaction transaction = session.beginTransaction();
-        session.update(order);
-        session.flush();
-        transaction.commit();
+        wrapper.update(order);
     }
 
     @Override
     public Collection<Order> getOrders(FieldExecutive fieldExecutive) {
-        Criteria criteria = session.createCriteria(Order.class);
+        Criteria criteria = wrapper.createCriteria(Order.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         criteria.add(Restrictions.eq("fieldExecutive", fieldExecutive));
-        return criteria.list();
+        return wrapper.get(criteria);
     }
 
     @Override
     public Collection<Order> getAllOrders() {
-        Criteria criteria = session.createCriteria(Order.class);
+        Criteria criteria = wrapper.createCriteria(Order.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return criteria.list();
+        return wrapper.get(criteria);
     }
 
 }
