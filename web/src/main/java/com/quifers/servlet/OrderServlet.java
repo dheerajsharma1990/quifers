@@ -3,6 +3,7 @@ package com.quifers.servlet;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
 import com.quifers.domain.enums.EmailType;
+import com.quifers.domain.enums.OrderState;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
@@ -42,6 +43,8 @@ public class OrderServlet extends HttpServlet {
             webPublisher.publishEmailMessage(EmailType.NEW_ORDER, order.getOrderId());
             JSONObject object = new JSONObject();
             object.put("success", "true");
+            object.put("order_state", OrderState.BOOKED.name());
+            object.put("order_id", order.getOrderId());
             response.setContentType("application/json");
             response.getWriter().write(object.toString());
         } catch (InvalidRequestException e) {

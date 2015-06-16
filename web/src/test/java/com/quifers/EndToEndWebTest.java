@@ -54,6 +54,11 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
+        JSONTokener tokener = new JSONTokener(IOUtils.toString(connection.getInputStream()));
+        JSONObject object = new JSONObject(tokener);
+        assertThat((String) object.get("order_id"), is(ORDER_ID));
+        assertThat((String) object.get("order_state"), is(OrderState.BOOKED.name()));
+        assertThat((String) object.get("success"), is("true"));
     }
 
     @Test(dependsOnMethods = "shouldRegisterNewAdmin")

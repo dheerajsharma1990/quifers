@@ -101,7 +101,7 @@ public class OrderBookRequestValidator {
     }
 
     private Date validateAndGetBookingDate(HttpServletRequest request) throws InvalidRequestException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         try {
             return dateFormat.parse(request.getParameter("date_time_label"));
         } catch (ParseException e) {

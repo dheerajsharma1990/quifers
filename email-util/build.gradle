@@ -8,7 +8,7 @@ task credentialFile {
 
 mainClassName = 'com.quifers.email.EmailService'
 
-distZip {
+distZip << {
     startScripts.defaultJvmOpts = ["-Denv=${env}"]
 }
 
