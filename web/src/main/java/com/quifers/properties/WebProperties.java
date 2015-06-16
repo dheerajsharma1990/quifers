@@ -2,17 +2,18 @@ package com.quifers.properties;
 
 import java.util.Properties;
 
-public class QuifersProperties {
+public class WebProperties {
 
     private static final String DRIVER_CLASS = "DRIVER_CLASS";
     private static final String QUIFERSDB_URL = "QUIFERSDB_URL";
     private static final String USER = "USER";
     private static final String PASSWORD = "PASSWORD";
+    private static final String LAST_ORDER_ID_COUNTER = "LAST_ORDER_ID_COUNTER";
 
 
     private final Properties properties;
 
-    public QuifersProperties(Properties properties) {
+    public WebProperties(Properties properties) {
         this.properties = properties;
     }
 
@@ -29,5 +30,8 @@ public class QuifersProperties {
     }
     public String getPassword() {
         return properties.getProperty(PASSWORD);
+    }
+    public long getLastOrderIdCounter() {
+        return Long.valueOf(properties.getProperty(LAST_ORDER_ID_COUNTER));
     }
 }

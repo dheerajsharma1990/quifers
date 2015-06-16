@@ -6,6 +6,8 @@ import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.hibernate.DaoFactoryBuilder;
+import com.quifers.properties.PropertiesLoader;
+import com.quifers.properties.WebProperties;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
@@ -46,11 +48,21 @@ public class StartupContextListener implements ServletContextListener {
         LOGGER.info("Starting quifers webapp...");
         ServletContext servletContext = servletContextEvent.getServletContext();
         Environment environment = getEnvironment(servletContext);
+        WebProperties webProperties = loadWebProperties(environment);
         initDaos(servletContext, environment);
-        OrderIdGeneratorService service = initialiseOrderIdService(servletContext);
+        OrderIdGeneratorService service = initialiseOrderIdService(servletContext, webProperties);
         initialiseActiveMqPublisher(servletContext);
         initialiseDao(servletContext);
         initialiseValidators(servletContext, service);
+    }
+
+    private WebProperties loadWebProperties(Environment environment) {
+        try {
+            return PropertiesLoader.loadProperties(environment);
+        } catch (IOException e) {
+            LOGGER.error("Unable to load properties for environment{}:{}", environment, e);
+        }
+        return null;
     }
 
     private Environment getEnvironment(ServletContext servletContext) {
@@ -67,8 +79,8 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-    public OrderIdGeneratorService initialiseOrderIdService(ServletContext servletContext) {
-        OrderIdGeneratorService service = new OrderIdGeneratorService(0L);
+    public OrderIdGeneratorService initialiseOrderIdService(ServletContext servletContext, WebProperties webProperties) {
+        OrderIdGeneratorService service = new OrderIdGeneratorService(webProperties.getLastOrderIdCounter());
         servletContext.setAttribute(ORDER_ID_SERVICE, service);
         return service;
     }
@@ -101,9 +113,8 @@ public class StartupContextListener implements ServletContextListener {
     }
 
     private void initDaos(ServletContext servletContext, Environment environment) {
-        DaoFactory daoFactory = null;
         try {
-            daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
+            DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
             servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
             servletContext.setAttribute(FIELD_EXECUTIVE_DAO, daoFactory.getFieldExecutiveDao());
             servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminDao()));
