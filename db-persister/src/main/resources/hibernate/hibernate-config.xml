@@ -15,5 +15,6 @@
         <mapping resource="hibernate/order-workflow.hbm.xml" />
         <mapping resource="hibernate/client.hbm.xml" />
         <mapping resource="hibernate/address.hbm.xml" />
+        <mapping resource="hibernate/distance.hbm.xml" />
     </session-factory>
 </hibernate-configuration>

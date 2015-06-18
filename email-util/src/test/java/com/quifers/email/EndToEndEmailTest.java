@@ -1,9 +1,6 @@
 package com.quifers.email;
 
-import com.quifers.domain.Address;
-import com.quifers.domain.Client;
-import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.*;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.email.builders.EmailRequestBuilder;
@@ -21,7 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Test(enabled = false)
+@Test
 public class EndToEndEmailTest {
 
     private CredentialsService credentialsService;
@@ -29,29 +26,19 @@ public class EndToEndEmailTest {
     /**
      * Kindly generate credentials from CredentialsGenerator.java before running this test..
      */
-    @Test(enabled = false)
-    public void shouldSendNewOrderEmailSuccessfully() throws Exception {
+    @Test
+    public void shouldSendEmailsSuccessfully() throws Exception {
         //given
         EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
         Order order = getOrder();
 
         //when
         emailSender.sendEmail(credentialsService.getCredentials(), new NewOrderEmailCreator("quifersdev@gmail.com"), order);
-
-        //then
-    }
-
-    @Test(enabled = false)
-    public void shouldSendBillDetailsEmailSuccessfully() throws Exception {
-        //given
-        EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
-        Order order = getOrder();
-
-        //when
         emailSender.sendEmail(credentialsService.getCredentials(), new BillDetailsEmailCreator("quifersdev@gmail.com"), order);
 
         //then
     }
+
 
     @BeforeClass
     public void initialiseEmailService() throws Exception {
@@ -74,7 +61,9 @@ public class EndToEndEmailTest {
         Set<Address> addresses = new HashSet<>();
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
-        return new Order(orderId, client, "vehicle", addresses, 1, "estimate", 2, 1, false, 2, true, null, workflowSet);
+        Order order =  new Order(orderId, client, "vehicle", addresses, 1, "estimate", 1, false, 2, true, null, workflowSet);
+        order.setDistance(new Distance(orderId,2));
+        return order;
     }
 
 }

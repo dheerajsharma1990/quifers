@@ -1,6 +1,7 @@
 package com.quifers.servlet.executives;
 
 import com.quifers.dao.OrderDao;
+import com.quifers.domain.Distance;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.EmailType;
@@ -10,6 +11,7 @@ import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.ChangeOrderResponse;
 import com.quifers.response.FieldExecutiveResponse;
+import com.quifers.response.GeneratePriceResponse;
 import com.quifers.servlet.listener.WebPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,7 +24,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
-import static com.quifers.response.PriceResponse.getPriceResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.WEB_PUBLISHER;
 
@@ -49,13 +50,14 @@ public class FieldExecutiveServlet extends HttpServlet {
                 changeOrderResponse.writeResponse();
             } else if ("/api/v0/executive/order/create/price".equals(requestUri)) {
                 GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
-                Order order = orderDao.getOrder(priceRequest.getOrderId());
-                order.setDistance(priceRequest.getDistance());
-                order.addOrderWorkflow(new OrderWorkflow(order.getOrderId(), OrderState.COMPLETED, new Date()));
+                Distance distance = priceRequest.getDistance();
+                Order order = orderDao.getOrder(distance.getOrderId());
+                order.setDistance(distance);
+                order.addOrderWorkflow(new OrderWorkflow(distance.getOrderId(), OrderState.COMPLETED, new Date()));
                 orderDao.updateOrder(order);
-                webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, order.getOrderId());
-                response.setContentType("application/json");
-                response.getWriter().write(getPriceResponse(order.getCost()));
+                webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, distance.getOrderId());
+                GeneratePriceResponse priceResponse = new GeneratePriceResponse(response);
+                priceResponse.writeResponse(order.getCost());
             } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {
                 Collection<Order> orders = orderDao.getAllOrders();
                 response.setContentType("application/json");

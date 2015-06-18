@@ -23,7 +23,7 @@ public class Order implements Serializable {
 
     private String estimate;
 
-    private int distance;
+    private Distance distance;
 
     private int pickupFloors;
 
@@ -42,7 +42,7 @@ public class Order implements Serializable {
     }
 
     public Order(String orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
-                 int distance, int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
+                 int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
         this.client = client;
@@ -50,7 +50,6 @@ public class Order implements Serializable {
         this.addresses = addresses;
         this.labours = labours;
         this.estimate = estimate;
-        this.distance = distance;
         this.pickupFloors = pickupFloors;
         this.pickupLiftWorking = pickupLiftWorking;
         this.dropOffFloors = dropOffFloors;
@@ -83,7 +82,7 @@ public class Order implements Serializable {
         return estimate;
     }
 
-    public int getDistance() {
+    public Distance getDistance() {
         return distance;
     }
 
@@ -135,7 +134,7 @@ public class Order implements Serializable {
         this.estimate = estimate;
     }
 
-    public void setDistance(int distance) {
+    public void setDistance(Distance distance) {
         this.distance = distance;
     }
 
@@ -189,10 +188,10 @@ public class Order implements Serializable {
     }
 
     private int getTransitCost() {
-        if (distance <= 2) {
+        if (distance.getDistance() <= 2) {
             return 300;
         }
-        return 300 + (distance - 2) * 30;
+        return 300 + (distance.getDistance() - 2) * 30;
     }
 
     private int getLabourCost() {
@@ -238,7 +237,6 @@ public class Order implements Serializable {
 
         Order order = (Order) o;
 
-        if (distance != order.distance) return false;
         if (dropOffFloors != order.dropOffFloors) return false;
         if (dropOffLiftWorking != order.dropOffLiftWorking) return false;
         if (labours != order.labours) return false;
@@ -246,6 +244,7 @@ public class Order implements Serializable {
         if (pickupLiftWorking != order.pickupLiftWorking) return false;
         if (addresses != null ? !addresses.equals(order.addresses) : order.addresses != null) return false;
         if (client != null ? !client.equals(order.client) : order.client != null) return false;
+        if (distance != null ? !distance.equals(order.distance) : order.distance != null) return false;
         if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
         if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
             return false;

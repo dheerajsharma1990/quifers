@@ -30,9 +30,7 @@
             <column name="estimate"/>
         </property>
 
-        <property name="distance" type="integer">
-            <column name="distance"/>
-        </property>
+        <one-to-one name="distance" class="com.quifers.domain.Distance" cascade="save-update" lazy="false" fetch="select"/>
 
         <property name="pickupFloors" type="integer">
             <column name="pick_up_floors"/>

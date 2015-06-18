@@ -1,5 +1,6 @@
 package com.quifers.request;
 
+import com.quifers.domain.Distance;
 import com.quifers.request.validators.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,12 +18,8 @@ public class GeneratePriceRequest {
         validate();
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public int getDistance() {
-        return Integer.valueOf(distance);
+    public Distance getDistance() {
+        return new Distance(orderId, Integer.valueOf(distance));
     }
 
     private void validate() throws InvalidRequestException {

@@ -1,6 +1,7 @@
 package com.quifers.dao.impl;
 
 import com.quifers.dao.OrderDao;
+import com.quifers.domain.Distance;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
@@ -15,6 +16,13 @@ public class OrderDaoImpl implements OrderDao {
 
     public OrderDaoImpl(DaoWrapper wrapper) {
         this.wrapper = wrapper;
+    }
+
+    @Override
+    public void addDistance(Distance distance) {
+        Order order = getOrder(distance.getOrderId());
+        order.setDistance(distance);
+        updateOrder(order);
     }
 
     @Override
