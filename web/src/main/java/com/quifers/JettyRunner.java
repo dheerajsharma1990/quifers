@@ -2,10 +2,7 @@ package com.quifers;
 
 import com.quifers.servlet.OrderServlet;
 import com.quifers.servlet.admin.*;
-import com.quifers.servlet.executives.ChangeOrderStateServlet;
-import com.quifers.servlet.executives.FieldExecutiveLoginServlet;
-import com.quifers.servlet.executives.GeneratePriceServlet;
-import com.quifers.servlet.executives.AllOrdersOfFieldExecutiveServlet;
+import com.quifers.servlet.executives.*;
 import com.quifers.servlet.filters.AdminAuthenticationFilter;
 import com.quifers.servlet.filters.FieldExecutiveAuthenticationFilter;
 import com.quifers.servlet.listener.StartupContextListener;
@@ -34,14 +31,15 @@ public class JettyRunner {
         context.addServlet(new ServletHolder(new FieldExecutiveAssignServlet()), "/api/v0/admin/executives/assign");
         context.addServlet(new ServletHolder(new FieldExecutiveListAllServlet()), "/api/v0/admin/executives/listAll");
         context.addServlet(new ServletHolder(new FieldExecutiveRegisterServlet()), "/api/v0/admin/executives/register");
-        context.addServlet(new ServletHolder(new ChangeOrderStateServlet()), "/api/v0/executive/order/update/state");
         context.addServlet(new ServletHolder(new FieldExecutiveLoginServlet()), "/api/v0/guest/executive/login");
-        context.addServlet(new ServletHolder(new OrderServlet()), "/api/v0/guest/order/*");
-        context.addServlet(new ServletHolder(new GeneratePriceServlet()), "/api/v0/executive/order/create/price");
-        context.addServlet(new ServletHolder(new AllOrdersOfFieldExecutiveServlet()), "/api/v0/executive/order/get/all");
+        context.addServlet(new ServletHolder(new OrderServlet()), "/api/v0/guest/order/book");
         context.addServlet(new ServletHolder(new AllOrdersServlet()), "/api/v0/admin/order/get/all");
         context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
+
+
+        context.addServlet(new ServletHolder(new FieldExecutiveServlet()), "/api/v0/executive/*");
         context.addFilter(new FilterHolder(new FieldExecutiveAuthenticationFilter()), "/api/v0/executive/*", EnumSet.of(DispatcherType.REQUEST));
+
         server.setHandler(context);
 
         server.start();
