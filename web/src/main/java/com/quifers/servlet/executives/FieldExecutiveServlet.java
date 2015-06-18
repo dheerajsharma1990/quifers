@@ -8,6 +8,7 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.request.ChangeOrderRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.response.ChangeOrderResponse;
 import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.servlet.listener.WebPublisher;
 import org.slf4j.Logger;
@@ -21,7 +22,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
-import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
 import static com.quifers.response.PriceResponse.getPriceResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.WEB_PUBLISHER;
@@ -43,10 +43,10 @@ public class FieldExecutiveServlet extends HttpServlet {
         try {
             String requestUri = request.getRequestURI();
             if ("/api/v0/executive/order/update/state".equals(requestUri)) {
-                ChangeOrderRequest changeOrderRequest = new ChangeOrderRequest(request);
-                orderDao.addOrderWorkflow(new OrderWorkflow(changeOrderRequest.getOrderId(), OrderState.valueOf(changeOrderRequest.getOrderState().toUpperCase()), new Date()));
-                response.setContentType("application/json");
-                response.getWriter().write(getSuccessResponse());
+                OrderWorkflow orderWorkflow = new ChangeOrderRequest(request).getOrderWorkflow();
+                orderDao.addOrderWorkflow(orderWorkflow);
+                ChangeOrderResponse changeOrderResponse = new ChangeOrderResponse(response);
+                changeOrderResponse.writeResponse();
             } else if ("/api/v0/executive/order/create/price".equals(requestUri)) {
                 GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
                 Order order = orderDao.getOrder(priceRequest.getOrderId());

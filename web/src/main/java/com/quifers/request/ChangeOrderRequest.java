@@ -1,8 +1,11 @@
 package com.quifers.request;
 
+import com.quifers.domain.OrderWorkflow;
 import com.quifers.request.validators.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.Date;
 
 import static com.quifers.domain.enums.OrderState.valueOf;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
@@ -18,12 +21,8 @@ public class ChangeOrderRequest {
         validate();
     }
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public String getOrderState() {
-        return orderState;
+    public OrderWorkflow getOrderWorkflow() {
+        return new OrderWorkflow(orderId,valueOf(orderState),new Date());
     }
 
     private void validate() throws InvalidRequestException {
