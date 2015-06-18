@@ -1,5 +1,6 @@
 package com.quifers.email.helpers;
 
+import com.quifers.domain.Cost;
 import com.quifers.domain.Order;
 
 import javax.mail.Message;
@@ -29,23 +30,24 @@ public class BillDetailsEmailCreator implements EmailCreator {
         emailMessage.setFrom(getFromAddress(fromAddress));
         emailMessage.addRecipient(Message.RecipientType.TO, getToAddress(order.getClient().getEmail()));
         emailMessage.setSubject(getSubject(order));
-        emailMessage.setContent(getBody(order), "text/html");
+        emailMessage.setContent(getBody(order.getCost()), "text/html");
         emailMessage.addHeader("Content-Type", "text/html");
 
         return emailMessage;
     }
 
-    private String getBody(Order order) {
+    private String getBody(Cost cost) {
         return "<html>\n" +
                 "<body>\n" +
                 "Hello ," +
                 "<br>\n" +
                 "We are pleased to have your order served by quifers.Below are the details.<br>\n" +
                 "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
-                "<tr><td><strong>Order Id :</strong> </td><td>" + order.getOrderId() + "</td></tr>" +
-                "<tr><td><strong>Waiting Cost :</strong> </td><td>" + order.getWaitingCost() + "</td></tr>" +
-                "<tr><td><strong>Transit Cost :</strong> </td><td>" + order.getTransitCost() + "</td></tr>" +
-                "<tr><td><strong>Labour Cost  :</strong> </td><td>" + order.getLabourCost() + "</td></tr>" +
+                "<tr><td><strong>Order Id :</strong> </td><td>" + cost.getOrderId() + "</td></tr>" +
+                "<tr><td><strong>Waiting Cost :</strong> </td><td>" + cost.getWaitingCost() + "</td></tr>" +
+                "<tr><td><strong>Transit Cost :</strong> </td><td>" + cost.getTransitCost() + "</td></tr>" +
+                "<tr><td><strong>Labour Cost  :</strong> </td><td>" + cost.getLabourCost() + "</td></tr>" +
+                "<tr><td><strong>Total Cost  :</strong> </td><td>" + cost.getTotalCost() + "</td></tr>" +
                 "</table>" +
                 "<br/>Please note that loading & unloading is free for first <b>60 mins</b><br/>" +
                 "Extra waiting time has been charged at INR 50 for every 15 min.<br/>" +

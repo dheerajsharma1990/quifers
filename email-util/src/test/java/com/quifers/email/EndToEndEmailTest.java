@@ -7,6 +7,7 @@ import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.email.builders.EmailRequestBuilder;
+import com.quifers.email.helpers.BillDetailsEmailCreator;
 import com.quifers.email.helpers.EmailHttpRequestSender;
 import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.helpers.NewOrderEmailCreator;
@@ -29,13 +30,25 @@ public class EndToEndEmailTest {
      * Kindly generate credentials from CredentialsGenerator.java before running this test..
      */
     @Test(enabled = false)
-    public void shouldSendEmailSuccessfully() throws Exception {
+    public void shouldSendNewOrderEmailSuccessfully() throws Exception {
         //given
         EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
         Order order = getOrder();
 
         //when
         emailSender.sendEmail(credentialsService.getCredentials(), new NewOrderEmailCreator("quifersdev@gmail.com"), order);
+
+        //then
+    }
+
+    @Test(enabled = false)
+    public void shouldSendBillDetailsEmailSuccessfully() throws Exception {
+        //given
+        EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
+        Order order = getOrder();
+
+        //when
+        emailSender.sendEmail(credentialsService.getCredentials(), new BillDetailsEmailCreator("quifersdev@gmail.com"), order);
 
         //then
     }

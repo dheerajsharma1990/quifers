@@ -45,7 +45,7 @@ public class GeneratePriceServlet extends HttpServlet {
             orderDao.updateOrder(order);
             webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, order.getOrderId());
             response.setContentType("application/json");
-            response.getWriter().write(getPriceResponse(order));
+            response.getWriter().write(getPriceResponse(order.getCost()));
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

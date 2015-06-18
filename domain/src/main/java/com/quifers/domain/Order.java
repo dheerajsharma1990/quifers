@@ -170,7 +170,14 @@ public class Order implements Serializable {
         this.orderWorkflows.add(orderWorkflow);
     }
 
-    public int getWaitingCost() {
+    public Cost getCost() {
+        int transitCost = getTransitCost();
+        int waitingCost = getWaitingCost();
+        int labourCost = getLabourCost();
+        return new Cost(orderId, transitCost, waitingCost, labourCost);
+    }
+
+    private int getWaitingCost() {
         int waitingMinutes = getWaitingMinutes();
         if (waitingMinutes <= 60) {
             return 0;
@@ -181,14 +188,14 @@ public class Order implements Serializable {
         return minutesBlock * 50;
     }
 
-    public int getTransitCost() {
+    private int getTransitCost() {
         if (distance <= 2) {
             return 300;
         }
         return 300 + (distance - 2) * 30;
     }
 
-    public int getLabourCost() {
+    private int getLabourCost() {
         int nonWorkingLifts = getNonWorkingPickUpFloors() + getNonWorkingDropOffFloors();
         if (nonWorkingLifts <= 2) {
             return 300 * labours;

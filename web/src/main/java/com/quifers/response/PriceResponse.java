@@ -1,15 +1,15 @@
 package com.quifers.response;
 
-import com.quifers.domain.Order;
+import com.quifers.domain.Cost;
 import org.json.JSONObject;
 
 public class PriceResponse {
 
-    public static String getPriceResponse(Order order) {
+    public static String getPriceResponse(Cost cost) {
         JSONObject object = new JSONObject();
-        object.put("waitingCost", order.getWaitingCost());
-        object.put("transitCost", order.getTransitCost());
-        object.put("labourCost", order.getLabourCost());
+        object.put("waitingCost", cost.getWaitingCost());
+        object.put("transitCost", cost.getTransitCost());
+        object.put("labourCost", cost.getLabourCost());
         return object.toString();
     }
 
