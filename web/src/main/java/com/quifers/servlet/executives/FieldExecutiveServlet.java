@@ -1,12 +1,16 @@
 package com.quifers.servlet.executives;
 
+import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Distance;
+import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.ChangeOrderRequest;
+import com.quifers.request.FilterRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.ChangeOrderResponse;
@@ -24,6 +28,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
+import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.WEB_PUBLISHER;
 
@@ -31,11 +36,13 @@ public class FieldExecutiveServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveServlet.class);
     private OrderDao orderDao;
+    private FieldExecutiveDao fieldExecutiveDao;
     private WebPublisher webPublisher;
 
     @Override
     public void init() throws ServletException {
         orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
+        fieldExecutiveDao = (FieldExecutiveDao) getServletContext().getAttribute(FIELD_EXECUTIVE_DAO);
         webPublisher = (WebPublisher) getServletContext().getAttribute(WEB_PUBLISHER);
     }
 
@@ -59,7 +66,9 @@ public class FieldExecutiveServlet extends HttpServlet {
                 GeneratePriceResponse priceResponse = new GeneratePriceResponse(response);
                 priceResponse.writeResponse(order.getCost());
             } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {
-                Collection<Order> orders = orderDao.getAllOrders();
+                FilterRequest filterRequest = new FilterRequest(request);
+                FieldExecutive fieldExecutive = fieldExecutiveDao.getFieldExecutive(new FieldExecutiveId(filterRequest.getUserId()));
+                Collection<Order> orders = orderDao.getOrders(fieldExecutive);
                 response.setContentType("application/json");
                 response.getWriter().write(FieldExecutiveResponse.getOrderResponse(orders));
             } else {
