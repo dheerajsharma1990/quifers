@@ -7,7 +7,7 @@ import java.util.Collection;
 
 public interface FieldExecutiveDao {
 
-    void saveFieldExecutive(FieldExecutive fieldExecutive);
+    void saveFieldExecutive(FieldExecutive fieldExecutive) throws Exception;
 
     FieldExecutive getFieldExecutive(FieldExecutiveId fieldExecutiveId);
 

@@ -4,7 +4,7 @@ import com.quifers.domain.Admin;
 
 public interface AdminDao {
 
-    void saveAdmin(Admin admin);
+    void saveAdmin(Admin admin) throws Exception;
 
     Admin getAdmin(String userId);
 }

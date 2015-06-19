@@ -44,7 +44,7 @@ public class OrderServlet extends HttpServlet {
             JSONObject object = new JSONObject();
             object.put("success", "true");
             object.put("order_state", OrderState.BOOKED.name());
-            object.put("order_id", order.getOrderId());
+            object.put("order_id", order.getOrderId().getOrderId());
             response.setContentType("application/json");
             response.getWriter().write(object.toString());
         } catch (InvalidRequestException e) {

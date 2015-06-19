@@ -1,12 +1,13 @@
 package com.quifers.domain;
 
+import com.quifers.domain.id.OrderId;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 
 public class Cost implements Serializable {
 
-    private String orderId;
+    private OrderId orderId;
 
     private int transitCost;
 
@@ -18,14 +19,14 @@ public class Cost implements Serializable {
     public Cost() {
     }
 
-    public Cost(String orderId, int transitCost, int waitingCost, int labourCost) {
+    public Cost(OrderId orderId, int transitCost, int waitingCost, int labourCost) {
         this.orderId = orderId;
         this.transitCost = transitCost;
         this.waitingCost = waitingCost;
         this.labourCost = labourCost;
     }
 
-    public String getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
@@ -45,7 +46,7 @@ public class Cost implements Serializable {
         return transitCost + waitingCost + labourCost;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(OrderId orderId) {
         this.orderId = orderId;
     }
 
@@ -60,6 +61,7 @@ public class Cost implements Serializable {
     public void setLabourCost(int labourCost) {
         this.labourCost = labourCost;
     }
+
 
     @Override
     public boolean equals(Object o) {

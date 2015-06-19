@@ -3,6 +3,7 @@ package com.quifers.email.jms;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
 import com.quifers.domain.enums.EmailType;
+import com.quifers.domain.id.OrderId;
 import com.quifers.email.helpers.EmailCreator;
 import com.quifers.email.helpers.EmailCreatorFactory;
 import com.quifers.email.helpers.EmailSender;
@@ -36,7 +37,7 @@ public class OrderReceiver {
         String emailType = message.getStringProperty("EMAIL_TYPE");
         String orderId = message.getStringProperty("ORDER_ID");
         EmailType type = EmailType.valueOf(emailType);
-        Order order = orderDao.getOrder(orderId);
+        Order order = orderDao.getOrder(new OrderId(orderId));
         emailOrder(credentialsService.getCredentials(), emailCreatorFactory.getEmailCreator(type), order);
         message.acknowledge();
     }

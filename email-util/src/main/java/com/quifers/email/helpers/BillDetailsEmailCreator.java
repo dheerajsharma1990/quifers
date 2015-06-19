@@ -43,7 +43,7 @@ public class BillDetailsEmailCreator implements EmailCreator {
                 "<br>\n" +
                 "We are pleased to have your order served by quifers.Below are the details.<br>\n" +
                 "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
-                "<tr><td><strong>Order Id :</strong> </td><td>" + cost.getOrderId() + "</td></tr>" +
+                "<tr><td><strong>Order Id :</strong> </td><td>" + cost.getOrderId().getOrderId() + "</td></tr>" +
                 "<tr><td><strong>Waiting Cost :</strong> </td><td>" + cost.getWaitingCost() + "</td></tr>" +
                 "<tr><td><strong>Transit Cost :</strong> </td><td>" + cost.getTransitCost() + "</td></tr>" +
                 "<tr><td><strong>Labour Cost  :</strong> </td><td>" + cost.getLabourCost() + "</td></tr>" +

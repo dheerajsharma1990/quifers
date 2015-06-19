@@ -3,6 +3,7 @@ package com.quifers.email;
 import com.quifers.domain.*;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.domain.id.OrderId;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.BillDetailsEmailCreator;
 import com.quifers.email.helpers.EmailHttpRequestSender;
@@ -47,7 +48,7 @@ public class EndToEndEmailTest {
     }
 
     private Order getOrder() {
-        String orderId = "100";
+        OrderId orderId = new OrderId("100");
         Set<OrderWorkflow> workflowSet = new HashSet<>();
         workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date()));
         workflowSet.add(new OrderWorkflow(orderId, OrderState.TRIP_STARTED, new Date()));
@@ -61,8 +62,8 @@ public class EndToEndEmailTest {
         Set<Address> addresses = new HashSet<>();
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
-        Order order =  new Order(orderId, client, "vehicle", addresses, 1, "estimate", 1, false, 2, true, null, workflowSet);
-        order.setDistance(new Distance(orderId,2));
+        Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 1, false, 2, true, null, workflowSet);
+        order.setDistance(new Distance(orderId, 2));
         return order;
     }
 

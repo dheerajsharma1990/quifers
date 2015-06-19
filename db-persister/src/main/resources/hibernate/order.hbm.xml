@@ -5,22 +5,14 @@
 
     <class name="com.quifers.domain.Order" table="orders">
 
-        <id name="orderId" type="string">
-            <column name="order_id"/>
-        </id>
-
-        <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select"/>
+        <composite-id name="orderId" class="com.quifers.domain.id.OrderId">
+            <key-property name="orderId" column="order_id"/>
+        </composite-id>
 
         <property name="vehicle" type="string">
             <column name="vehicle"/>
         </property>
 
-        <set name="addresses" table="address" inverse="true" cascade="save-update" fetch="join">
-            <key>
-                <column name="order_id" not-null="true"/>
-            </key>
-            <one-to-many class="com.quifers.domain.Address"/>
-        </set>
 
         <property name="labours" type="integer">
             <column name="labours"/>
@@ -30,7 +22,6 @@
             <column name="estimate"/>
         </property>
 
-        <one-to-one name="distance" class="com.quifers.domain.Distance" cascade="save-update" lazy="false" fetch="select"/>
 
         <property name="pickupFloors" type="integer">
             <column name="pick_up_floors"/>
@@ -48,7 +39,18 @@
             <column name="drop_off_lift_working"/>
         </property>
 
+        <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select"/>
+
+        <one-to-one name="distance" class="com.quifers.domain.Distance" cascade="save-update" lazy="false" fetch="select"/>
+
         <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="save-update" lazy="false" fetch="join" />
+
+        <set name="addresses" table="address" inverse="true" cascade="save-update" fetch="join">
+            <key>
+                <column name="order_id" not-null="true"/>
+            </key>
+            <one-to-many class="com.quifers.domain.Address"/>
+        </set>
 
         <set name="orderWorkflows" table="orders_workflow" inverse="true" cascade="all" fetch="join">
             <key>

@@ -1,28 +1,29 @@
 package com.quifers.domain;
 
+import com.quifers.domain.id.OrderId;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
 
 public class Distance implements Serializable {
 
-    private String orderId;
+    private OrderId orderId;
 
     private int distance;
 
     public Distance() {
     }
 
-    public Distance(String orderId, int distance) {
+    public Distance(OrderId orderId, int distance) {
         this.orderId = orderId;
         this.distance = distance;
     }
 
-    public String getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(OrderId orderId) {
         this.orderId = orderId;
     }
 

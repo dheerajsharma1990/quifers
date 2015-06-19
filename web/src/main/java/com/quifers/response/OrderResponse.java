@@ -35,7 +35,7 @@ public class OrderResponse {
     private Set<OrderWorkflowResponse> orderWorkflows;
 
     public OrderResponse(Order order) {
-        this.orderId = order.getOrderId();
+        this.orderId = order.getOrderId().getOrderId();
         this.client = order.getClient();
         this.vehicle = order.getVehicle();
         Set<AddressResponse> addressResponses = new HashSet<>();

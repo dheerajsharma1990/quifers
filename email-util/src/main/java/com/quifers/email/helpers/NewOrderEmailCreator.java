@@ -50,7 +50,7 @@ public class NewOrderEmailCreator implements EmailCreator {
                 "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getPickUpAddress().getAddressHouseNumber() + "," + order.getPickUpAddress().getAddressSociety() + "," + order.getPickUpAddress().getAddressArea() + "," + order.getPickUpAddress().getAddressCity() + "</td></tr>" +
                 "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getDropOffAddress().getAddressHouseNumber() + "," + order.getDropOffAddress().getAddressSociety() + "," + order.getDropOffAddress().getAddressArea() + "," + order.getDropOffAddress().getAddressCity() + "</td></tr>" +
                 "<tr><td><strong>Booking Time :</strong> </td><td>" + workflow.getEffectiveTime() + "</td></tr>" +
-                "<tr><td><strong>Order State :</strong> </td><td>" + workflow.getOrderState() + "</td></tr>" +
+                "<tr><td><strong>Order State :</strong> </td><td>" + workflow.getOrderWorkflowId().getOrderState() + "</td></tr>" +
                 "</table>" +
                 "<br/>Please note that loading & unloading is free for first <b>60 mins</b><br/>" +
                 "Extra waiting time to be charged at INR 50 for every 15 min.<br/>" +

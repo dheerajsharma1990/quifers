@@ -6,6 +6,7 @@ import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.domain.id.OrderId;
 import com.quifers.service.OrderIdGeneratorService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +56,7 @@ public class OrderBookRequestValidator {
         int dropOffFloors = validateAndGetInteger(request, "floor_no_drop");
         boolean dropOffLiftWorking = validateAndGetBoolean(request, "lift_drop");
 
-        String orderId = orderIdGeneratorService.getNewOrderId();
+        OrderId orderId = new OrderId(orderIdGeneratorService.getNewOrderId());
 
         Address pickUpAddress = new Address(orderId, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
         Address dropOffAddress = new Address(orderId, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);

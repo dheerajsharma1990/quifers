@@ -15,7 +15,8 @@ public class DaoWrapper {
         this.session = session;
     }
 
-    public void save(Object object) {
+
+    public void save(Object object) throws Exception {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
@@ -26,10 +27,11 @@ public class DaoWrapper {
             if (transaction != null) {
                 transaction.rollback();
             }
+            throw new Exception(e);
         }
     }
 
-    public void update(Object object) {
+    public void update(Object object) throws Exception {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
@@ -40,6 +42,7 @@ public class DaoWrapper {
             if (transaction != null) {
                 transaction.rollback();
             }
+            throw new Exception(e);
         }
     }
 

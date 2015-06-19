@@ -1,5 +1,6 @@
 package com.quifers.domain;
 
+import com.quifers.domain.id.OrderId;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -7,7 +8,7 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
 
-    private String orderId;
+    private OrderId orderId;
 
     private String name;
 
@@ -18,18 +19,18 @@ public class Client implements Serializable {
     public Client() {
     }
 
-    public Client(String orderId, String name, long mobileNumber, String email) {
+    public Client(OrderId orderId, String name, long mobileNumber, String email) {
         this.orderId = orderId;
         this.name = name;
         this.mobileNumber = mobileNumber;
         this.email = email;
     }
 
-    public String getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(OrderId orderId) {
         this.orderId = orderId;
     }
 

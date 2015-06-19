@@ -1,6 +1,7 @@
 package com.quifers.request;
 
 import com.quifers.domain.id.FieldExecutiveId;
+import com.quifers.domain.id.OrderId;
 import com.quifers.request.validators.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,8 +23,8 @@ public class FieldExecutiveAssignRequest {
         return new FieldExecutiveId(fieldExecutiveId);
     }
 
-    public String getOrderId() {
-        return orderId;
+    public OrderId getOrderId() {
+        return new OrderId(orderId);
     }
 
     private void validate() throws InvalidRequestException {

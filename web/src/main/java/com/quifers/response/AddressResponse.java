@@ -15,7 +15,7 @@ public class AddressResponse {
     private String addressCity;
 
     public AddressResponse(Address address) {
-        this.addressType = address.getAddressType().name();
+        this.addressType = address.getAddressId().getAddressType().name();
         this.addressHouseNumber = address.getAddressHouseNumber();
         this.addressSociety = address.getAddressSociety();
         this.addressArea = address.getAddressArea();

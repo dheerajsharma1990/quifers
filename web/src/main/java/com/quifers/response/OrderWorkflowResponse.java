@@ -12,7 +12,7 @@ public class OrderWorkflowResponse {
 
     public OrderWorkflowResponse(OrderWorkflow orderWorkflow) {
         SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:MM:SS");
-        this.orderState = orderWorkflow.getOrderState().name();
+        this.orderState = orderWorkflow.getOrderWorkflowId().getOrderState().name();
         this.effectiveTime = format.format(orderWorkflow.getEffectiveTime());
     }
 

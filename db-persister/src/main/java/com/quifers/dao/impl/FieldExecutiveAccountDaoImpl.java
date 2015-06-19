@@ -13,7 +13,7 @@ public class FieldExecutiveAccountDaoImpl implements FieldExecutiveAccountDao {
     }
 
     @Override
-    public void saveFieldExecutiveAccount(FieldExecutiveAccount fieldExecutiveAccount) {
+    public void saveFieldExecutiveAccount(FieldExecutiveAccount fieldExecutiveAccount) throws Exception {
         wrapper.save(fieldExecutiveAccount);
     }
 

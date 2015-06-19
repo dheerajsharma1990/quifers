@@ -16,7 +16,7 @@ public class FieldExecutiveDaoImpl implements FieldExecutiveDao {
     }
 
     @Override
-    public void saveFieldExecutive(FieldExecutive fieldExecutive) {
+    public void saveFieldExecutive(FieldExecutive fieldExecutive) throws Exception {
         if (fieldExecutive != null) {
             wrapper.save(fieldExecutive);
         }

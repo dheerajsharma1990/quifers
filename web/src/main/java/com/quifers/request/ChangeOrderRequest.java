@@ -1,6 +1,7 @@
 package com.quifers.request;
 
 import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.id.OrderId;
 import com.quifers.request.validators.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class ChangeOrderRequest {
     }
 
     public OrderWorkflow getOrderWorkflow() {
-        return new OrderWorkflow(orderId,valueOf(orderState),new Date());
+        return new OrderWorkflow(new OrderId(orderId), valueOf(orderState), new Date());
     }
 
     private void validate() throws InvalidRequestException {
@@ -34,7 +35,7 @@ public class ChangeOrderRequest {
         }
         try {
             valueOf(orderState.toUpperCase());
-        }catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException exception) {
             throw new InvalidRequestException("Invalid Order State.");
         }
     }

@@ -2,6 +2,7 @@ package com.quifers.domain;
 
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.domain.id.OrderId;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 
 public class Order implements Serializable {
 
-    private String orderId;
+    private OrderId orderId;
 
     private Client client;
 
@@ -41,7 +42,7 @@ public class Order implements Serializable {
 
     }
 
-    public Order(String orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
+    public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
                  int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
@@ -58,7 +59,7 @@ public class Order implements Serializable {
         this.orderWorkflows = orderWorkflows;
     }
 
-    public String getOrderId() {
+    public OrderId getOrderId() {
         return orderId;
     }
 
@@ -110,7 +111,7 @@ public class Order implements Serializable {
         return orderWorkflows;
     }
 
-    public void setOrderId(String orderId) {
+    public void setOrderId(OrderId orderId) {
         this.orderId = orderId;
     }
 
@@ -216,7 +217,7 @@ public class Order implements Serializable {
 
     public OrderWorkflow getWorkflow(OrderState orderState) {
         for (OrderWorkflow workflow : orderWorkflows) {
-            if (orderState.equals(workflow.getOrderState())) {
+            if (orderState.equals(workflow.getOrderWorkflowId().getOrderState())) {
                 return workflow;
             }
         }
@@ -270,7 +271,7 @@ public class Order implements Serializable {
 
     public Address getPickUpAddress() {
         for (Address address : addresses) {
-            if (AddressType.PICKUP.equals(address.getAddressType())) {
+            if (AddressType.PICKUP.equals(address.getAddressId().getAddressType())) {
                 return address;
             }
         }
@@ -279,7 +280,7 @@ public class Order implements Serializable {
 
     public Address getDropOffAddress() {
         for (Address address : addresses) {
-            if (AddressType.DROP.equals(address.getAddressType())) {
+            if (AddressType.DROP.equals(address.getAddressId().getAddressType())) {
                 return address;
             }
         }

@@ -13,7 +13,7 @@ public class AdminAccountDaoImpl implements AdminAccountDao {
     }
 
     @Override
-    public void saveAdminAccount(AdminAccount adminAccount) {
+    public void saveAdminAccount(AdminAccount adminAccount) throws Exception {
         wrapper.save(adminAccount);
     }
 

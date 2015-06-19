@@ -4,7 +4,7 @@
 <hibernate-mapping>
     <class name="com.quifers.domain.OrderWorkflow" table="orders_workflow">
 
-        <composite-id>
+        <composite-id name="orderWorkflowId" class="com.quifers.domain.id.OrderWorkflowId">
             <key-property name="orderId" type="string">
                 <column name="order_id"/>
             </key-property>
