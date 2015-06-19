@@ -44,8 +44,8 @@ public class AdminLoginServlet extends HttpServlet {
             if (!adminAuthenticator.isValidAdmin(adminAccount)) {
                 loginResponse = AdminLoginResponse.getInvalidLoginResponse();
             } else {
-                String accessToken = tokenGenerator.generateAccessToken(adminAccount);
-                AdminAuthenticationData.putAdminAccessToken(adminAccount.getUserId(), accessToken);
+                String accessToken = adminAccount.getAccessToken();
+                AdminAuthenticationData.putAdminAccessToken(adminAccount.getAdminId().getUserId(), accessToken);
                 loginResponse = getSuccessResponse(accessToken);
             }
             response.getWriter().write(loginResponse);

@@ -1,17 +1,11 @@
 package com.quifers.authentication;
 
-import com.quifers.domain.AdminAccount;
 import com.quifers.domain.FieldExecutiveAccount;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class AccessTokenGenerator {
-
-    public String generateAccessToken(AdminAccount adminAccount) throws NoSuchAlgorithmException {
-        String combined = adminAccount.getUserId() + "" + adminAccount.getPassword();
-        return getString(combined);
-    }
 
     public String generateAccessToken(FieldExecutiveAccount fieldExecutiveAccount) throws NoSuchAlgorithmException {
         String combined = fieldExecutiveAccount.getUserId() + "" + fieldExecutiveAccount.getPassword();

@@ -1,12 +1,12 @@
 package com.quifers.domain;
 
+import com.quifers.domain.id.AdminId;
+
 import static org.apache.commons.lang3.builder.ToStringBuilder.reflectionToString;
 
 public class Admin {
 
-    private String userId;
-
-    private AdminAccount account;
+    private AdminId adminId;
 
     private String name;
 
@@ -15,44 +15,34 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(AdminAccount account, String name, long mobileNumber) {
-        this.userId = account.getUserId();
-        this.account = account;
+    public Admin(AdminId adminId, String name, long mobileNumber) {
+        this.adminId = adminId;
         this.name = name;
         this.mobileNumber = mobileNumber;
     }
 
-    public String getUserId() {
-        return userId;
+    public AdminId getAdminId() {
+        return adminId;
     }
 
-    public void setAccount(AdminAccount account) {
-        this.account = account;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setMobileNumber(long mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-
-    }
-
-    public AdminAccount getAccount() {
-        return account;
+    public void setAdminId(AdminId adminId) {
+        this.adminId = adminId;
     }
 
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public long getMobileNumber() {
         return mobileNumber;
+    }
+
+    public void setMobileNumber(long mobileNumber) {
+        this.mobileNumber = mobileNumber;
     }
 
     @Override
@@ -63,7 +53,7 @@ public class Admin {
         Admin admin = (Admin) o;
 
         if (mobileNumber != admin.mobileNumber) return false;
-        if (account != null ? !account.equals(admin.account) : admin.account != null) return false;
+        if (adminId != null ? !adminId.equals(admin.adminId) : admin.adminId != null) return false;
         if (name != null ? !name.equals(admin.name) : admin.name != null) return false;
 
         return true;
@@ -71,7 +61,7 @@ public class Admin {
 
     @Override
     public int hashCode() {
-        return account != null ? account.hashCode() : 0;
+        return adminId != null ? adminId.hashCode() : 0;
     }
 
     @Override

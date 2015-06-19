@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Test
+@Test(enabled = false)
 public class EndToEndEmailTest {
 
     private CredentialsService credentialsService;
@@ -26,7 +26,7 @@ public class EndToEndEmailTest {
     /**
      * Kindly generate credentials from CredentialsGenerator.java before running this test..
      */
-    @Test
+    @Test(enabled = false)
     public void shouldSendEmailsSuccessfully() throws Exception {
         //given
         EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());

@@ -1,7 +1,10 @@
 package com.quifers.servlet.admin;
 
+import com.quifers.dao.AdminAccountDao;
 import com.quifers.dao.AdminDao;
 import com.quifers.domain.Admin;
+import com.quifers.domain.AdminAccount;
+import com.quifers.domain.id.AdminId;
 import com.quifers.request.AdminRegisterRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
@@ -16,16 +19,19 @@ import java.io.IOException;
 import static com.quifers.request.transformers.AdminTransformer.transform;
 import static com.quifers.request.validators.admin.AdminRegisterRequestValidator.validateAdminRegisterRequest;
 import static com.quifers.response.AdminRegisterResponse.getSuccessResponse;
+import static com.quifers.servlet.listener.StartupContextListener.ADMIN_ACCOUNT_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_DAO;
 
 public class AdminRegisterServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminRegisterServlet.class);
     private AdminDao adminDao;
+    private AdminAccountDao adminAccountDao;
 
     @Override
     public void init() throws ServletException {
         adminDao = (AdminDao) getServletContext().getAttribute(ADMIN_DAO);
+        adminAccountDao = (AdminAccountDao) getServletContext().getAttribute(ADMIN_ACCOUNT_DAO);
     }
 
     @Override
@@ -34,6 +40,7 @@ public class AdminRegisterServlet extends HttpServlet {
             AdminRegisterRequest registerRequest = new AdminRegisterRequest(request);
             validateAdminRegisterRequest(registerRequest);
             Admin admin = transform(registerRequest);
+            adminAccountDao.saveAdminAccount(new AdminAccount(new AdminId(registerRequest.getUserId()), registerRequest.getPassword()));
             adminDao.saveAdmin(admin);
             String successResponse = getSuccessResponse();
             response.setContentType("application/json");

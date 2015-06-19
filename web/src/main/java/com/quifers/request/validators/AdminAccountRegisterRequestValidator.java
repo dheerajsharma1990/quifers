@@ -1,6 +1,7 @@
 package com.quifers.request.validators;
 
 import com.quifers.domain.AdminAccount;
+import com.quifers.domain.id.AdminId;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +12,7 @@ public class AdminAccountRegisterRequestValidator {
     public AdminAccount validateAdminAccountRequest(HttpServletRequest request) throws InvalidRequestException {
         String userId = validateAndGetUserId(request);
         String password = validateAndGetPassword(request);
-        return new AdminAccount(userId, password);
+        return new AdminAccount(new AdminId(userId), password);
     }
 
     private String validateAndGetUserId(HttpServletRequest request) throws InvalidRequestException {

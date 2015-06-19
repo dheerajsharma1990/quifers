@@ -34,6 +34,7 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_TOKEN_GENERATOR = "ADMIN_TOKEN_GENERATOR";
     public static final String AUTHENTICATION_REQUEST_VALIDATOR = "AUTHENTICATION_REQUEST_VALIDATOR";
 
+    public static final String ADMIN_ACCOUNT_DAO = "ADMIN_ACCOUNT_DAO";
     public static final String ADMIN_DAO = "ADMIN_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
@@ -116,8 +117,9 @@ public class StartupContextListener implements ServletContextListener {
         try {
             DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
             servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
+            servletContext.setAttribute(ADMIN_ACCOUNT_DAO, daoFactory.getAdminAccountDao());
             servletContext.setAttribute(FIELD_EXECUTIVE_DAO, daoFactory.getFieldExecutiveDao());
-            servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminDao()));
+            servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminAccountDao()));
             servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(daoFactory.getFieldExecutiveDao()));
             servletContext.setAttribute(ORDER_DAO, daoFactory.getOrderDao());
         } catch (IOException e) {
