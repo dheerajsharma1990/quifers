@@ -1,9 +1,6 @@
 package com.quifers.hibernate;
 
-import com.quifers.dao.AdminAccountDao;
-import com.quifers.dao.AdminDao;
-import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.dao.OrderDao;
+import com.quifers.dao.*;
 import com.quifers.dao.impl.*;
 import org.hibernate.CacheMode;
 import org.hibernate.Session;
@@ -21,12 +18,16 @@ public class DaoFactory {
         daoWrapper = new DaoWrapper(session);
     }
 
+    public AdminAccountDao getAdminAccountDao() {
+        return new AdminAccountDaoImpl(daoWrapper);
+    }
+
     public AdminDao getAdminDao() {
         return new AdminDaoImpl(daoWrapper);
     }
 
-    public AdminAccountDao getAdminAccountDao() {
-        return new AdminAccountDaoImpl(daoWrapper);
+    public FieldExecutiveAccountDao getFieldExecutiveAccountDao() {
+        return new FieldExecutiveAccountDaoImpl(daoWrapper);
     }
 
     public FieldExecutiveDao getFieldExecutiveDao() {

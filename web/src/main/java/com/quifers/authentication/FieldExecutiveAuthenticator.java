@@ -1,21 +1,20 @@
 package com.quifers.authentication;
 
-import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.domain.FieldExecutive;
+import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.domain.FieldExecutiveAccount;
 
 import java.sql.SQLException;
 
 public class FieldExecutiveAuthenticator {
 
-    private final FieldExecutiveDao fieldExecutiveDao;
+    private final FieldExecutiveAccountDao fieldExecutiveAccountDao;
 
-    public FieldExecutiveAuthenticator(FieldExecutiveDao fieldExecutiveDao) {
-        this.fieldExecutiveDao = fieldExecutiveDao;
+    public FieldExecutiveAuthenticator(FieldExecutiveAccountDao fieldExecutiveAccountDao) {
+        this.fieldExecutiveAccountDao = fieldExecutiveAccountDao;
     }
 
     public boolean isValidFieldExecutive(FieldExecutiveAccount fieldExecutiveAccount) throws SQLException {
-        FieldExecutive accountFromDb = fieldExecutiveDao.getFieldExecutive(fieldExecutiveAccount.getUserId());
-        return accountFromDb != null && accountFromDb.getAccount().equals(fieldExecutiveAccount);
+        FieldExecutiveAccount accountFromDb = fieldExecutiveAccountDao.getFieldExecutiveAccount(fieldExecutiveAccount.getFieldExecutiveId());
+        return accountFromDb != null && accountFromDb.equals(fieldExecutiveAccount);
     }
 }

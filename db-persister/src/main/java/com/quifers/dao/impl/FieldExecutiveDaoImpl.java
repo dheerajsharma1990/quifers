@@ -2,6 +2,7 @@ package com.quifers.dao.impl;
 
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.domain.FieldExecutive;
+import com.quifers.domain.id.FieldExecutiveId;
 import org.hibernate.Criteria;
 
 import java.util.Collection;
@@ -22,8 +23,8 @@ public class FieldExecutiveDaoImpl implements FieldExecutiveDao {
     }
 
     @Override
-    public FieldExecutive getFieldExecutive(String userId) {
-        return  (FieldExecutive) wrapper.get(FieldExecutive.class, userId);
+    public FieldExecutive getFieldExecutive(FieldExecutiveId fieldExecutiveId) {
+        return  (FieldExecutive) wrapper.get(FieldExecutive.class, fieldExecutiveId);
     }
 
     @Override

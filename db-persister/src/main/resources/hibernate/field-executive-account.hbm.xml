@@ -3,9 +3,9 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
     <class name="com.quifers.domain.FieldExecutiveAccount" table="field_executive_account">
-        <id name="userId" type="string">
-            <column name="user_id" />
-        </id>
+        <composite-id name="fieldExecutiveId" class="com.quifers.domain.id.FieldExecutiveId">
+            <key-property name="userId" column="user_id"/>
+        </composite-id>
         <property name="password" type="string">
             <column name="password" length="255" not-null="true" />
         </property>

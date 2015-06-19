@@ -1,6 +1,5 @@
 package com.quifers.servlet.admin;
 
-import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticationData;
 import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.domain.AdminAccount;
@@ -19,19 +18,16 @@ import java.io.IOException;
 import static com.quifers.request.transformers.AdminTransformer.transform;
 import static com.quifers.response.AdminLoginResponse.getSuccessResponse;
 import static com.quifers.servlet.listener.StartupContextListener.ADMIN_AUTHENTICATOR;
-import static com.quifers.servlet.listener.StartupContextListener.ADMIN_TOKEN_GENERATOR;
 
 public class AdminLoginServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminLoginServlet.class);
 
     private AdminAuthenticator adminAuthenticator;
-    private AccessTokenGenerator tokenGenerator;
 
     @Override
     public void init() throws ServletException {
         adminAuthenticator = (AdminAuthenticator) getServletContext().getAttribute(ADMIN_AUTHENTICATOR);
-        tokenGenerator = (AccessTokenGenerator) getServletContext().getAttribute(ADMIN_TOKEN_GENERATOR);
     }
 
     @Override

@@ -25,13 +25,13 @@ import static com.quifers.servlet.listener.StartupContextListener.ADMIN_DAO;
 public class AdminRegisterServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminRegisterServlet.class);
-    private AdminDao adminDao;
     private AdminAccountDao adminAccountDao;
+    private AdminDao adminDao;
 
     @Override
     public void init() throws ServletException {
-        adminDao = (AdminDao) getServletContext().getAttribute(ADMIN_DAO);
         adminAccountDao = (AdminAccountDao) getServletContext().getAttribute(ADMIN_ACCOUNT_DAO);
+        adminDao = (AdminDao) getServletContext().getAttribute(ADMIN_DAO);
     }
 
     @Override

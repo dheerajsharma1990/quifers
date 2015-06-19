@@ -1,9 +1,11 @@
 package com.quifers.servlet.admin;
 
+import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.domain.FieldExecutive;
+import com.quifers.domain.FieldExecutiveAccount;
+import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.FieldExecutiveRegisterRequest;
-import com.quifers.request.transformers.FieldExecutiveTransformer;
 import com.quifers.request.validators.InvalidRequestException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,15 +17,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
+import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_ACCOUNT_DAO;
 import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
+import static java.lang.Long.valueOf;
 
 public class FieldExecutiveRegisterServlet extends HttpServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveRegisterServlet.class);
+    private FieldExecutiveAccountDao fieldExecutiveAccountDao;
     private FieldExecutiveDao fieldExecutiveDao;
 
     @Override
     public void init() throws ServletException {
+        fieldExecutiveAccountDao = (FieldExecutiveAccountDao) getServletContext().getAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO);
         fieldExecutiveDao = (FieldExecutiveDao) getServletContext().getAttribute(FIELD_EXECUTIVE_DAO);
     }
 
@@ -31,8 +37,8 @@ public class FieldExecutiveRegisterServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             FieldExecutiveRegisterRequest registerRequest = new FieldExecutiveRegisterRequest(request);
-            FieldExecutive fieldExecutive = FieldExecutiveTransformer.transform(registerRequest);
-            fieldExecutiveDao.saveFieldExecutive(fieldExecutive);
+            fieldExecutiveAccountDao.saveFieldExecutiveAccount(new FieldExecutiveAccount(new FieldExecutiveId(registerRequest.getFieldExecutiveId()), registerRequest.getPassword()));
+            fieldExecutiveDao.saveFieldExecutive(new FieldExecutive(new FieldExecutiveId(registerRequest.getFieldExecutiveId()), registerRequest.getName(), valueOf(registerRequest.getMobileNumber())));
             String successResponse = getSuccessResponse();
             response.setContentType("application/json");
             response.getWriter().write(successResponse);

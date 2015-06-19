@@ -1,16 +1,14 @@
 package com.quifers.domain;
 
+import com.quifers.domain.id.FieldExecutiveId;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 
 public class FieldExecutive implements Serializable {
 
-    private String fieldExecutiveId;
-
-    private FieldExecutiveAccount account;
+    private FieldExecutiveId fieldExecutiveId;
 
     private String name;
 
@@ -19,31 +17,30 @@ public class FieldExecutive implements Serializable {
     public FieldExecutive() {
     }
 
-    public FieldExecutive(FieldExecutiveAccount account, String name, long mobileNumber) {
-        setFieldExecutiveId(account.getUserId());
-        this.account = account;
+    public FieldExecutive(FieldExecutiveId fieldExecutiveId, String name, long mobileNumber) {
+        this.fieldExecutiveId = fieldExecutiveId;
         this.name = name;
         this.mobileNumber = mobileNumber;
     }
 
-    public FieldExecutiveAccount getAccount() {
-        return account;
+    public FieldExecutiveId getFieldExecutiveId() {
+        return fieldExecutiveId;
+    }
+
+    public void setFieldExecutiveId(FieldExecutiveId fieldExecutiveId) {
+        this.fieldExecutiveId = fieldExecutiveId;
     }
 
     public String getName() {
         return name;
     }
 
-    public long getMobileNumber() {
-        return mobileNumber;
-    }
-
-    public void setAccount(FieldExecutiveAccount account) {
-        this.account = account;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public long getMobileNumber() {
+        return mobileNumber;
     }
 
     public void setMobileNumber(long mobileNumber) {
@@ -58,7 +55,8 @@ public class FieldExecutive implements Serializable {
         FieldExecutive that = (FieldExecutive) o;
 
         if (mobileNumber != that.mobileNumber) return false;
-        if (account != null ? !account.equals(that.account) : that.account != null) return false;
+        if (fieldExecutiveId != null ? !fieldExecutiveId.equals(that.fieldExecutiveId) : that.fieldExecutiveId != null)
+            return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
 
         return true;
@@ -66,23 +64,12 @@ public class FieldExecutive implements Serializable {
 
     @Override
     public int hashCode() {
-        return account != null ? account.hashCode() : 0;
+        return fieldExecutiveId != null ? fieldExecutiveId.hashCode() : 0;
     }
 
     @Override
     public String toString() {
-        return (new ReflectionToStringBuilder(this, ToStringStyle.JSON_STYLE) {
-            protected boolean accept(Field f) {
-                return super.accept(f) && !f.getName().equals("account");
-            }
-        }).toString();
+        return (new ReflectionToStringBuilder(this, ToStringStyle.JSON_STYLE)).toString();
     }
 
-    public String getFieldExecutiveId() {
-        return fieldExecutiveId;
-    }
-
-    public void setFieldExecutiveId(String fieldExecutiveId) {
-        this.fieldExecutiveId = fieldExecutiveId;
-    }
 }

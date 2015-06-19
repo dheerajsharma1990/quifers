@@ -23,7 +23,7 @@ public class FieldExecutiveResponse {
     public static String getAllFieldExecutivesResponse(Collection<FieldExecutive> fieldExecutives) {
         List<FieldExecutiveListAll> listAlls = new ArrayList<>();
         for (FieldExecutive fieldExecutive : fieldExecutives) {
-            listAlls.add(new FieldExecutiveListAll(fieldExecutive.getAccount().getUserId(), fieldExecutive.getName(), fieldExecutive.getMobileNumber()));
+            listAlls.add(new FieldExecutiveListAll(fieldExecutive.getFieldExecutiveId().getUserId(), fieldExecutive.getName(), fieldExecutive.getMobileNumber()));
         }
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("field_executives", listAlls);

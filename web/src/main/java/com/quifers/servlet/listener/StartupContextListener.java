@@ -1,10 +1,9 @@
 package com.quifers.servlet.listener;
 
-import com.quifers.hibernate.DaoFactory;
 import com.quifers.Environment;
-import com.quifers.authentication.AccessTokenGenerator;
 import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
+import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
 import com.quifers.properties.PropertiesLoader;
 import com.quifers.properties.WebProperties;
@@ -36,6 +35,7 @@ public class StartupContextListener implements ServletContextListener {
 
     public static final String ADMIN_ACCOUNT_DAO = "ADMIN_ACCOUNT_DAO";
     public static final String ADMIN_DAO = "ADMIN_DAO";
+    public static final String FIELD_EXECUTIVE_ACCOUNT_DAO = "FIELD_EXECUTIVE_ACCOUNT_DAO";
     public static final String FIELD_EXECUTIVE_DAO = "FIELD_EXECUTIVE_DAO";
     public static final String ORDER_DAO = "ORDER_DAO";
 
@@ -89,7 +89,6 @@ public class StartupContextListener implements ServletContextListener {
     public void initialiseDao(ServletContext servletContext) {
         servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
-        servletContext.setAttribute(ADMIN_TOKEN_GENERATOR, new AccessTokenGenerator());
         servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());
     }
 
@@ -116,11 +115,12 @@ public class StartupContextListener implements ServletContextListener {
     private void initDaos(ServletContext servletContext, Environment environment) {
         try {
             DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
-            servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
             servletContext.setAttribute(ADMIN_ACCOUNT_DAO, daoFactory.getAdminAccountDao());
+            servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
+            servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, daoFactory.getFieldExecutiveAccountDao());
             servletContext.setAttribute(FIELD_EXECUTIVE_DAO, daoFactory.getFieldExecutiveDao());
             servletContext.setAttribute(ADMIN_AUTHENTICATOR, new AdminAuthenticator(daoFactory.getAdminAccountDao()));
-            servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(daoFactory.getFieldExecutiveDao()));
+            servletContext.setAttribute(FIELD_EXECUTIVE_AUTHENTICATOR, new FieldExecutiveAuthenticator(daoFactory.getFieldExecutiveAccountDao()));
             servletContext.setAttribute(ORDER_DAO, daoFactory.getOrderDao());
         } catch (IOException e) {
             e.printStackTrace();
