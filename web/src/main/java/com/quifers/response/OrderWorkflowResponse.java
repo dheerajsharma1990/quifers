@@ -11,7 +11,7 @@ public class OrderWorkflowResponse {
     private String effectiveTime;
 
     public OrderWorkflowResponse(OrderWorkflow orderWorkflow) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:MM:SS");
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         this.orderState = orderWorkflow.getOrderWorkflowId().getOrderState().name();
         this.effectiveTime = format.format(orderWorkflow.getEffectiveTime());
     }
