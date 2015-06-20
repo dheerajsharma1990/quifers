@@ -1,6 +1,5 @@
 package com.quifers.request;
 
-import com.quifers.domain.Distance;
 import com.quifers.domain.id.OrderId;
 import com.quifers.request.validators.InvalidRequestException;
 
@@ -12,16 +11,27 @@ public class GeneratePriceRequest {
 
     private String orderId;
     private String distance;
+    private String waitingMinutes;
 
     public GeneratePriceRequest(HttpServletRequest request) throws InvalidRequestException {
         this.orderId = request.getParameter("order_id");
         this.distance = request.getParameter("distance");
+        this.waitingMinutes = request.getParameter("waiting_minutes");
         validate();
     }
 
-    public Distance getDistance() {
-        return new Distance(new OrderId(orderId), Integer.valueOf(distance));
+    public OrderId getOrderId() {
+        return new OrderId(orderId);
     }
+
+    public int getDistance() {
+        return Integer.valueOf(distance);
+    }
+
+    public int getWaitingMinutes() {
+        return Integer.valueOf(waitingMinutes);
+    }
+
 
     private void validate() throws InvalidRequestException {
         if (isEmpty(orderId)) {
@@ -29,6 +39,9 @@ public class GeneratePriceRequest {
         }
         if (isEmpty(distance)) {
             throw new InvalidRequestException("Distance cannot be empty.");
+        }
+        if (isEmpty(waitingMinutes)) {
+            throw new InvalidRequestException("Waiting minutes cannot be empty.");
         }
     }
 }

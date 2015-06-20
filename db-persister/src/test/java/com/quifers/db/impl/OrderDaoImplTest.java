@@ -53,7 +53,6 @@ public class OrderDaoImplTest {
         Order order = new Order(orderId);
         order.setFieldExecutive(fieldExecutive);
         order.addOrderWorkflow(new OrderWorkflow(orderId, OrderState.BOOKED, dateFormat.parse(dateString)));
-        order.addOrderWorkflow(new OrderWorkflow(orderId, OrderState.TRIP_STARTED, dateFormat.parse("30/06/2015 15:00")));
         return order;
     }
 

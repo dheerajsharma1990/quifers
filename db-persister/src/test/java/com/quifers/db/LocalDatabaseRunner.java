@@ -13,7 +13,7 @@ public class LocalDatabaseRunner {
         server = Server.createTcpServer("-tcpPort", "9092");
         server.start();
         Class.forName("org.h2.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:h2:tcp://localhost:9092/~/quifersdb;DB_CLOSE_ON_EXIT=FALSE", "", "");
+        Connection connection = DriverManager.getConnection("jdbc:h2:tcp://localhost:9092/~/quifersdb;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL", "", "");
         connection.prepareStatement("DROP ALL OBJECTS").execute();
         SqlFilesSorter sqlFilesSorter = new SqlFilesSorter();
         SqlFilesExecutor executor = new SqlFilesExecutor(connection, sqlFilesSorter, new SqlScriptParser());

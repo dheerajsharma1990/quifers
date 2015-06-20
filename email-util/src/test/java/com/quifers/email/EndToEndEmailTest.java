@@ -51,10 +51,6 @@ public class EndToEndEmailTest {
         OrderId orderId = new OrderId("100");
         Set<OrderWorkflow> workflowSet = new HashSet<>();
         workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date()));
-        workflowSet.add(new OrderWorkflow(orderId, OrderState.TRIP_STARTED, new Date()));
-        workflowSet.add(new OrderWorkflow(orderId, OrderState.TRANSIT_STARTED, new Date()));
-        workflowSet.add(new OrderWorkflow(orderId, OrderState.TRANSIT_ENDED, new Date()));
-        workflowSet.add(new OrderWorkflow(orderId, OrderState.TRIP_ENDED, new Date()));
 
         Client client = new Client(orderId, "name", 9988776655l, "dheerajsharma1990@gmail.com");
         Address pickUpAddress = new Address(orderId, AddressType.PICKUP, "fromAddressHouseNumber", "fromAddressSociety", "fromAddressArea", "fromAddressCity");

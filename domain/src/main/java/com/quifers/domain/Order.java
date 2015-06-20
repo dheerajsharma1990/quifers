@@ -38,6 +38,8 @@ public class Order implements Serializable {
 
     private Set<OrderWorkflow> orderWorkflows;
 
+    private int waitingMinutes;
+
     public Order() {
 
     }
@@ -168,6 +170,14 @@ public class Order implements Serializable {
         this.orderWorkflows = orderWorkflows;
     }
 
+    public void setWaitingMinutes(int waitingMinutes) {
+        this.waitingMinutes = waitingMinutes;
+    }
+
+    public int getWaitingMinutes() {
+        return waitingMinutes;
+    }
+
     public void addOrderWorkflow(OrderWorkflow orderWorkflow) {
         if (orderWorkflows == null) {
             orderWorkflows = new HashSet<>();
@@ -183,7 +193,6 @@ public class Order implements Serializable {
     }
 
     private int getWaitingCost() {
-        int waitingMinutes = getWaitingMinutes();
         if (waitingMinutes <= 60) {
             return 0;
         }
@@ -208,17 +217,6 @@ public class Order implements Serializable {
         return 350 * (nonWorkingLifts - 2);
     }
 
-    private int getWaitingMinutes() {
-        OrderWorkflow tripStarted = getWorkflow(OrderState.TRIP_STARTED);
-        OrderWorkflow transitStarted = getWorkflow(OrderState.TRANSIT_STARTED);
-        OrderWorkflow transitEnded = getWorkflow(OrderState.TRANSIT_ENDED);
-        OrderWorkflow tripEnded = getWorkflow(OrderState.TRIP_ENDED);
-        long startTripTime = tripStarted.getEffectiveTime().getTime();
-        long startTransitTime = transitStarted.getEffectiveTime().getTime();
-        long endTransitTime = transitEnded.getEffectiveTime().getTime();
-        long endTripTime = tripEnded.getEffectiveTime().getTime();
-        return (int) (((startTransitTime - startTripTime) + (endTripTime - endTransitTime)) / (1000 * 60));
-    }
 
     public OrderWorkflow getWorkflow(OrderState orderState) {
         for (OrderWorkflow workflow : orderWorkflows) {
@@ -248,6 +246,7 @@ public class Order implements Serializable {
         if (labours != order.labours) return false;
         if (pickupFloors != order.pickupFloors) return false;
         if (pickupLiftWorking != order.pickupLiftWorking) return false;
+        if (waitingMinutes != order.waitingMinutes) return false;
         if (addresses != null ? !addresses.equals(order.addresses) : order.addresses != null) return false;
         if (client != null ? !client.equals(order.client) : order.client != null) return false;
         if (distance != null ? !distance.equals(order.distance) : order.distance != null) return false;

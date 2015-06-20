@@ -39,6 +39,10 @@
             <column name="drop_off_lift_working"/>
         </property>
 
+        <property name="waitingMinutes" type="integer">
+            <column name="waiting_minutes"/>
+        </property>
+
         <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select"/>
 
         <one-to-one name="distance" class="com.quifers.domain.Distance" cascade="save-update" lazy="false" fetch="select"/>

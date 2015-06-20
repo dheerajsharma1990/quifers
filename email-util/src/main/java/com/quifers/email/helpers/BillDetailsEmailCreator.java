@@ -67,7 +67,7 @@ public class BillDetailsEmailCreator implements EmailCreator {
     }
 
     private String getSubject(Order order) {
-        return "Quifers Bill .Order Id [" + order.getOrderId() + "]";
+        return "Quifers Bill .Order Id [" + order.getOrderId().getOrderId() + "]";
     }
 
 }

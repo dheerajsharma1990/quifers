@@ -9,12 +9,10 @@ import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
-import com.quifers.request.ChangeOrderRequest;
 import com.quifers.request.FieldExecutiveGetAllOrdersRequest;
 import com.quifers.request.FilterRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
-import com.quifers.response.ChangeOrderResponse;
 import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.response.GeneratePriceResponse;
 import com.quifers.servlet.listener.WebPublisher;
@@ -29,9 +27,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
-import static com.quifers.servlet.listener.StartupContextListener.FIELD_EXECUTIVE_DAO;
-import static com.quifers.servlet.listener.StartupContextListener.ORDER_DAO;
-import static com.quifers.servlet.listener.StartupContextListener.WEB_PUBLISHER;
+import static com.quifers.servlet.listener.StartupContextListener.*;
 
 public class FieldExecutiveServlet extends HttpServlet {
 
@@ -51,17 +47,13 @@ public class FieldExecutiveServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String requestUri = request.getRequestURI();
-            if ("/api/v0/executive/order/update/state".equals(requestUri)) {
-                OrderWorkflow orderWorkflow = new ChangeOrderRequest(request).getOrderWorkflow();
-                orderDao.addOrderWorkflow(orderWorkflow);
-                ChangeOrderResponse changeOrderResponse = new ChangeOrderResponse(response);
-                changeOrderResponse.writeResponse();
-            } else if ("/api/v0/executive/order/create/price".equals(requestUri)) {
+            if ("/api/v0/executive/order/create/price".equals(requestUri)) {
                 GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
-                Order order = orderDao.getOrder(priceRequest.getDistance().getOrderId());
+                Order order = orderDao.getOrder(priceRequest.getOrderId());
                 Distance distance = order.getDistance();
-                distance.setDistance(priceRequest.getDistance().getDistance());
+                distance.setDistance(priceRequest.getDistance());
                 order.setDistance(distance);
+                order.setWaitingMinutes(priceRequest.getWaitingMinutes());
                 order.addOrderWorkflow(new OrderWorkflow(distance.getOrderId(), OrderState.COMPLETED, new Date()));
                 orderDao.updateOrder(order);
                 webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, distance.getOrderId());

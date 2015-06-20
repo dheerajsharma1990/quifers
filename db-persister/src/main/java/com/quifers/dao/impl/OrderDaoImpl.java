@@ -3,7 +3,6 @@ package com.quifers.dao.impl;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
 import org.hibernate.Criteria;
@@ -31,12 +30,6 @@ public class OrderDaoImpl implements OrderDao {
         return (Order) wrapper.get(Order.class, orderId);
     }
 
-    @Override
-    public void addOrderWorkflow(OrderWorkflow orderWorkflow) throws Exception {
-        Order order = getOrder(new OrderId(orderWorkflow.getOrderWorkflowId().getOrderId()));
-        order.addOrderWorkflow(orderWorkflow);
-        updateOrder(order);
-    }
 
     @Override
     public void assignFieldExecutive(OrderId orderId, FieldExecutive fieldExecutive) throws Exception {
@@ -48,14 +41,6 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public void updateOrder(Order order) throws Exception {
         wrapper.update(order);
-    }
-
-    @Override
-    public Collection<Order> getOrders(FieldExecutive fieldExecutive) {
-        Criteria criteria = wrapper.createCriteria(Order.class);
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        criteria.add(Restrictions.eq("fieldExecutive", fieldExecutive));
-        return wrapper.get(criteria);
     }
 
     @Override

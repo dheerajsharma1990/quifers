@@ -154,27 +154,11 @@ public class EndToEndWebTest {
         assertThat(response, is("{\"success\":\"true\",\"access_token\":\"297f7024a516256a526bd6b9f2d3f15c\"}"));
     }
 
+
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnFieldExecutiveLogin")
-    public void shouldChangeOrderState() throws Exception {
-        //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/update/state");
-        String request = buildChangeOrderRequest(OrderState.TRIP_STARTED);
-
-        //when
-        int responseCode = sendRequest(connection, request);
-
-        //then
-        assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
-    }
-
-    @Test(dependsOnMethods = "shouldChangeOrderState")
     public void shouldGeneratePrice() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/create/price");
-        sendRequest(getConnection(BASE_URL + "/api/v0/executive/order/update/state"), buildChangeOrderRequest(OrderState.TRANSIT_STARTED));
-        sendRequest(getConnection(BASE_URL + "/api/v0/executive/order/update/state"), buildChangeOrderRequest(OrderState.TRANSIT_ENDED));
-        sendRequest(getConnection(BASE_URL + "/api/v0/executive/order/update/state"), buildChangeOrderRequest(OrderState.TRIP_ENDED));
         String request = buildCreatePriceRequest();
 
         //when
@@ -182,7 +166,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"labourCost\":0,\"waitingCost\":0}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"labourCost\":0,\"waitingCost\":1100}"));
     }
 
     @Test(dependsOnMethods = "shouldGeneratePrice")
@@ -258,17 +242,12 @@ public class EndToEndWebTest {
                 .add("password", "mypassword").build();
     }
 
-    private String buildChangeOrderRequest(OrderState state) throws UnsupportedEncodingException {
-        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
-                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("order_id", ORDER_ID)
-                .add("order_state", state.name()).build();
-    }
 
     private String buildCreatePriceRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("distance", "14")
+                .add("waiting_minutes", "400")
                 .add("order_id", ORDER_ID).build();
     }
 
