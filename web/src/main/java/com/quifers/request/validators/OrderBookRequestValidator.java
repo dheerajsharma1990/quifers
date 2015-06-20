@@ -1,9 +1,6 @@
 package com.quifers.request.validators;
 
-import com.quifers.domain.Address;
-import com.quifers.domain.Client;
-import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.*;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
@@ -64,7 +61,7 @@ public class OrderBookRequestValidator {
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
         return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
-                estimate, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
+                estimate, new Distance(orderId, 0), pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
                 new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))));
 
     }

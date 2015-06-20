@@ -42,7 +42,7 @@ public class Order implements Serializable {
 
     }
 
-    public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate,
+    public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate, Distance distance,
                  int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
@@ -51,6 +51,7 @@ public class Order implements Serializable {
         this.addresses = addresses;
         this.labours = labours;
         this.estimate = estimate;
+        this.distance = distance;
         this.pickupFloors = pickupFloors;
         this.pickupLiftWorking = pickupLiftWorking;
         this.dropOffFloors = dropOffFloors;
