@@ -45,7 +45,7 @@ public class NewOrderEmailCreator implements EmailCreator {
                 "<br>\n" +
                 "We are pleased to have you on-board, Below are the details of your booking that has been confirmed with us.<br>\n" +
                 "<table rules=\"all\" style=\"border-color: #666;\" cellpadding=\"10\">" +
-                "<tr><td><strong>Order Id :</strong> </td><td>" + order.getOrderId() + "</td></tr>" +
+                "<tr><td><strong>Order Id :</strong> </td><td>" + order.getOrderId().getOrderId() + "</td></tr>" +
                 "<tr><td><strong>Name :</strong> </td><td>" + order.getClient().getName() + "</td></tr>" +
                 "<tr><td><strong>Pick-Up Address :</strong> </td><td>" + order.getPickUpAddress().getAddressHouseNumber() + "," + order.getPickUpAddress().getAddressSociety() + "," + order.getPickUpAddress().getAddressArea() + "," + order.getPickUpAddress().getAddressCity() + "</td></tr>" +
                 "<tr><td><strong>Drop-Off Address :</strong> </td><td>" + order.getDropOffAddress().getAddressHouseNumber() + "," + order.getDropOffAddress().getAddressSociety() + "," + order.getDropOffAddress().getAddressArea() + "," + order.getDropOffAddress().getAddressCity() + "</td></tr>" +
@@ -71,7 +71,7 @@ public class NewOrderEmailCreator implements EmailCreator {
     }
 
     private String getSubject(Order order) {
-        return "Confirmation for your Quifers Booking.Order Id [" + order.getOrderId() + "]";
+        return "Confirmation for your Quifers Booking.Order Id [" + order.getOrderId().getOrderId() + "]";
     }
 
 }
