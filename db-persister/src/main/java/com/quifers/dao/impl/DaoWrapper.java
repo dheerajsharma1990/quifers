@@ -50,6 +50,10 @@ public class DaoWrapper {
         return session.createCriteria(clazz);
     }
 
+    public Criteria createCriteria(Class clazz, String alias) {
+        return session.createCriteria(clazz, alias);
+    }
+
     public Object get(Class clazz, Serializable object) {
         session.clear();
         Object o = session.get(clazz, object);

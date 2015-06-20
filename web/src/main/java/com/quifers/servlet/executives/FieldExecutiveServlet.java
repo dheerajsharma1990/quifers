@@ -10,6 +10,7 @@ import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.ChangeOrderRequest;
+import com.quifers.request.FieldExecutiveGetAllOrdersRequest;
 import com.quifers.request.FilterRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
@@ -67,8 +68,9 @@ public class FieldExecutiveServlet extends HttpServlet {
                 priceResponse.writeResponse(order.getCost());
             } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {
                 FilterRequest filterRequest = new FilterRequest(request);
+                FieldExecutiveGetAllOrdersRequest getAllOrdersRequest = new FieldExecutiveGetAllOrdersRequest(request);
                 FieldExecutive fieldExecutive = fieldExecutiveDao.getFieldExecutive(new FieldExecutiveId(filterRequest.getUserId()));
-                Collection<Order> orders = orderDao.getOrders(fieldExecutive);
+                Collection<Order> orders = orderDao.getBookedOrders(fieldExecutive, getAllOrdersRequest.getBookingDate());
                 response.setContentType("application/json");
                 response.getWriter().write(FieldExecutiveResponse.getOrderResponse(orders));
             } else {
@@ -78,7 +80,6 @@ public class FieldExecutiveServlet extends HttpServlet {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
-            LOGGER.error("Error occurred in registering field executive account.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
 

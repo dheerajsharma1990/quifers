@@ -274,7 +274,8 @@ public class EndToEndWebTest {
 
     private String buildAllOrdersOfFieldExecutiveRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
-                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c").build();
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("booking_date", "22/09/1990").build();
     }
 
     private int sendRequest(HttpURLConnection connection, String request) throws IOException {

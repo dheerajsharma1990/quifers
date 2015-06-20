@@ -42,6 +42,10 @@ public class Order implements Serializable {
 
     }
 
+    public Order(OrderId orderId) {
+        this.orderId = orderId;
+    }
+
     public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate, Distance distance,
                  int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {

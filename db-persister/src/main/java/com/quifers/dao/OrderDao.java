@@ -6,6 +6,7 @@ import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.id.OrderId;
 
 import java.util.Collection;
+import java.util.Date;
 
 public interface OrderDao {
 
@@ -20,6 +21,8 @@ public interface OrderDao {
     void updateOrder(Order order) throws Exception;
 
     Collection<Order> getOrders(FieldExecutive fieldExecutive);
+
+    Collection<Order> getBookedOrders(FieldExecutive fieldExecutive, Date bookingDateTime) throws Exception;
 
     Collection<Order> getAllOrders();
 
