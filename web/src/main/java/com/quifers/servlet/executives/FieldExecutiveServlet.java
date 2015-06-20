@@ -58,8 +58,9 @@ public class FieldExecutiveServlet extends HttpServlet {
                 changeOrderResponse.writeResponse();
             } else if ("/api/v0/executive/order/create/price".equals(requestUri)) {
                 GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
-                Distance distance = priceRequest.getDistance();
-                Order order = orderDao.getOrder(distance.getOrderId());
+                Order order = orderDao.getOrder(priceRequest.getDistance().getOrderId());
+                Distance distance = order.getDistance();
+                distance.setDistance(priceRequest.getDistance().getDistance());
                 order.setDistance(distance);
                 order.addOrderWorkflow(new OrderWorkflow(distance.getOrderId(), OrderState.COMPLETED, new Date()));
                 orderDao.updateOrder(order);
