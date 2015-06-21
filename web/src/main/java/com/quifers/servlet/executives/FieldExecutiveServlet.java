@@ -73,6 +73,7 @@ public class FieldExecutiveServlet extends HttpServlet {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         } catch (Exception e) {
+            LOGGER.error("Some error occurred.", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
         }
 
