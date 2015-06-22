@@ -35,7 +35,7 @@ public class DaoWrapper {
         Transaction transaction = null;
         try {
             transaction = session.beginTransaction();
-            session.update(object);
+            session.merge(object);
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
