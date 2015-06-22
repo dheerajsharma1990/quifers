@@ -28,12 +28,9 @@ public class JettyRunner {
         context.addEventListener(new StartupContextListener());
         context.addServlet(new ServletHolder(new AdminLoginServlet()), "/api/v0/guest/admin/login");
         context.addServlet(new ServletHolder(new AdminRegisterServlet()), "/api/v0/guest/admin/register");
-        context.addServlet(new ServletHolder(new FieldExecutiveAssignServlet()), "/api/v0/admin/executives/assign");
-        context.addServlet(new ServletHolder(new FieldExecutiveListAllServlet()), "/api/v0/admin/executives/listAll");
-        context.addServlet(new ServletHolder(new FieldExecutiveRegisterServlet()), "/api/v0/admin/executives/register");
         context.addServlet(new ServletHolder(new FieldExecutiveLoginServlet()), "/api/v0/guest/executive/login");
         context.addServlet(new ServletHolder(new OrderServlet()), "/api/v0/guest/order/book");
-        context.addServlet(new ServletHolder(new AllOrdersServlet()), "/api/v0/admin/order/get/all");
+        context.addServlet(new ServletHolder(new AdminServlet()), "/api/v0/admin/*");
         context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
 
 

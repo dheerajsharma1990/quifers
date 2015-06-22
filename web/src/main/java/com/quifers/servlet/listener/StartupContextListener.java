@@ -30,9 +30,9 @@ public class StartupContextListener implements ServletContextListener {
     public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
     public static final String ADMIN_AUTHENTICATOR = "ADMIN_AUTHENTICATOR";
     public static final String FIELD_EXECUTIVE_AUTHENTICATOR = "FIELD_EXECUTIVE_AUTHENTICATOR";
-    public static final String ADMIN_TOKEN_GENERATOR = "ADMIN_TOKEN_GENERATOR";
     public static final String AUTHENTICATION_REQUEST_VALIDATOR = "AUTHENTICATION_REQUEST_VALIDATOR";
 
+    public static final String DAO_FACTORY = "DAO_FACTORY";
     public static final String ADMIN_ACCOUNT_DAO = "ADMIN_ACCOUNT_DAO";
     public static final String ADMIN_DAO = "ADMIN_DAO";
     public static final String FIELD_EXECUTIVE_ACCOUNT_DAO = "FIELD_EXECUTIVE_ACCOUNT_DAO";
@@ -53,7 +53,7 @@ public class StartupContextListener implements ServletContextListener {
         initDaos(servletContext, environment);
         OrderIdGeneratorService service = initialiseOrderIdService(servletContext, webProperties);
         initialiseActiveMqPublisher(servletContext);
-        initialiseDao(servletContext);
+        initialiseValidators(servletContext);
         initialiseValidators(servletContext, service);
     }
 
@@ -86,7 +86,7 @@ public class StartupContextListener implements ServletContextListener {
         return service;
     }
 
-    public void initialiseDao(ServletContext servletContext) {
+    public void initialiseValidators(ServletContext servletContext) {
         servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
         servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());
@@ -115,6 +115,7 @@ public class StartupContextListener implements ServletContextListener {
     private void initDaos(ServletContext servletContext, Environment environment) {
         try {
             DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
+            servletContext.setAttribute(DAO_FACTORY, daoFactory);
             servletContext.setAttribute(ADMIN_ACCOUNT_DAO, daoFactory.getAdminAccountDao());
             servletContext.setAttribute(ADMIN_DAO, daoFactory.getAdminDao());
             servletContext.setAttribute(FIELD_EXECUTIVE_ACCOUNT_DAO, daoFactory.getFieldExecutiveAccountDao());

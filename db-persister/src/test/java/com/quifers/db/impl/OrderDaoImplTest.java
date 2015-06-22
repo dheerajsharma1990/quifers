@@ -12,8 +12,8 @@ import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.text.ParseException;
@@ -32,13 +32,12 @@ public class OrderDaoImplTest {
     private OrderId orderId = new OrderId("QUIFID1");
     private DaoFactory daoFactory;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private OrderDao orderDao;
 
     @Test
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
         //given
-        Order order = buildOrder(orderId, "28/06/2015 15:15");
-        OrderDao orderDao = daoFactory.getOrderDao();
-        orderDao.saveOrder(order);
+        orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15"));
 
         //when
         Date bookingDateTime = dateFormat.parse("28/06/2015 00:00");
@@ -48,19 +47,54 @@ public class OrderDaoImplTest {
         assertThat(ordersFromDb.size(), is(1));
     }
 
+    @Test
+    public void shouldGetAllOrders() throws Exception {
+        //given
+        orderDao.saveOrder(new Order(new OrderId("QUIFID10")));
+        orderDao.saveOrder(new Order(new OrderId("QUIFID11")));
+        Order order = new Order(new OrderId("QUIFID12"));
+        order.setFieldExecutive(fieldExecutive);
+        orderDao.saveOrder(order);
 
-    private Order buildOrder(OrderId orderId, String dateString) throws ParseException {
+        //when
+        Collection<Order> unassignedOrders = orderDao.getUnassignedOrders();
+        Collection<Order> assignedOrders = orderDao.getAssignedOrders();
+
+        //then
+        assertThat(unassignedOrders.size(), is(2));
+        assertThat(assignedOrders.size(), is(1));
+    }
+
+    @Test
+    public void shouldGetAllCompletedOrders() throws Exception {
+        //given
+        orderDao.saveOrder(buildOrder(new OrderId("QUIF1"), OrderState.BOOKED, "20/06/2015 15:15"));
+        orderDao.saveOrder(buildOrder(new OrderId("QUIF2"), OrderState.COMPLETED, "19/06/2015 15:15"));
+        orderDao.saveOrder(buildOrder(new OrderId("QUIF3"), OrderState.COMPLETED, "18/06/2015 15:15"));
+
+        //when
+        Collection<Order> completedOrders = orderDao.getCompletedOrders(dateFormat.parse("18/06/2015 00:00"),
+                dateFormat.parse("20/06/2015 00:00"));
+
+        //then
+        assertThat(completedOrders.size(), is(2));
+    }
+
+
+    private Order buildOrder(OrderId orderId, OrderState orderState, String dateString) throws ParseException {
         Order order = new Order(orderId);
         order.setFieldExecutive(fieldExecutive);
-        order.addOrderWorkflow(new OrderWorkflow(orderId, OrderState.BOOKED, dateFormat.parse(dateString)));
+        order.addOrderWorkflow(new OrderWorkflow(orderId, orderState, dateFormat.parse(dateString)));
         return order;
     }
 
-    @BeforeClass
+
+    @BeforeMethod
     public void startDatabaseAndAddFieldExecutives() throws Exception {
         new LocalDatabaseRunner().runDatabaseServer();
         daoFactory = DaoFactoryBuilder.getDaoFactory(Environment.LOCAL);
         saveFieldExecutive();
+        orderDao = daoFactory.getOrderDao();
     }
 
     private void saveFieldExecutive() throws Exception {
@@ -68,7 +102,7 @@ public class OrderDaoImplTest {
         daoFactory.getFieldExecutiveDao().saveFieldExecutive(fieldExecutive);
     }
 
-    @AfterClass
+    @AfterMethod
     public void stopDatabase() throws Exception {
         new LocalDatabaseRunner().stopDatabaseServer();
     }

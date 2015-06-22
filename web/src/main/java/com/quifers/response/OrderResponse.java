@@ -20,8 +20,6 @@ public class OrderResponse {
 
     private int labours;
 
-    private String estimate;
-
     private int distance;
 
     private int pickupFloors;
@@ -75,10 +73,6 @@ public class OrderResponse {
 
     public int getLabours() {
         return labours;
-    }
-
-    public String getEstimate() {
-        return estimate;
     }
 
     public int getDistance() {

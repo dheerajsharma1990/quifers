@@ -13,7 +13,6 @@ import com.quifers.request.FieldExecutiveGetAllOrdersRequest;
 import com.quifers.request.FilterRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
-import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.response.GeneratePriceResponse;
 import com.quifers.servlet.listener.WebPublisher;
 import org.slf4j.Logger;
@@ -27,6 +26,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
+import static com.quifers.response.Responses.getOrderResponse;
 import static com.quifers.servlet.listener.StartupContextListener.*;
 
 public class FieldExecutiveServlet extends HttpServlet {
@@ -65,7 +65,7 @@ public class FieldExecutiveServlet extends HttpServlet {
                 FieldExecutive fieldExecutive = fieldExecutiveDao.getFieldExecutive(new FieldExecutiveId(filterRequest.getUserId()));
                 Collection<Order> orders = orderDao.getBookedOrders(fieldExecutive, getAllOrdersRequest.getBookingDate());
                 response.setContentType("application/json");
-                response.getWriter().write(FieldExecutiveResponse.getOrderResponse(orders));
+                response.getWriter().write(getOrderResponse(orders));
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }

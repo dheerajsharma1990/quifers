@@ -2,6 +2,7 @@ package com.quifers.dao.impl;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.io.Serializable;
@@ -9,16 +10,17 @@ import java.util.List;
 
 public class DaoWrapper {
 
-    private final Session session;
+    private final SessionFactory sessionFactory;
 
-    public DaoWrapper(Session session) {
-        this.session = session;
+    public DaoWrapper(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
     }
 
 
     public void save(Object object) throws Exception {
         Transaction transaction = null;
         try {
+            Session session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.save(object);
             transaction.commit();
@@ -34,9 +36,11 @@ public class DaoWrapper {
     public void update(Object object) throws Exception {
         Transaction transaction = null;
         try {
+            Session session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.merge(object);
             transaction.commit();
+            session.close();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
@@ -47,26 +51,30 @@ public class DaoWrapper {
     }
 
     public Criteria createCriteria(Class clazz) {
+        Session session = sessionFactory.openSession();
         return session.createCriteria(clazz);
     }
 
     public Criteria createCriteria(Class clazz, String alias) {
+        Session session = sessionFactory.openSession();
         return session.createCriteria(clazz, alias);
     }
 
     public Object get(Class clazz, Serializable object) {
-        session.clear();
+        Session session = sessionFactory.openSession();
         Object o = session.get(clazz, object);
+        session.close();
         return o;
     }
 
     public List get(Criteria criteria) {
-        session.clear();
+        Session session = sessionFactory.openSession();
         List list = criteria.list();
+        session.close();
         return list;
     }
 
     public void close() {
-        session.close();
+        sessionFactory.close();
     }
 }

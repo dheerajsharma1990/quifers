@@ -2,8 +2,6 @@ package com.quifers.hibernate;
 
 import com.quifers.dao.*;
 import com.quifers.dao.impl.*;
-import org.hibernate.CacheMode;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 public class DaoFactory {
@@ -13,9 +11,7 @@ public class DaoFactory {
 
     public DaoFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
-        Session session = sessionFactory.openSession();
-        session.setCacheMode(CacheMode.IGNORE);
-        daoWrapper = new DaoWrapper(session);
+        daoWrapper = new DaoWrapper(sessionFactory);
     }
 
     public AdminAccountDao getAdminAccountDao() {

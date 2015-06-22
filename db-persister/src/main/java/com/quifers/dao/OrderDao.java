@@ -21,4 +21,10 @@ public interface OrderDao {
 
     Collection<Order> getAllOrders();
 
+    Collection<Order> getUnassignedOrders();
+
+    Collection<Order> getAssignedOrders();
+
+    Collection<Order> getCompletedOrders(Date beginBookingDate,Date endBookingDate);
+
 }

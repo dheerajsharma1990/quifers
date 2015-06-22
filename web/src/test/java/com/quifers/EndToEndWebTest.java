@@ -92,6 +92,22 @@ public class EndToEndWebTest {
     }
 
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnAdminLogin")
+    public void shouldGetUnassignedOrder() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
+        String request = buildUnassignedOrderRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        JSONTokener tokener = new JSONTokener(IOUtils.toString(connection.getInputStream()));
+        JSONObject object = new JSONObject(tokener);
+        assertThat(object.getJSONArray("orders").length(), is(1));
+    }
+
+    @Test(dependsOnMethods = "shouldGetUnassignedOrder")
     public void shouldRegisterFieldExecutive() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/register");
@@ -183,20 +199,6 @@ public class EndToEndWebTest {
         assertThat(IOUtils.toString(connection.getInputStream()), notNullValue());
     }
 
-    @Test(dependsOnMethods = "shouldGetOrdersOfFieldExecutive")
-    public void shouldGetAllOrders() throws Exception {
-        //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order/get/all");
-        String request = buildValidAdminAccessTokenRequest();
-
-        //when
-        int responseCode = sendRequest(connection, request);
-
-        //then
-        assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), notNullValue());
-    }
-
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("field_executive_id", "dheerajsharma1990")
@@ -205,6 +207,12 @@ public class EndToEndWebTest {
                 .add("mobile_number", "9999770595")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .build();
+    }
+
+    private String buildUnassignedOrderRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("cmd", "unassigned").build();
     }
 
     private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {

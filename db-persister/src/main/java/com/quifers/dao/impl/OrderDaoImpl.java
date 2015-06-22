@@ -66,4 +66,30 @@ public class OrderDaoImpl implements OrderDao {
         return wrapper.get(criteria);
     }
 
+    @Override
+    public Collection<Order> getUnassignedOrders() {
+        Criteria criteria = wrapper.createCriteria(Order.class, "order");
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.isNull("order.fieldExecutive"));
+        return wrapper.get(criteria);
+    }
+
+    @Override
+    public Collection<Order> getAssignedOrders() {
+        Criteria criteria = wrapper.createCriteria(Order.class, "order");
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        criteria.add(Restrictions.isNotNull("order.fieldExecutive"));
+        return wrapper.get(criteria);
+    }
+
+    @Override
+    public Collection<Order> getCompletedOrders(Date beginBookingDate, Date endBookingDate) {
+        Criteria criteria = wrapper.createCriteria(Order.class, "order");
+        criteria.createAlias("order.orderWorkflows", "orderWorkflow");
+        criteria.add(Restrictions.between("orderWorkflow.effectiveTime", beginBookingDate, endBookingDate));
+        criteria.add(Restrictions.eq("orderWorkflow.orderWorkflowId.orderState", OrderState.COMPLETED));
+        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
+        return wrapper.get(criteria);
+    }
+
 }

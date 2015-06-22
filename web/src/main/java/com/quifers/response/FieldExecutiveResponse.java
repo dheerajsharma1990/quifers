@@ -30,13 +30,5 @@ public class FieldExecutiveResponse {
         return jsonObject.toString();
     }
 
-    public static String getOrderResponse(Collection<Order> orders) {
-        Collection<OrderResponse> orderResponses = new ArrayList<>();
-        for(Order order : orders) {
-            orderResponses.add(new OrderResponse(order));
-        }
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("orders", orderResponses);
-        return jsonObject.toString();
-    }
+
 }
