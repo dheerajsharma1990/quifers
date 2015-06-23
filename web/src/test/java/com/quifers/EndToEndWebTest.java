@@ -156,6 +156,22 @@ public class EndToEndWebTest {
     }
 
     @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
+    public void shouldGetAssignedOrder() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
+        String request = buildAssignedOrderRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        JSONTokener tokener = new JSONTokener(IOUtils.toString(connection.getInputStream()));
+        JSONObject object = new JSONObject(tokener);
+        assertThat(object.getJSONArray("orders").length(), is(1));
+    }
+
+    @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
     public void shouldValidateAuthenticationOnFieldExecutiveLogin() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/guest/executive/login");
@@ -213,6 +229,12 @@ public class EndToEndWebTest {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("cmd", "unassigned").build();
+    }
+
+    private String buildAssignedOrderRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("cmd", "assigned").build();
     }
 
     private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {

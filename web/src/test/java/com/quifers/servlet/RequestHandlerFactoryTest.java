@@ -1,6 +1,7 @@
 package com.quifers.servlet;
 
 import com.quifers.dao.OrderDao;
+import com.quifers.servlet.admin.AssignedOrdersRequestHandler;
 import com.quifers.servlet.admin.UnassignedOrdersRequestHandler;
 import org.testng.annotations.Test;
 
@@ -8,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.fail;
 
 public class RequestHandlerFactoryTest {
@@ -17,7 +17,7 @@ public class RequestHandlerFactoryTest {
     private final RequestHandlerFactory requestHandlerFactory = new RequestHandlerFactory(mock(OrderDao.class));
 
     @Test
-    public void shouldReturnCorrectHandlerFactory() throws CommandNotFoundException {
+    public void shouldReturnUnassignedRequestHandler() throws CommandNotFoundException {
         //given
         HttpServletRequest servletRequest = mock(HttpServletRequest.class);
         when(servletRequest.getParameter("cmd")).thenReturn("unassigned");
@@ -26,21 +26,23 @@ public class RequestHandlerFactoryTest {
         RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(servletRequest);
 
         //then
+        verify(servletRequest, times(1)).getParameter("cmd");
         assertThat(requestHandler instanceof UnassignedOrdersRequestHandler, is(true));
 
     }
 
     @Test
-    public void shouldReturnCorrectHandlerCaseInsensitiveFactory() throws CommandNotFoundException {
+    public void shouldReturnAssignedRequestHandler() throws CommandNotFoundException {
         //given
         HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        when(servletRequest.getParameter("cmd")).thenReturn("Unassigned");
+        when(servletRequest.getParameter("cmd")).thenReturn("assigned");
 
         //when
         RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(servletRequest);
 
         //then
-        assertThat(requestHandler instanceof UnassignedOrdersRequestHandler, is(true));
+        verify(servletRequest, times(1)).getParameter("cmd");
+        assertThat(requestHandler instanceof AssignedOrdersRequestHandler, is(true));
 
     }
 
