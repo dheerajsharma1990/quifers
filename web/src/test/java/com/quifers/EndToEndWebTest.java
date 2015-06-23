@@ -199,7 +199,21 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"labourCost\":0,\"waitingCost\":1100}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"labourCost\":350,\"waitingCost\":1100}"));
+    }
+
+    @Test(dependsOnMethods = "shouldGeneratePrice")
+    public void shouldUpdateReceivables() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/receivables");
+        String request = buildUpdateReceivablesRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"remaining_amount\":2050,\"success\":\"true\"}"));
     }
 
     @Test(dependsOnMethods = "shouldGeneratePrice")
@@ -306,6 +320,17 @@ public class EndToEndWebTest {
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("distance", "14")
                 .add("waiting_minutes", "400")
+                .add("pick_up_floors", "1")
+                .add("drop_off_floors", "3")
+                .add("pick_up_lift_working", "false")
+                .add("drop_off_lift_working", "true")
+                .add("order_id", ORDER_ID).build();
+    }
+
+    private String buildUpdateReceivablesRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("receivables", "60")
                 .add("order_id", ORDER_ID).build();
     }
 
@@ -356,7 +381,7 @@ public class EndToEndWebTest {
                 .add("society_name_drop", "To Society")
                 .add("area_drop", "To Area")
                 .add("city_drop", "To City")
-                .add("labour", "0")
+                .add("labour", "1")
                 .add("estimate_label", "12 Min")
                 .add("distance_label", "12")
                 .add("floor_no_pick", "1")

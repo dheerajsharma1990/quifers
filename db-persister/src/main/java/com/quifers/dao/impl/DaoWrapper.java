@@ -41,7 +41,7 @@ public class DaoWrapper {
         try {
             Session session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.merge(object);
+            session.update(object);
             transaction.commit();
             session.close();
         } catch (Exception e) {
@@ -65,6 +65,7 @@ public class DaoWrapper {
 
     public Object get(Class clazz, Serializable object) {
         Session session = sessionFactory.openSession();
+        session.clear();
         Object o = session.get(clazz, object);
         session.close();
         return o;

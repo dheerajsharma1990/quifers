@@ -14,6 +14,8 @@ import com.quifers.request.FilterRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.GeneratePriceResponse;
+import com.quifers.servlet.executives.request.ReceivableRequest;
+import com.quifers.servlet.executives.request.ReceivableRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,7 @@ import java.util.Collection;
 import java.util.Date;
 
 import static com.quifers.response.Responses.getOrderResponse;
+import static com.quifers.response.Responses.getReceivableResponse;
 import static com.quifers.servlet.listener.StartupContextListener.*;
 
 public class FieldExecutiveServlet extends HttpServlet {
@@ -55,6 +58,12 @@ public class FieldExecutiveServlet extends HttpServlet {
                 order.setDistance(distance);
                 order.setWaitingMinutes(priceRequest.getWaitingMinutes());
                 order.addOrderWorkflow(new OrderWorkflow(distance.getOrderId(), OrderState.COMPLETED, new Date()));
+
+                order.setPickupFloors(priceRequest.getPickupFloors());
+                order.setPickupLiftWorking(priceRequest.isPickupLiftWorking());
+                order.setDropOffFloors(priceRequest.getDropOffFloors());
+                order.setDropOffLiftWorking(priceRequest.isDropOffLiftWorking());
+
                 orderDao.updateOrder(order);
                 webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, distance.getOrderId());
                 GeneratePriceResponse priceResponse = new GeneratePriceResponse(response);
@@ -66,6 +75,13 @@ public class FieldExecutiveServlet extends HttpServlet {
                 Collection<Order> orders = orderDao.getBookedOrders(fieldExecutive, getAllOrdersRequest.getBookingDate());
                 response.setContentType("application/json");
                 response.getWriter().write(getOrderResponse(orders));
+            } else if ("/api/v0/executive/order/receivables".equals(requestUri)) {
+                ReceivableRequest receivableRequest = new ReceivableRequestValidator().validateRequest(request);
+                Order order = orderDao.getOrder(receivableRequest.getOrderId());
+                order.setReceivables(receivableRequest.getReceivables());
+                orderDao.updateOrder(order);
+                response.setContentType("application/json");
+                response.getWriter().write(getReceivableResponse(order));
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }

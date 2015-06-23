@@ -40,6 +40,8 @@ public class Order implements Serializable {
 
     private int waitingMinutes;
 
+    private int receivables;
+
     public Order() {
 
     }
@@ -178,6 +180,14 @@ public class Order implements Serializable {
         return waitingMinutes;
     }
 
+    public int getReceivables() {
+        return receivables;
+    }
+
+    public void setReceivables(int receivables) {
+        this.receivables = receivables;
+    }
+
     public void addOrderWorkflow(OrderWorkflow orderWorkflow) {
         if (orderWorkflows == null) {
             orderWorkflows = new HashSet<>();
@@ -214,7 +224,7 @@ public class Order implements Serializable {
         if (nonWorkingLifts <= 2) {
             return 300 * labours;
         }
-        return 350 * (nonWorkingLifts - 2);
+        return 350 * labours * (nonWorkingLifts - 2);
     }
 
 

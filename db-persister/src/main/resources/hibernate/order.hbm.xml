@@ -43,6 +43,10 @@
             <column name="waiting_minutes"/>
         </property>
 
+        <property name="receivables" type="integer">
+            <column name="receivables"/>
+        </property>
+
         <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select"/>
 
         <one-to-one name="distance" class="com.quifers.domain.Distance" cascade="save-update" lazy="false" fetch="select"/>

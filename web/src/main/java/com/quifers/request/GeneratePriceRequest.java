@@ -12,11 +12,19 @@ public class GeneratePriceRequest {
     private String orderId;
     private String distance;
     private String waitingMinutes;
+    private int pickupFloors;
+    private boolean pickupLiftWorking;
+    private int dropOffFloors;
+    private boolean dropOffLiftWorking;
 
     public GeneratePriceRequest(HttpServletRequest request) throws InvalidRequestException {
         this.orderId = request.getParameter("order_id");
         this.distance = request.getParameter("distance");
         this.waitingMinutes = request.getParameter("waiting_minutes");
+        this.pickupFloors = Integer.valueOf(request.getParameter("pick_up_floors"));
+        this.dropOffFloors = Integer.valueOf(request.getParameter("drop_off_floors"));
+        this.pickupLiftWorking = Boolean.valueOf(request.getParameter("pick_up_lift_working"));
+        this.dropOffLiftWorking = Boolean.valueOf(request.getParameter("drop_off_lift_working"));
         validate();
     }
 
@@ -32,6 +40,21 @@ public class GeneratePriceRequest {
         return Integer.valueOf(waitingMinutes);
     }
 
+    public int getPickupFloors() {
+        return pickupFloors;
+    }
+
+    public boolean isPickupLiftWorking() {
+        return pickupLiftWorking;
+    }
+
+    public int getDropOffFloors() {
+        return dropOffFloors;
+    }
+
+    public boolean isDropOffLiftWorking() {
+        return dropOffLiftWorking;
+    }
 
     private void validate() throws InvalidRequestException {
         if (isEmpty(orderId)) {
