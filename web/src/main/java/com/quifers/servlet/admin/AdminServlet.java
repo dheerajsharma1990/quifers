@@ -1,10 +1,7 @@
 package com.quifers.servlet.admin;
 
 import com.quifers.domain.FieldExecutive;
-import com.quifers.domain.FieldExecutiveAccount;
-import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.FieldExecutiveAssignRequest;
-import com.quifers.request.FieldExecutiveRegisterRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.servlet.BaseServlet;
@@ -19,7 +16,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 import static com.quifers.response.FieldExecutiveResponse.getSuccessResponse;
-import static java.lang.Long.valueOf;
 
 public class AdminServlet extends BaseServlet {
 
@@ -40,15 +36,11 @@ public class AdminServlet extends BaseServlet {
                 Collection<FieldExecutive> allFieldExecutives = fieldExecutiveDao.getAllFieldExecutives();
                 response.setContentType("application/json");
                 response.getWriter().write(FieldExecutiveResponse.getAllFieldExecutivesResponse(allFieldExecutives));
-            } else if ("/api/v0/admin/executives/register".equals(requestUri)) {
-                FieldExecutiveRegisterRequest registerRequest = new FieldExecutiveRegisterRequest(request);
-                fieldExecutiveAccountDao.saveFieldExecutiveAccount(new FieldExecutiveAccount(new FieldExecutiveId(registerRequest.getFieldExecutiveId()), registerRequest.getPassword()));
-                fieldExecutiveDao.saveFieldExecutive(new FieldExecutive(new FieldExecutiveId(registerRequest.getFieldExecutiveId()), registerRequest.getName(), valueOf(registerRequest.getMobileNumber())));
-                String successResponse = getSuccessResponse();
-                response.setContentType("application/json");
-                response.getWriter().write(successResponse);
+            } else if ("/api/v0/admin/fieldExecutive".equals(requestUri)) {
+                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
+                requestHandler.handleRequest(request, response);
             } else if ("/api/v0/admin/order".equals(requestUri)) {
-                RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(request);
+                RequestHandler requestHandler = orderRequestHandlerFactory.getRequestHandler(request);
                 requestHandler.handleRequest(request, response);
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);

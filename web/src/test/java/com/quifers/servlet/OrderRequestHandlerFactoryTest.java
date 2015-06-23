@@ -2,6 +2,7 @@ package com.quifers.servlet;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.servlet.admin.AssignedOrdersRequestHandler;
+import com.quifers.servlet.admin.OrderRequestHandlerFactory;
 import com.quifers.servlet.admin.UnassignedOrdersRequestHandler;
 import org.testng.annotations.Test;
 
@@ -12,9 +13,9 @@ import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.fail;
 
-public class RequestHandlerFactoryTest {
+public class OrderRequestHandlerFactoryTest {
 
-    private final RequestHandlerFactory requestHandlerFactory = new RequestHandlerFactory(mock(OrderDao.class));
+    private final OrderRequestHandlerFactory orderRequestHandlerFactory = new OrderRequestHandlerFactory(mock(OrderDao.class));
 
     @Test
     public void shouldReturnUnassignedRequestHandler() throws CommandNotFoundException {
@@ -23,7 +24,7 @@ public class RequestHandlerFactoryTest {
         when(servletRequest.getParameter("cmd")).thenReturn("unassigned");
 
         //when
-        RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(servletRequest);
+        RequestHandler requestHandler = orderRequestHandlerFactory.getRequestHandler(servletRequest);
 
         //then
         verify(servletRequest, times(1)).getParameter("cmd");
@@ -38,7 +39,7 @@ public class RequestHandlerFactoryTest {
         when(servletRequest.getParameter("cmd")).thenReturn("assigned");
 
         //when
-        RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(servletRequest);
+        RequestHandler requestHandler = orderRequestHandlerFactory.getRequestHandler(servletRequest);
 
         //then
         verify(servletRequest, times(1)).getParameter("cmd");
@@ -53,7 +54,7 @@ public class RequestHandlerFactoryTest {
         when(servletRequest.getParameter("cmd")).thenReturn("abc");
 
         try {
-            requestHandlerFactory.getRequestHandler(servletRequest);
+            orderRequestHandlerFactory.getRequestHandler(servletRequest);
             fail("Should have thrown command not found exception.");
         } catch (CommandNotFoundException e) {
 

@@ -4,12 +4,15 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 public class DaoWrapper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DaoWrapper.class);
     private final SessionFactory sessionFactory;
 
     public DaoWrapper(SessionFactory sessionFactory) {
@@ -25,11 +28,11 @@ public class DaoWrapper {
             session.save(object);
             transaction.commit();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("An exception occurred in saving object to database.", e);
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new Exception(e);
+            throw new DatabasePersistenceException(e);
         }
     }
 

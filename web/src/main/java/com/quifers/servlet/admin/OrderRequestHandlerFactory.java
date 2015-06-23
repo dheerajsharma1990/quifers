@@ -1,20 +1,18 @@
-package com.quifers.servlet;
+package com.quifers.servlet.admin;
 
 import com.quifers.dao.OrderDao;
-import com.quifers.servlet.admin.AssignedOrdersRequestHandler;
-import com.quifers.servlet.admin.CompletedOrdersRequestHandler;
-import com.quifers.servlet.admin.CompletedOrdersRequestValidator;
-import com.quifers.servlet.admin.UnassignedOrdersRequestHandler;
+import com.quifers.servlet.CommandNotFoundException;
+import com.quifers.servlet.RequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
 
-public class RequestHandlerFactory {
+public class OrderRequestHandlerFactory {
 
     private final OrderDao orderDao;
 
-    public RequestHandlerFactory(OrderDao orderDao) {
+    public OrderRequestHandlerFactory(OrderDao orderDao) {
         this.orderDao = orderDao;
     }
 

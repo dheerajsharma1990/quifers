@@ -4,6 +4,8 @@ import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.hibernate.DaoFactory;
+import com.quifers.servlet.admin.FieldExecutiveRequestHandlerFactory;
+import com.quifers.servlet.admin.OrderRequestHandlerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +19,8 @@ public class BaseServlet extends HttpServlet {
     protected FieldExecutiveAccountDao fieldExecutiveAccountDao;
     protected FieldExecutiveDao fieldExecutiveDao;
     protected OrderDao orderDao;
-    protected RequestHandlerFactory requestHandlerFactory;
+    protected OrderRequestHandlerFactory orderRequestHandlerFactory;
+    protected FieldExecutiveRequestHandlerFactory fieldExecutiveRequestHandlerFactory;
 
     @Override
     public void init() throws ServletException {
@@ -25,6 +28,7 @@ public class BaseServlet extends HttpServlet {
         fieldExecutiveAccountDao = daoFactory.getFieldExecutiveAccountDao();
         fieldExecutiveDao = daoFactory.getFieldExecutiveDao();
         orderDao = daoFactory.getOrderDao();
-        requestHandlerFactory = new RequestHandlerFactory(orderDao);
+        orderRequestHandlerFactory = new OrderRequestHandlerFactory(orderDao);
+        fieldExecutiveRequestHandlerFactory = new FieldExecutiveRequestHandlerFactory(fieldExecutiveAccountDao, fieldExecutiveDao);
     }
 }

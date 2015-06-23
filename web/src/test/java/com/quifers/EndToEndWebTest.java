@@ -111,7 +111,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldGetUnassignedOrder")
     public void shouldRegisterFieldExecutive() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/executives/register");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/fieldExecutive");
         String request = buildFieldExecutiveAccount();
 
         //when
@@ -234,6 +234,7 @@ public class EndToEndWebTest {
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("cmd", "register")
                 .add("field_executive_id", "dheerajsharma1990")
                 .add("password", "mypassword")
                 .add("name", "Dheeraj Sharma")

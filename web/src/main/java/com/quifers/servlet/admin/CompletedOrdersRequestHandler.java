@@ -15,7 +15,7 @@ import static com.quifers.response.Responses.getOrderResponse;
 
 public class CompletedOrdersRequestHandler implements RequestHandler {
 
-    private CompletedOrdersRequestValidator requestValidator;
+    private final CompletedOrdersRequestValidator requestValidator;
     private final OrderDao orderDao;
 
     public CompletedOrdersRequestHandler(CompletedOrdersRequestValidator requestValidator, OrderDao orderDao) {
