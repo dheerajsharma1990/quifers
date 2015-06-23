@@ -1,8 +1,9 @@
-package com.quifers.servlet.admin;
+package com.quifers.servlet.admin.handlers;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.admin.validators.CompletedOrdersRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;
 

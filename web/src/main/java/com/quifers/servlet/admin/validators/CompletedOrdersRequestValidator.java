@@ -1,7 +1,8 @@
-package com.quifers.servlet.admin;
+package com.quifers.servlet.admin.validators;
 
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
+import com.quifers.servlet.admin.request.CompletedOrdersRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;

@@ -1,9 +1,9 @@
 package com.quifers.servlet;
 
 import com.quifers.dao.OrderDao;
-import com.quifers.servlet.admin.AssignedOrdersRequestHandler;
-import com.quifers.servlet.admin.OrderRequestHandlerFactory;
-import com.quifers.servlet.admin.UnassignedOrdersRequestHandler;
+import com.quifers.servlet.admin.handlers.AssignedOrdersRequestHandler;
+import com.quifers.servlet.admin.handlers.OrderRequestHandlerFactory;
+import com.quifers.servlet.admin.handlers.UnassignedOrdersRequestHandler;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.quifers.servlet.admin;
+package com.quifers.servlet.admin.handlers;
 
 import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
@@ -6,6 +6,8 @@ import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.admin.request.FieldExecutiveRegisterRequest;
+import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

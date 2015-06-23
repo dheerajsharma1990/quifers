@@ -1,4 +1,4 @@
-package com.quifers.servlet.admin;
+package com.quifers.servlet.admin.handlers;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;

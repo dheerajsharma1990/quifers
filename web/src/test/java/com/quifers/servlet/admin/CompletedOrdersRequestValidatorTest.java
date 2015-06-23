@@ -1,6 +1,8 @@
 package com.quifers.servlet.admin;
 
 import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.servlet.admin.request.CompletedOrdersRequest;
+import com.quifers.servlet.admin.validators.CompletedOrdersRequestValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
