@@ -20,6 +20,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.quifers.JettyRunner.runJettyServer;
+import static com.quifers.utils.DateUtils.getTodayString;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -202,6 +203,22 @@ public class EndToEndWebTest {
     }
 
     @Test(dependsOnMethods = "shouldGeneratePrice")
+    public void shouldGetCompletedOrder() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
+        String request = buildCompletedOrdersRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        JSONTokener tokener = new JSONTokener(IOUtils.toString(connection.getInputStream()));
+        JSONObject object = new JSONObject(tokener);
+        assertThat(object.getJSONArray("orders").length(), is(1));
+    }
+
+    @Test(dependsOnMethods = "shouldGeneratePrice")
     public void shouldGetOrdersOfFieldExecutive() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/get/all");
@@ -235,6 +252,14 @@ public class EndToEndWebTest {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("cmd", "assigned").build();
+    }
+
+    private String buildCompletedOrdersRequest() throws UnsupportedEncodingException {
+        return new ParametersBuilder().add("user_id", "dheerajsharma1990")
+                .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("cmd", "completed")
+                .add("begin_booking_day", "22/09/1990")
+                .add("end_booking_day", getTodayString()).build();
     }
 
     private String buildNewAdminRegisterRequest() throws UnsupportedEncodingException {

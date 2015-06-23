@@ -13,17 +13,20 @@ import java.util.Collection;
 
 import static com.quifers.response.Responses.getOrderResponse;
 
-public class AssignedOrdersRequestHandler implements RequestHandler {
+public class CompletedOrdersRequestHandler implements RequestHandler {
 
+    private CompletedOrdersRequestValidator requestValidator;
     private final OrderDao orderDao;
 
-    public AssignedOrdersRequestHandler(OrderDao orderDao) {
+    public CompletedOrdersRequestHandler(CompletedOrdersRequestValidator requestValidator, OrderDao orderDao) {
+        this.requestValidator = requestValidator;
         this.orderDao = orderDao;
     }
 
     @Override
     public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException, InvalidRequestException {
-        Collection<Order> assignedOrders = orderDao.getAssignedOrders();
+        CompletedOrdersRequest request = requestValidator.validateRequest(servletRequest);
+        Collection<Order> assignedOrders = orderDao.getCompletedOrders(request.getBeginBookingDate(), request.getEndBookingDate());
         servletResponse.setContentType("application/json");
         servletResponse.getWriter().write(getOrderResponse(assignedOrders));
     }

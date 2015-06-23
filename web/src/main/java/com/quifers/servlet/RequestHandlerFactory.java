@@ -2,6 +2,8 @@ package com.quifers.servlet;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.servlet.admin.AssignedOrdersRequestHandler;
+import com.quifers.servlet.admin.CompletedOrdersRequestHandler;
+import com.quifers.servlet.admin.CompletedOrdersRequestValidator;
 import com.quifers.servlet.admin.UnassignedOrdersRequestHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +24,8 @@ public class RequestHandlerFactory {
             return new UnassignedOrdersRequestHandler(orderDao);
         } else if (isEqual("assigned", command)) {
             return new AssignedOrdersRequestHandler(orderDao);
+        } else if (isEqual("completed", command)) {
+            return new CompletedOrdersRequestHandler(new CompletedOrdersRequestValidator(), orderDao);
         }
         throw new CommandNotFoundException(command);
     }

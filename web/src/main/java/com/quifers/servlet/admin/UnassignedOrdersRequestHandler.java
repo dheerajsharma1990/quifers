@@ -2,6 +2,7 @@ package com.quifers.servlet.admin;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
+import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.RequestHandler;
 
 import javax.servlet.ServletException;
@@ -21,7 +22,7 @@ public class UnassignedOrdersRequestHandler implements RequestHandler {
     }
 
     @Override
-    public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException {
+    public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException, InvalidRequestException {
         Collection<Order> unassignedOrders = orderDao.getUnassignedOrders();
         servletResponse.setContentType("application/json");
         servletResponse.getWriter().write(getOrderResponse(unassignedOrders));
