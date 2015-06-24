@@ -58,7 +58,7 @@ public class EndToEndEmailTest {
         Set<Address> addresses = new HashSet<>();
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
-        Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 10, 1, false, 2, true, null, workflowSet);
+        Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 10, 1, false, 2, true, null, workflowSet, 0, 0);
         return order;
     }
 

@@ -46,13 +46,19 @@ public class Order implements Serializable {
 
     }
 
+    public Order(Order order) {
+        this(order.getOrderId(), order.getClient(), order.getVehicle(), order.getAddresses(), order.getLabours(), order.getEstimate(),
+                order.getDistance(), order.getPickupFloors(), order.isPickupLiftWorking(), order.getDropOffFloors(), order.isDropOffLiftWorking(), order.getFieldExecutive(),
+                order.getOrderWorkflows(), order.getWaitingMinutes(), order.getReceivables());
+    }
+
     public Order(OrderId orderId) {
         this.orderId = orderId;
     }
 
     public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate, int distance,
                  int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
-                 FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
+                 FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows, int waitingMinutes, int receivables) {
         this.orderId = orderId;
         this.client = client;
         this.vehicle = vehicle;
@@ -66,6 +72,8 @@ public class Order implements Serializable {
         this.dropOffLiftWorking = dropOffLiftWorking;
         this.fieldExecutive = fieldExecutive;
         this.orderWorkflows = orderWorkflows;
+        this.waitingMinutes = waitingMinutes;
+        this.receivables = receivables;
     }
 
     public OrderId getOrderId() {

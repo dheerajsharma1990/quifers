@@ -19,8 +19,6 @@ public interface OrderDao {
 
     Collection<Order> getBookedOrders(FieldExecutive fieldExecutive, Date bookingDateTime) throws Exception;
 
-    Collection<Order> getAllOrders();
-
     Collection<Order> getUnassignedOrders();
 
     Collection<Order> getAssignedOrders();

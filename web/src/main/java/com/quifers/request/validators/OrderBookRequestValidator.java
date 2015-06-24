@@ -62,7 +62,7 @@ public class OrderBookRequestValidator {
         addresses.add(dropOffAddress);
         return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
                 estimate, 0, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
-                new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))));
+                new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate))), 0, 0);
 
     }
 

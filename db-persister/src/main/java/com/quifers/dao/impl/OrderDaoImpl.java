@@ -27,7 +27,8 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public Order getOrder(OrderId orderId) {
-        return (Order) wrapper.get(Order.class, orderId);
+        Order order = (Order) wrapper.get(Order.class, orderId);
+        return new Order(order);
     }
 
 
@@ -55,13 +56,6 @@ public class OrderDaoImpl implements OrderDao {
         Date endTime = dateTimeFormat.parse(bookingDateAsString + " " + "23:59");
         criteria.add(Restrictions.between("orderWorkflow.effectiveTime", startTime, endTime));
         criteria.add(Restrictions.eq("orderWorkflow.orderWorkflowId.orderState", OrderState.BOOKED));
-        criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
-        return wrapper.get(criteria);
-    }
-
-    @Override
-    public Collection<Order> getAllOrders() {
-        Criteria criteria = wrapper.createCriteria(Order.class);
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return wrapper.get(criteria);
     }

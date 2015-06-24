@@ -46,7 +46,7 @@ public class DaoWrapper {
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.merge(object);
+            session.update(object);
             transaction.commit();
             session.close();
         } catch (Exception e) {
