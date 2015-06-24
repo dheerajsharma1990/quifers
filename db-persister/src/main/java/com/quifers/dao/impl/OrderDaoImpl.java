@@ -7,6 +7,7 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.internal.util.SerializationHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -28,7 +29,7 @@ public class OrderDaoImpl implements OrderDao {
     @Override
     public Order getOrder(OrderId orderId) {
         Order order = (Order) wrapper.get(Order.class, orderId);
-        return new Order(order);
+        return (Order) SerializationHelper.clone(order);
     }
 
 
