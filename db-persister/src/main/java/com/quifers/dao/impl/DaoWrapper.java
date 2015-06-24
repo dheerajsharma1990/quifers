@@ -28,6 +28,7 @@ public class DaoWrapper {
             transaction = session.beginTransaction();
             session.save(object);
             transaction.commit();
+            session.close();
         } catch (Exception e) {
             LOGGER.error("An exception occurred in saving object to database.", e);
             if (transaction != null) {

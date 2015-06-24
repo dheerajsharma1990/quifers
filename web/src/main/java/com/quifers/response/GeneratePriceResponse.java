@@ -20,6 +20,7 @@ public class GeneratePriceResponse {
         object.put("waitingCost", cost.getWaitingCost());
         object.put("transitCost", cost.getTransitCost());
         object.put("labourCost", cost.getLabourCost());
+        object.put("totalCost", cost.getTotalCost());
         response.getWriter().write(object.toString());
     }
 }

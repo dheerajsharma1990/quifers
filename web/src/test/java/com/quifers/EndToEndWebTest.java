@@ -199,7 +199,7 @@ public class EndToEndWebTest {
 
         //then
         assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"labourCost\":350,\"waitingCost\":1100}"));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"transitCost\":660,\"totalCost\":2110,\"labourCost\":350,\"waitingCost\":1100}"));
     }
 
     @Test(dependsOnMethods = "shouldGeneratePrice")

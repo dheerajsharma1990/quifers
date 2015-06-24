@@ -200,6 +200,12 @@ public class Order implements Serializable {
         if (orderWorkflows == null) {
             orderWorkflows = new HashSet<>();
         }
+        for (OrderWorkflow workflow : orderWorkflows) {
+            if (workflow.getOrderWorkflowId().equals(orderWorkflow.getOrderWorkflowId())) {
+                orderWorkflows.remove(workflow);
+                break;
+            }
+        }
         this.orderWorkflows.add(orderWorkflow);
     }
 
