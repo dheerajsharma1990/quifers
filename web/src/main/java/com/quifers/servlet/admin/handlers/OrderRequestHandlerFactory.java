@@ -3,7 +3,7 @@ package com.quifers.servlet.admin.handlers;
 import com.quifers.dao.OrderDao;
 import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.admin.validators.CompletedOrdersRequestValidator;
+import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -22,9 +22,9 @@ public class OrderRequestHandlerFactory {
         if (isEqual("unassigned", command)) {
             return new UnassignedOrdersRequestHandler(orderDao);
         } else if (isEqual("assigned", command)) {
-            return new AssignedOrdersRequestHandler(orderDao);
+            return new AssignedOrdersRequestHandler(new BookingDateRangeRequestValidator(), orderDao);
         } else if (isEqual("completed", command)) {
-            return new CompletedOrdersRequestHandler(new CompletedOrdersRequestValidator(), orderDao);
+            return new CompletedOrdersRequestHandler(new BookingDateRangeRequestValidator(), orderDao);
         }
         throw new CommandNotFoundException(command);
     }

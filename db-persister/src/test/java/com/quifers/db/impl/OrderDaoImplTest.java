@@ -7,6 +7,7 @@ import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.builders.OrderBuilder;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
@@ -32,12 +33,13 @@ public class OrderDaoImplTest {
     private OrderId orderId = new OrderId("QUIFID1");
     private DaoFactory daoFactory;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    private SimpleDateFormat dayFormat = new SimpleDateFormat("dd/MM/yyyy");
     private OrderDao orderDao;
 
     @Test
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
         //given
-        orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15"));
+        orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15", true));
 
         //when
         Date bookingDateTime = dateFormat.parse("28/06/2015 00:00");
@@ -48,7 +50,7 @@ public class OrderDaoImplTest {
     }
 
     @Test
-    public void shouldGetAllOrders() throws Exception {
+    public void shouldGetUnassignedOrders() throws Exception {
         //given
         orderDao.saveOrder(new Order(new OrderId("QUIFID10")));
         orderDao.saveOrder(new Order(new OrderId("QUIFID11")));
@@ -58,19 +60,34 @@ public class OrderDaoImplTest {
 
         //when
         Collection<Order> unassignedOrders = orderDao.getUnassignedOrders();
-        Collection<Order> assignedOrders = orderDao.getAssignedOrders();
 
         //then
         assertThat(unassignedOrders.size(), is(2));
-        assertThat(assignedOrders.size(), is(1));
     }
 
     @Test
+    public void shouldGetAssignedOrders() throws Exception {
+        //given
+        orderDao.saveOrder(new OrderBuilder("QUIFID20")
+                .addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("25/06/2015 15:15"), false)
+                .addOrderWorkflow(OrderState.COMPLETED, dateFormat.parse("27/06/2015 15:15"), true).buildOrder());
+        orderDao.saveOrder(new OrderBuilder("QUIFID21")
+                .addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("26/06/2015 15:15"), true).buildOrder());
+        orderDao.saveOrder(new OrderBuilder("QUIFID22")
+                .addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("28/06/2015 15:15"), true).buildOrder());
+
+        //when
+        Collection<Order> assignedOrders = orderDao.getAssignedOrders(dayFormat.parse("24/06/2015"), dayFormat.parse("28/06/2015"));
+
+        //then
+        assertThat(assignedOrders.size(), is(1));
+    }
+    @Test
     public void shouldGetAllCompletedOrders() throws Exception {
         //given
-        orderDao.saveOrder(buildOrder(new OrderId("QUIF1"), OrderState.BOOKED, "20/06/2015 15:15"));
-        orderDao.saveOrder(buildOrder(new OrderId("QUIF2"), OrderState.COMPLETED, "19/06/2015 15:15"));
-        orderDao.saveOrder(buildOrder(new OrderId("QUIF3"), OrderState.COMPLETED, "18/06/2015 15:15"));
+        orderDao.saveOrder(buildOrder(new OrderId("QUIF1"), OrderState.BOOKED, "20/06/2015 15:15", true));
+        orderDao.saveOrder(buildOrder(new OrderId("QUIF2"), OrderState.COMPLETED, "19/06/2015 15:15", true));
+        orderDao.saveOrder(buildOrder(new OrderId("QUIF3"), OrderState.COMPLETED, "18/06/2015 15:15", true));
 
         //when
         Collection<Order> completedOrders = orderDao.getCompletedOrders(dateFormat.parse("18/06/2015 00:00"),
@@ -81,10 +98,10 @@ public class OrderDaoImplTest {
     }
 
 
-    private Order buildOrder(OrderId orderId, OrderState orderState, String dateString) throws ParseException {
+    private Order buildOrder(OrderId orderId, OrderState orderState, String dateString, boolean currentState) throws ParseException {
         Order order = new Order(orderId);
         order.setFieldExecutive(fieldExecutive);
-        order.addOrderWorkflow(new OrderWorkflow(orderId, orderState, dateFormat.parse(dateString)));
+        order.addOrderWorkflow(new OrderWorkflow(orderId, orderState, dateFormat.parse(dateString), currentState));
         return order;
     }
 

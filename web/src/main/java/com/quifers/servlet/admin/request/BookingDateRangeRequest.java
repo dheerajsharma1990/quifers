@@ -4,12 +4,12 @@ import com.quifers.servlet.ApiRequest;
 
 import java.util.Date;
 
-public class CompletedOrdersRequest implements ApiRequest {
+public class BookingDateRangeRequest implements ApiRequest {
 
     private Date beginBookingDate;
     private Date endBookingDate;
 
-    public CompletedOrdersRequest(Date beginBookingDate, Date endBookingDate) {
+    public BookingDateRangeRequest(Date beginBookingDate, Date endBookingDate) {
         this.beginBookingDate = beginBookingDate;
         this.endBookingDate = endBookingDate;
     }

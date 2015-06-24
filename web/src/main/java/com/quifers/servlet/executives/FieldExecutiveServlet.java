@@ -54,7 +54,8 @@ public class FieldExecutiveServlet extends HttpServlet {
                 Order order = orderDao.getOrder(priceRequest.getOrderId());
                 order.setDistance(priceRequest.getDistance());
                 order.setWaitingMinutes(priceRequest.getWaitingMinutes());
-                order.addOrderWorkflow(new OrderWorkflow(priceRequest.getOrderId(), OrderState.COMPLETED, new Date()));
+                order.getWorkflow(OrderState.BOOKED).setCurrentState(false);
+                order.addOrderWorkflow(new OrderWorkflow(priceRequest.getOrderId(), OrderState.COMPLETED, new Date(), true));
 
                 order.setPickupFloors(priceRequest.getPickupFloors());
                 order.setPickupLiftWorking(priceRequest.isPickupLiftWorking());

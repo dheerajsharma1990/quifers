@@ -142,21 +142,7 @@ public class EndToEndWebTest {
         assertThat(executive.get("mobileNumber").toString(), is("9999770595"));
     }
 
-    @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
-    public void shouldAssignOrderToFieldExecutive() throws Exception {
-        //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/fieldExecutive");
-        String request = buildAssignFieldExecutiveAssignRequest();
-
-        //when
-        int responseCode = sendRequest(connection, request);
-
-        //then
-        assertThat(responseCode, is(200));
-        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
-    }
-
-    @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
+    @Test(dependsOnMethods = "shouldGetAllFieldExecutives")
     public void shouldGetAssignedOrder() throws Exception {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
@@ -171,6 +157,21 @@ public class EndToEndWebTest {
         JSONObject object = new JSONObject(tokener);
         assertThat(object.getJSONArray("orders").length(), is(1));
     }
+
+    @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
+    public void shouldAssignOrderToFieldExecutive() throws Exception {
+        //given
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/fieldExecutive");
+        String request = buildAssignFieldExecutiveAssignRequest();
+
+        //when
+        int responseCode = sendRequest(connection, request);
+
+        //then
+        assertThat(responseCode, is(200));
+        assertThat(IOUtils.toString(connection.getInputStream()), is("{\"success\":\"true\"}"));
+    }
+
 
     @Test(dependsOnMethods = "shouldAssignOrderToFieldExecutive")
     public void shouldValidateAuthenticationOnFieldExecutiveLogin() throws Exception {
@@ -266,6 +267,8 @@ public class EndToEndWebTest {
     private String buildAssignedOrderRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
+                .add("begin_booking_day", "22/09/1990")
+                .add("end_booking_day", getTodayString())
                 .add("cmd", "assigned").build();
     }
 

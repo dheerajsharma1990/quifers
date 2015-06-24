@@ -21,7 +21,7 @@ public interface OrderDao {
 
     Collection<Order> getUnassignedOrders();
 
-    Collection<Order> getAssignedOrders();
+    Collection<Order> getAssignedOrders(Date beginBookingDate, Date endBookingDate);
 
     Collection<Order> getCompletedOrders(Date beginBookingDate,Date endBookingDate);
 

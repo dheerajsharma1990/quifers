@@ -46,60 +46,74 @@ public class OrderBuilder {
         this.orderId = new OrderId(orderId);
     }
 
-    public void addClient(String name, long mobileNumber, String email) {
+    public OrderBuilder addClient(String name, long mobileNumber, String email) {
         this.client = new Client(orderId, name, mobileNumber, email);
+        return this;
     }
 
-    public void addVehicle(String vehicle) {
+    public OrderBuilder addVehicle(String vehicle) {
         this.vehicle = vehicle;
+        return this;
     }
 
-    public void addAddress(AddressType addressType, String houseNumber, String society, String city, String area) {
+    public OrderBuilder addAddress(AddressType addressType, String houseNumber, String society, String city, String area) {
         addresses.add(new Address(orderId, addressType, houseNumber, society, area, city));
+        return this;
     }
 
-    public void addLabours(int labours) {
+    public OrderBuilder addLabours(int labours) {
         this.labours = labours;
+        return this;
     }
 
-    public void addEstimate(String estimate) {
+    public OrderBuilder addEstimate(String estimate) {
         this.estimate = estimate;
+        return this;
     }
 
-    public void addDistance(int distance) {
+    public OrderBuilder addDistance(int distance) {
         this.distance = distance;
+        return this;
     }
 
-    public void addPickUpFloors(int pickupFloors) {
+    public OrderBuilder addPickUpFloors(int pickupFloors) {
         this.pickupFloors = pickupFloors;
+        return this;
     }
 
-    public void addPickUpLiftWorking(boolean pickupLiftWorking) {
+    public OrderBuilder addPickUpLiftWorking(boolean pickupLiftWorking) {
         this.pickupLiftWorking = pickupLiftWorking;
+        return this;
     }
 
-    public void addDropOffFloors(int dropOffFloors) {
+    public OrderBuilder addDropOffFloors(int dropOffFloors) {
         this.dropOffFloors = dropOffFloors;
+        return this;
     }
 
-    public void addDropOffLiftWorking(boolean dropOffLiftWorking) {
+    public OrderBuilder addDropOffLiftWorking(boolean dropOffLiftWorking) {
         this.dropOffLiftWorking = dropOffLiftWorking;
+        return this;
     }
 
-    public void addFieldExecutive(String fieldExecutiveId, String name, long mobileNumber) {
+    public OrderBuilder addFieldExecutive(String fieldExecutiveId, String name, long mobileNumber) {
         this.fieldExecutive = new FieldExecutive(new FieldExecutiveId(fieldExecutiveId), name, mobileNumber);
+        return this;
     }
 
-    public void addOrderWorkflow(OrderState orderState, Date effectiveTime) {
-        orderWorkflows.add(new OrderWorkflow(orderId, orderState, effectiveTime));
+    public OrderBuilder addOrderWorkflow(OrderState orderState, Date effectiveTime, boolean currentState) {
+        orderWorkflows.add(new OrderWorkflow(orderId, orderState, effectiveTime,currentState));
+        return this;
     }
 
-    public void addWaitingMinutes(int waitingMinutes) {
+    public OrderBuilder addWaitingMinutes(int waitingMinutes) {
         this.waitingMinutes = waitingMinutes;
+        return this;
     }
 
-    public void addReceivables(int receivables) {
+    public OrderBuilder addReceivables(int receivables) {
         this.receivables = receivables;
+        return this;
     }
 
     public Order buildOrder() {

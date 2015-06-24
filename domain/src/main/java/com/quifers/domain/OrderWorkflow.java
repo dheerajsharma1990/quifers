@@ -15,12 +15,15 @@ public class OrderWorkflow implements Serializable {
 
     private Date effectiveTime;
 
+    private boolean currentState = true;
+
     public OrderWorkflow() {
     }
 
-    public OrderWorkflow(OrderId orderId, OrderState orderState, Date effectiveTime) {
+    public OrderWorkflow(OrderId orderId, OrderState orderState, Date effectiveTime, boolean currentState) {
         this.orderWorkflowId = new OrderWorkflowId(orderId.getOrderId(), orderState);
         this.effectiveTime = effectiveTime;
+        this.currentState = currentState;
     }
 
 
@@ -40,16 +43,25 @@ public class OrderWorkflow implements Serializable {
         this.effectiveTime = effectiveTime;
     }
 
+    public boolean isCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(boolean currentState) {
+        this.currentState = currentState;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        OrderWorkflow workflow = (OrderWorkflow) o;
+        OrderWorkflow that = (OrderWorkflow) o;
 
-        if (effectiveTime != null ? !effectiveTime.equals(workflow.effectiveTime) : workflow.effectiveTime != null)
+        if (currentState != that.currentState) return false;
+        if (effectiveTime != null ? !effectiveTime.equals(that.effectiveTime) : that.effectiveTime != null)
             return false;
-        if (orderWorkflowId != null ? !orderWorkflowId.equals(workflow.orderWorkflowId) : workflow.orderWorkflowId != null)
+        if (orderWorkflowId != null ? !orderWorkflowId.equals(that.orderWorkflowId) : that.orderWorkflowId != null)
             return false;
 
         return true;

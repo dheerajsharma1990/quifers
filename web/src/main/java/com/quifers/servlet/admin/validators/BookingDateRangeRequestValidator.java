@@ -2,7 +2,7 @@ package com.quifers.servlet.admin.validators;
 
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
-import com.quifers.servlet.admin.request.CompletedOrdersRequest;
+import com.quifers.servlet.admin.request.BookingDateRangeRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
@@ -10,19 +10,18 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CompletedOrdersRequestValidator implements RequestValidator {
+public class BookingDateRangeRequestValidator implements RequestValidator {
 
     public static final String FORMAT = "dd/MM/yyyy";
     private SimpleDateFormat dayFormat = new SimpleDateFormat(FORMAT);
 
-
     @Override
-    public CompletedOrdersRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
+    public BookingDateRangeRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
         String beginBookingDay = servletRequest.getParameter("begin_booking_day");
         String endBookingDay = servletRequest.getParameter("end_booking_day");
         Date endBookingDate = validateBookingDay(endBookingDay, "End Booking Date");
         endBookingDate = add1Day(endBookingDate);
-        return new CompletedOrdersRequest(validateBookingDay(beginBookingDay, "Begin Booking Date"),
+        return new BookingDateRangeRequest(validateBookingDay(beginBookingDay, "Begin Booking Date"),
                 endBookingDate);
     }
 
@@ -35,7 +34,7 @@ public class CompletedOrdersRequestValidator implements RequestValidator {
 
     private Date validateBookingDay(String bookingDay, String attributeName) throws InvalidRequestException {
         if (bookingDay == null) {
-            throw new InvalidRequestException("Begin " + attributeName + " is null.");
+            throw new InvalidRequestException(attributeName + " is null.");
         }
         try {
             return dayFormat.parse(bookingDay);

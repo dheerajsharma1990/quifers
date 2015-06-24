@@ -50,7 +50,7 @@ public class EndToEndEmailTest {
     private Order getOrder() {
         OrderId orderId = new OrderId("100");
         Set<OrderWorkflow> workflowSet = new HashSet<>();
-        workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date()));
+        workflowSet.add(new OrderWorkflow(orderId, OrderState.BOOKED, new Date(), true));
 
         Client client = new Client(orderId, "name", 9988776655l, "dheerajsharma1990@gmail.com");
         Address pickUpAddress = new Address(orderId, AddressType.PICKUP, "fromAddressHouseNumber", "fromAddressSociety", "fromAddressArea", "fromAddressCity");

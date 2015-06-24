@@ -21,5 +21,9 @@
             <column name="effective_time"/>
         </property>
 
+        <property name="currentState" type="boolean">
+            <column name="current_state"/>
+        </property>
+
     </class>
 </hibernate-mapping>

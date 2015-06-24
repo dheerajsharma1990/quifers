@@ -1,8 +1,8 @@
 package com.quifers.servlet.admin;
 
 import com.quifers.request.validators.InvalidRequestException;
-import com.quifers.servlet.admin.request.CompletedOrdersRequest;
-import com.quifers.servlet.admin.validators.CompletedOrdersRequestValidator;
+import com.quifers.servlet.admin.request.BookingDateRangeRequest;
+import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,9 +14,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
-public class CompletedOrdersRequestValidatorTest {
+public class BookingDateRangeRequestValidatorTest {
 
-    private final CompletedOrdersRequestValidator validator = new CompletedOrdersRequestValidator();
+    private final BookingDateRangeRequestValidator validator = new BookingDateRangeRequestValidator();
 
     @Test
     public void shouldPassAllValidation() throws Exception {
@@ -26,8 +26,8 @@ public class CompletedOrdersRequestValidatorTest {
         when(servletRequest.getParameter("end_booking_day")).thenReturn("30/06/2015");
 
         //when
-        CompletedOrdersRequest request = validator.validateRequest(servletRequest);
-        SimpleDateFormat dateFormat = new SimpleDateFormat(CompletedOrdersRequestValidator.FORMAT);
+        BookingDateRangeRequest request = validator.validateRequest(servletRequest);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(BookingDateRangeRequestValidator.FORMAT);
 
         //then
         assertThat(request.getBeginBookingDate(), is(dateFormat.parse("28/06/2015")));

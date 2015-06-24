@@ -4,6 +4,8 @@ import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.admin.request.BookingDateRangeRequest;
+import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -15,15 +17,18 @@ import static com.quifers.response.Responses.getOrderResponse;
 
 public class AssignedOrdersRequestHandler implements RequestHandler {
 
+    private final BookingDateRangeRequestValidator requestValidator;
     private final OrderDao orderDao;
 
-    public AssignedOrdersRequestHandler(OrderDao orderDao) {
+    public AssignedOrdersRequestHandler(BookingDateRangeRequestValidator requestValidator, OrderDao orderDao) {
+        this.requestValidator = requestValidator;
         this.orderDao = orderDao;
     }
 
     @Override
     public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException, InvalidRequestException {
-        Collection<Order> assignedOrders = orderDao.getAssignedOrders();
+        BookingDateRangeRequest request = requestValidator.validateRequest(servletRequest);
+        Collection<Order> assignedOrders = orderDao.getAssignedOrders(request.getBeginBookingDate(), request.getEndBookingDate());
         servletResponse.setContentType("application/json");
         servletResponse.getWriter().write(getOrderResponse(assignedOrders));
     }
