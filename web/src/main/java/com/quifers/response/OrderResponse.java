@@ -42,7 +42,7 @@ public class OrderResponse {
         }
         this.addresses = addressResponses;
         this.labours = order.getLabours();
-        this.distance = order.getDistance().getDistance();
+        this.distance = order.getDistance();
         this.pickupFloors = order.getPickupFloors();
         this.pickupLiftWorking = order.isPickupLiftWorking();
         this.dropOffFloors = order.getDropOffFloors();

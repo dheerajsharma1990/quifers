@@ -2,7 +2,6 @@ package com.quifers.servlet.executives;
 
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
-import com.quifers.domain.Distance;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
@@ -53,11 +52,9 @@ public class FieldExecutiveServlet extends HttpServlet {
             if ("/api/v0/executive/order/create/price".equals(requestUri)) {
                 GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
                 Order order = orderDao.getOrder(priceRequest.getOrderId());
-                Distance distance = order.getDistance();
-                distance.setDistance(priceRequest.getDistance());
-                order.setDistance(distance);
+                order.setDistance(priceRequest.getDistance());
                 order.setWaitingMinutes(priceRequest.getWaitingMinutes());
-                order.addOrderWorkflow(new OrderWorkflow(distance.getOrderId(), OrderState.COMPLETED, new Date()));
+                order.addOrderWorkflow(new OrderWorkflow(priceRequest.getOrderId(), OrderState.COMPLETED, new Date()));
 
                 order.setPickupFloors(priceRequest.getPickupFloors());
                 order.setPickupLiftWorking(priceRequest.isPickupLiftWorking());
@@ -65,7 +62,7 @@ public class FieldExecutiveServlet extends HttpServlet {
                 order.setDropOffLiftWorking(priceRequest.isDropOffLiftWorking());
 
                 orderDao.updateOrder(order);
-                webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, distance.getOrderId());
+                webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, priceRequest.getOrderId());
                 GeneratePriceResponse priceResponse = new GeneratePriceResponse(response);
                 priceResponse.writeResponse(order.getCost());
             } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {

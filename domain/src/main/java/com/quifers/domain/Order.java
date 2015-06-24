@@ -24,7 +24,7 @@ public class Order implements Serializable {
 
     private String estimate;
 
-    private Distance distance;
+    private int distance;
 
     private int pickupFloors;
 
@@ -50,7 +50,7 @@ public class Order implements Serializable {
         this.orderId = orderId;
     }
 
-    public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate, Distance distance,
+    public Order(OrderId orderId, Client client, String vehicle, Set<Address> addresses, int labours, String estimate, int distance,
                  int pickupFloors, boolean pickupLiftWorking, int dropOffFloors, boolean dropOffLiftWorking,
                  FieldExecutive fieldExecutive, Set<OrderWorkflow> orderWorkflows) {
         this.orderId = orderId;
@@ -90,10 +90,6 @@ public class Order implements Serializable {
 
     public String getEstimate() {
         return estimate;
-    }
-
-    public Distance getDistance() {
-        return distance;
     }
 
     public int getPickupFloors() {
@@ -144,10 +140,6 @@ public class Order implements Serializable {
         this.estimate = estimate;
     }
 
-    public void setDistance(Distance distance) {
-        this.distance = distance;
-    }
-
     public void setPickupFloors(int pickupFloors) {
         this.pickupFloors = pickupFloors;
     }
@@ -188,6 +180,14 @@ public class Order implements Serializable {
         this.receivables = receivables;
     }
 
+    public int getDistance() {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
     public void addOrderWorkflow(OrderWorkflow orderWorkflow) {
         if (orderWorkflows == null) {
             orderWorkflows = new HashSet<>();
@@ -213,11 +213,12 @@ public class Order implements Serializable {
     }
 
     private int getTransitCost() {
-        if (distance.getDistance() <= 2) {
+        if (distance <= 2) {
             return 300;
         }
-        return 300 + (distance.getDistance() - 2) * 30;
+        return 300 + (distance - 2) * 30;
     }
+
 
     private int getLabourCost() {
         int nonWorkingLifts = getNonWorkingPickUpFloors() + getNonWorkingDropOffFloors();
@@ -226,7 +227,6 @@ public class Order implements Serializable {
         }
         return 350 * labours * (nonWorkingLifts - 2);
     }
-
 
     public OrderWorkflow getWorkflow(OrderState orderState) {
         for (OrderWorkflow workflow : orderWorkflows) {
@@ -244,6 +244,7 @@ public class Order implements Serializable {
         return 0;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -251,15 +252,16 @@ public class Order implements Serializable {
 
         Order order = (Order) o;
 
+        if (distance != order.distance) return false;
         if (dropOffFloors != order.dropOffFloors) return false;
         if (dropOffLiftWorking != order.dropOffLiftWorking) return false;
         if (labours != order.labours) return false;
         if (pickupFloors != order.pickupFloors) return false;
         if (pickupLiftWorking != order.pickupLiftWorking) return false;
+        if (receivables != order.receivables) return false;
         if (waitingMinutes != order.waitingMinutes) return false;
         if (addresses != null ? !addresses.equals(order.addresses) : order.addresses != null) return false;
         if (client != null ? !client.equals(order.client) : order.client != null) return false;
-        if (distance != null ? !distance.equals(order.distance) : order.distance != null) return false;
         if (estimate != null ? !estimate.equals(order.estimate) : order.estimate != null) return false;
         if (fieldExecutive != null ? !fieldExecutive.equals(order.fieldExecutive) : order.fieldExecutive != null)
             return false;

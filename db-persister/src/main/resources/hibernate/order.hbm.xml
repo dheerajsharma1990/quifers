@@ -47,13 +47,15 @@
             <column name="receivables"/>
         </property>
 
-        <one-to-one name="client" class="com.quifers.domain.Client" cascade="save-update" lazy="false" fetch="select"/>
+        <property name="distance" type="integer">
+            <column name="distance"/>
+        </property>
 
-        <one-to-one name="distance" class="com.quifers.domain.Distance" cascade="save-update" lazy="false" fetch="select"/>
+        <one-to-one name="client" class="com.quifers.domain.Client" cascade="all" lazy="false" fetch="select"/>
 
-        <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="save-update" lazy="false" fetch="join" />
+        <many-to-one name="fieldExecutive" class="com.quifers.domain.FieldExecutive" column="field_executive_id" cascade="all" lazy="false" fetch="join" />
 
-        <set name="addresses" table="address" inverse="true" cascade="save-update" fetch="join">
+        <set name="addresses" table="address" inverse="true" cascade="all" fetch="join">
             <key>
                 <column name="order_id" not-null="true"/>
             </key>

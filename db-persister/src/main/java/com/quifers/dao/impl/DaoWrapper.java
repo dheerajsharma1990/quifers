@@ -22,8 +22,9 @@ public class DaoWrapper {
 
     public void save(Object object) throws Exception {
         Transaction transaction = null;
+        Session session = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
             session.save(object);
             transaction.commit();
@@ -32,22 +33,29 @@ public class DaoWrapper {
             if (transaction != null) {
                 transaction.rollback();
             }
+            if (session != null) {
+                session.close();
+            }
             throw new DatabasePersistenceException(e);
         }
     }
 
     public void update(Object object) throws Exception {
         Transaction transaction = null;
+        Session session = null;
         try {
-            Session session = sessionFactory.openSession();
+            session = sessionFactory.openSession();
             transaction = session.beginTransaction();
-            session.update(object);
+            session.merge(object);
             transaction.commit();
             session.close();
         } catch (Exception e) {
             e.printStackTrace();
             if (transaction != null) {
                 transaction.rollback();
+            }
+            if (session != null) {
+                session.close();
             }
             throw new Exception(e);
         }
@@ -65,7 +73,6 @@ public class DaoWrapper {
 
     public Object get(Class clazz, Serializable object) {
         Session session = sessionFactory.openSession();
-        session.clear();
         Object o = session.get(clazz, object);
         session.close();
         return o;

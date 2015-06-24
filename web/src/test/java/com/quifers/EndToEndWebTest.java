@@ -193,7 +193,7 @@ public class EndToEndWebTest {
         //given
         HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/executive/order/create/price");
         String request = buildCreatePriceRequest();
-
+        //32377deec4b2eb41d332af99055fbf28
         //when
         int responseCode = sendRequest(connection, request);
 
