@@ -15,23 +15,11 @@ public class AdminServlet extends BaseServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(AdminServlet.class);
 
-
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String requestUri = request.getRequestURI();
-            if ("/api/v0/admin/executives/assign".equals(requestUri)) {
-                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            }  else if ("/api/v0/admin/fieldExecutive".equals(requestUri)) {
-                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            } else if ("/api/v0/admin/order".equals(requestUri)) {
-                RequestHandler requestHandler = orderRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            }
+            RequestHandler requestHandler = adminRequestHandlerFactory.getRequestHandler(request);
+            requestHandler.handleRequest(request, response);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

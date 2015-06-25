@@ -249,7 +249,7 @@ public class EndToEndWebTest {
 
     private String buildFieldExecutiveAccount() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
-                .add("cmd", "register")
+                .add("cmd", "registerFieldExecutive")
                 .add("field_executive_id", "dheerajsharma1990")
                 .add("password", "mypassword")
                 .add("name", "Dheeraj Sharma")
@@ -261,7 +261,7 @@ public class EndToEndWebTest {
     private String buildUnassignedOrderRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("cmd", "unassigned").build();
+                .add("cmd", "unassignedOrders").build();
     }
 
     private String buildAssignedOrderRequest() throws UnsupportedEncodingException {
@@ -269,13 +269,13 @@ public class EndToEndWebTest {
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
                 .add("begin_booking_day", "22/09/1990")
                 .add("end_booking_day", getTodayString())
-                .add("cmd", "assigned").build();
+                .add("cmd", "assignedOrders").build();
     }
 
     private String buildCompletedOrdersRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("cmd", "completed")
+                .add("cmd", "completedOrders")
                 .add("begin_booking_day", "22/09/1990")
                 .add("end_booking_day", getTodayString()).build();
     }
@@ -301,7 +301,7 @@ public class EndToEndWebTest {
     private String buildValidAdminAccessTokenRequest() throws UnsupportedEncodingException {
         return new ParametersBuilder().add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("cmd", "getAll").build();
+                .add("cmd", "getAllFieldExecutives").build();
     }
 
     private String buildAssignFieldExecutiveAssignRequest() throws UnsupportedEncodingException {
@@ -309,7 +309,7 @@ public class EndToEndWebTest {
                 .add("field_executive_id", "dheerajsharma1990")
                 .add("user_id", "dheerajsharma1990")
                 .add("access_token", "297f7024a516256a526bd6b9f2d3f15c")
-                .add("cmd", "assign").build();
+                .add("cmd", "assignFieldExecutive").build();
     }
 
     private String buildValidFieldExecutiveLoginRequest() throws UnsupportedEncodingException {
