@@ -1,9 +1,6 @@
 package com.quifers.response;
 
-import com.quifers.domain.Address;
-import com.quifers.domain.Client;
-import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -32,6 +29,8 @@ public class OrderResponse {
 
     private Set<OrderWorkflowResponse> orderWorkflows;
 
+    private FieldExecutive fieldExecutive;
+
     public OrderResponse(Order order) {
         this.orderId = order.getOrderId().getOrderId();
         this.client = order.getClient();
@@ -47,6 +46,7 @@ public class OrderResponse {
         this.pickupLiftWorking = order.isPickupLiftWorking();
         this.dropOffFloors = order.getDropOffFloors();
         this.dropOffLiftWorking = order.isDropOffLiftWorking();
+        this.fieldExecutive = order.getFieldExecutive();
         Set<OrderWorkflowResponse> orderWorkflowResponses = new HashSet<>();
         for(OrderWorkflow orderWorkflow : order.getOrderWorkflows()) {
             orderWorkflowResponses.add(new OrderWorkflowResponse(orderWorkflow));
@@ -93,6 +93,10 @@ public class OrderResponse {
 
     public boolean isDropOffLiftWorking() {
         return dropOffLiftWorking;
+    }
+
+    public FieldExecutive getFieldExecutive() {
+        return fieldExecutive;
     }
 
     public Set<OrderWorkflowResponse> getOrderWorkflows() {
