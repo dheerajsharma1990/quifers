@@ -95,7 +95,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldValidateAuthenticationOnAdminLogin")
     public void shouldGetUnassignedOrder() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin");
         String request = buildUnassignedOrderRequest();
 
         //when
@@ -111,7 +111,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldGetUnassignedOrder")
     public void shouldRegisterFieldExecutive() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/fieldExecutive");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin");
         String request = buildFieldExecutiveAccount();
 
         //when
@@ -124,7 +124,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
     public void shouldGetAllFieldExecutives() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/fieldExecutive");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin");
         String request = buildValidAdminAccessTokenRequest();
 
         //when
@@ -145,7 +145,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldGetAllFieldExecutives")
     public void shouldGetAssignedOrder() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin");
         String request = buildAssignedOrderRequest();
 
         //when
@@ -161,7 +161,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldRegisterFieldExecutive")
     public void shouldAssignOrderToFieldExecutive() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/fieldExecutive");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin");
         String request = buildAssignFieldExecutiveAssignRequest();
 
         //when
@@ -220,7 +220,7 @@ public class EndToEndWebTest {
     @Test(dependsOnMethods = "shouldGeneratePrice")
     public void shouldGetCompletedOrder() throws Exception {
         //given
-        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin/order");
+        HttpURLConnection connection = getConnection(BASE_URL + "/api/v0/admin");
         String request = buildCompletedOrdersRequest();
 
         //when
