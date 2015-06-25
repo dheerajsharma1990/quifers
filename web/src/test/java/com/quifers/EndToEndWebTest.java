@@ -363,7 +363,7 @@ public class EndToEndWebTest {
     public void startServerAndDatabase() throws Exception {
         new LocalDatabaseRunner().runDatabaseServer();
         new ActiveMqBroker().startBroker();
-        runJettyServer(9111);
+        runJettyServer(9111, 0);
     }
 
     @AfterClass

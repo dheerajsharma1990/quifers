@@ -11,19 +11,19 @@ public class DBPersisterProperties {
     }
 
     public String getDriverClass() {
-        return properties.getProperty("hibernate.connection.driver_class");
+        return properties.getProperty("DRIVER_CLASS");
     }
 
     public String getUrl() {
-        return properties.getProperty("hibernate.connection.url");
+        return properties.getProperty("QUIFERSDB_URL");
     }
 
     public String getUserName() {
-        return properties.getProperty("hibernate.connection.username");
+        return properties.getProperty("USER");
     }
 
     public String getPassword() {
-        return properties.getProperty("hibernate.connection.password");
+        return properties.getProperty("PASSWORD");
     }
 
 

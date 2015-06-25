@@ -5,8 +5,6 @@ import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
-import com.quifers.properties.PropertiesLoader;
-import com.quifers.properties.WebProperties;
 import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
 import com.quifers.request.validators.OrderBookRequestValidator;
@@ -49,21 +47,11 @@ public class StartupContextListener implements ServletContextListener {
         LOGGER.info("Starting quifers webapp...");
         ServletContext servletContext = servletContextEvent.getServletContext();
         Environment environment = getEnvironment(servletContext);
-        WebProperties webProperties = loadWebProperties(environment);
         initDaos(servletContext, environment);
-        OrderIdGeneratorService service = initialiseOrderIdService(servletContext, webProperties);
+        OrderIdGeneratorService service = initialiseOrderIdService(servletContext);
         initialiseActiveMqPublisher(servletContext);
         initialiseValidators(servletContext);
         initialiseValidators(servletContext, service);
-    }
-
-    private WebProperties loadWebProperties(Environment environment) {
-        try {
-            return PropertiesLoader.loadProperties(environment);
-        } catch (IOException e) {
-            LOGGER.error("Unable to load properties for environment{}:{}", environment, e);
-        }
-        return null;
     }
 
     private Environment getEnvironment(ServletContext servletContext) {
@@ -80,8 +68,12 @@ public class StartupContextListener implements ServletContextListener {
         return environment;
     }
 
-    public OrderIdGeneratorService initialiseOrderIdService(ServletContext servletContext, WebProperties webProperties) {
-        OrderIdGeneratorService service = new OrderIdGeneratorService(webProperties.getLastOrderIdCounter());
+    public OrderIdGeneratorService initialiseOrderIdService(ServletContext servletContext) {
+        String lastOrderIdCounter = servletContext.getInitParameter("lastOrderIdCounter");
+        if(lastOrderIdCounter == null) {
+            throw new IllegalArgumentException("No lastOrderIdCounter parameter specified.");
+        }
+        OrderIdGeneratorService service = new OrderIdGeneratorService(Long.valueOf(lastOrderIdCounter));
         servletContext.setAttribute(ORDER_ID_SERVICE, service);
         return service;
     }

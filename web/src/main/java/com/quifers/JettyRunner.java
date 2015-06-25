@@ -16,7 +16,7 @@ import java.util.EnumSet;
 
 public class JettyRunner {
 
-    public static Server runJettyServer(int port) throws Exception {
+    public static Server runJettyServer(int port, long lastOrderIdCounter) throws Exception {
 
         Server server = new Server(port);
 
@@ -25,6 +25,7 @@ public class JettyRunner {
         String envProperty = System.getProperty("env");
         String env = envProperty == null ? "LOCAL" : envProperty.toUpperCase();
         context.setInitParameter("env", env);
+        context.setInitParameter("lastOrderIdCounter", String.valueOf(lastOrderIdCounter));
         context.addEventListener(new StartupContextListener());
         context.addServlet(new ServletHolder(new AdminLoginServlet()), "/api/v0/guest/admin/login");
         context.addServlet(new ServletHolder(new AdminRegisterServlet()), "/api/v0/guest/admin/register");
@@ -45,7 +46,10 @@ public class JettyRunner {
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = runJettyServer(80);
+        if (args.length != 1) {
+            throw new Exception("Please provide last order number as the first argument.");
+        }
+        Server server = runJettyServer(80, Long.valueOf(args[0]));
         server.join();
     }
 

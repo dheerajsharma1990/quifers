@@ -9,21 +9,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class PropertiesLoader {
+public class DBPersisterPropertiesLoader {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesLoader.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DBPersisterPropertiesLoader.class);
 
     public static DBPersisterProperties loadDbPersisterProperties(Environment environment) throws IOException {
         LOGGER.info("Loading db persister properties for environment: [{}]", environment);
         String pathToProperties = getPropertyFileLocation(environment);
-        InputStream inputStream = PropertiesLoader.class.getClassLoader().getResourceAsStream(pathToProperties);
+        InputStream inputStream = DBPersisterPropertiesLoader.class.getClassLoader().getResourceAsStream(pathToProperties);
         Properties properties = new Properties();
         properties.load(inputStream);
         return new DBPersisterProperties(properties);
     }
 
     private static String getPropertyFileLocation(Environment environment) {
-        return "properties" + File.separator + environment.name().toLowerCase() + File.separator + "hibernate.properties";
+        return "properties" + File.separator + environment.name().toLowerCase() + File.separator + "db-persister.properties";
     }
 
 }
