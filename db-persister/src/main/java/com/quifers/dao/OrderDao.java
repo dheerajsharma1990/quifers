@@ -2,6 +2,7 @@ package com.quifers.dao;
 
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
+import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
 
 import java.util.Collection;
@@ -21,8 +22,6 @@ public interface OrderDao {
 
     Collection<Order> getUnassignedOrders();
 
-    Collection<Order> getAssignedOrders(Date beginBookingDate, Date endBookingDate);
-
-    Collection<Order> getCompletedOrders(Date beginBookingDate,Date endBookingDate);
+    Collection<Order> getOrders(OrderState orderState,Date beginBookingDate,Date endBookingDate);
 
 }

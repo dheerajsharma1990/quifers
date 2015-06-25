@@ -2,6 +2,7 @@ package com.quifers.servlet.admin.handlers;
 
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
+import com.quifers.domain.enums.OrderState;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.RequestHandler;
 import com.quifers.servlet.admin.request.BookingDateRangeRequest;
@@ -28,7 +29,7 @@ public class CompletedOrdersRequestHandler implements RequestHandler {
     @Override
     public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException, InvalidRequestException {
         BookingDateRangeRequest request = requestValidator.validateRequest(servletRequest);
-        Collection<Order> assignedOrders = orderDao.getCompletedOrders(request.getBeginBookingDate(), request.getEndBookingDate());
+        Collection<Order> assignedOrders = orderDao.getOrders(OrderState.COMPLETED, request.getBeginBookingDate(), request.getEndBookingDate());
         servletResponse.setContentType("application/json");
         servletResponse.getWriter().write(getOrderResponse(assignedOrders));
     }
