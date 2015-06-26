@@ -7,6 +7,7 @@ import com.quifers.hibernate.DaoFactory;
 import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.admin.handlers.AdminRequestHandlerFactory;
+import com.quifers.servlet.guest.handlers.GuestRequestHandlerFactory;
 import com.quifers.servlet.listener.WebPublisher;
 
 import javax.servlet.ServletException;
@@ -25,6 +26,7 @@ public class BaseServlet extends HttpServlet {
     protected AdminDao adminDao;
     protected OrderDao orderDao;
     protected AdminRequestHandlerFactory adminRequestHandlerFactory;
+    protected GuestRequestHandlerFactory guestRequestHandlerFactory;
     protected OrderIdGeneratorService orderIdGeneratorService;
     protected OrderBookRequestValidator orderBookRequestValidator;
     protected WebPublisher webPublisher;
@@ -41,6 +43,7 @@ public class BaseServlet extends HttpServlet {
         adminAccountDao = daoFactory.getAdminAccountDao();
         adminDao = daoFactory.getAdminDao();
         adminRequestHandlerFactory = new AdminRequestHandlerFactory(fieldExecutiveAccountDao, fieldExecutiveDao, orderDao);
+        guestRequestHandlerFactory = new GuestRequestHandlerFactory(adminAccountDao, adminDao);
         orderIdGeneratorService = new OrderIdGeneratorService(Long.valueOf(getServletContext().getInitParameter("lastOrderIdCounter")));
         orderBookRequestValidator = new OrderBookRequestValidator(orderIdGeneratorService);
         adminAuthenticator = new AdminAuthenticator(adminAccountDao);

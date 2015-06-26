@@ -1,19 +1,18 @@
 package com.quifers.servlet.guest;
 
 import com.quifers.authentication.AdminAuthenticationData;
-import com.quifers.domain.Admin;
 import com.quifers.domain.AdminAccount;
 import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.Order;
 import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.AdminId;
-import com.quifers.request.AdminRegisterRequest;
 import com.quifers.request.LoginRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.AdminLoginResponse;
 import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.servlet.BaseServlet;
+import com.quifers.servlet.RequestHandler;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +21,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import static com.quifers.request.transformers.AdminTransformer.transform;
-import static com.quifers.request.validators.admin.AdminRegisterRequestValidator.validateAdminRegisterRequest;
-import static com.quifers.response.AdminRegisterResponse.getSuccessResponse;
 
 public class GuestServlet extends BaseServlet {
 
@@ -36,14 +31,8 @@ public class GuestServlet extends BaseServlet {
         try {
             String requestUri = request.getRequestURI();
             if ("/api/v0/guest/admin/register".equals(requestUri)) {
-                AdminRegisterRequest registerRequest = new AdminRegisterRequest(request);
-                validateAdminRegisterRequest(registerRequest);
-                Admin admin = transform(registerRequest);
-                adminAccountDao.saveAdminAccount(new AdminAccount(new AdminId(registerRequest.getUserId()), registerRequest.getPassword()));
-                adminDao.saveAdmin(admin);
-                String successResponse = getSuccessResponse();
-                response.setContentType("application/json");
-                response.getWriter().write(successResponse);
+                RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(request);
+                requestHandler.handleRequest(request, response);
             } else if ("/api/v0/guest/order/book".equals(requestUri)) {
                 Order order = orderBookRequestValidator.validateRequest(request);
                 orderDao.saveOrder(order);
@@ -56,7 +45,7 @@ public class GuestServlet extends BaseServlet {
                 response.getWriter().write(object.toString());
             } else if ("/api/v0/guest/admin/login".equals(requestUri)) {
                 LoginRequest loginRequest = new LoginRequest(request);
-                AdminAccount adminAccount = transform(loginRequest);
+                AdminAccount adminAccount = new AdminAccount(new AdminId(loginRequest.getUserId()), loginRequest.getPassword());
                 response.setContentType("application/json");
                 String loginResponse;
                 if (!adminAuthenticator.isValidAdmin(adminAccount)) {
