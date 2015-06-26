@@ -13,6 +13,8 @@ import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
+import com.quifers.properties.DBPersisterProperties;
+import com.quifers.properties.DBPersisterPropertiesLoader;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -109,7 +111,8 @@ public class OrderDaoImplTest {
 
     @BeforeMethod
     public void startDatabaseAndAddFieldExecutives() throws Exception {
-        new LocalDatabaseRunner().runDatabaseServer();
+        DBPersisterProperties dbPersisterProperties = DBPersisterPropertiesLoader.loadDbPersisterProperties(Environment.LOCAL);
+        new LocalDatabaseRunner().runDatabaseServer(dbPersisterProperties);
         daoFactory = DaoFactoryBuilder.getDaoFactory(Environment.LOCAL);
         saveFieldExecutive();
         orderDao = daoFactory.getOrderDao();

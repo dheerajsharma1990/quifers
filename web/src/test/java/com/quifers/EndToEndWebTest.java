@@ -2,6 +2,8 @@ package com.quifers;
 
 import com.quifers.db.LocalDatabaseRunner;
 import com.quifers.domain.enums.OrderState;
+import com.quifers.properties.DBPersisterProperties;
+import com.quifers.properties.DBPersisterPropertiesLoader;
 import com.quifers.runners.ActiveMqBroker;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.utils.ParametersBuilder;
@@ -361,7 +363,8 @@ public class EndToEndWebTest {
 
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
-        new LocalDatabaseRunner().runDatabaseServer();
+        DBPersisterProperties dbPersisterProperties = DBPersisterPropertiesLoader.loadDbPersisterProperties(Environment.LOCAL);
+        new LocalDatabaseRunner().runDatabaseServer(dbPersisterProperties);
         new ActiveMqBroker().startBroker();
         runJettyServer(9111, 0);
     }

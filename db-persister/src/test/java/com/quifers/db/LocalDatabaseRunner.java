@@ -1,5 +1,8 @@
 package com.quifers.db;
 
+import com.quifers.Environment;
+import com.quifers.properties.DBPersisterProperties;
+import com.quifers.properties.DBPersisterPropertiesLoader;
 import org.h2.tools.Server;
 
 import java.sql.Connection;
@@ -9,11 +12,11 @@ public class LocalDatabaseRunner {
 
     private static Server server;
 
-    public void runDatabaseServer() throws Exception {
+    public void runDatabaseServer(DBPersisterProperties dbPersisterProperties) throws Exception {
         server = Server.createTcpServer("-tcpPort", "9092");
         server.start();
-        Class.forName("org.h2.Driver");
-        Connection connection = DriverManager.getConnection("jdbc:h2:tcp://localhost:9092/~/quifersdb;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL", "", "");
+        Class.forName(dbPersisterProperties.getDriverClass());
+        Connection connection = DriverManager.getConnection(dbPersisterProperties.getUrl(),dbPersisterProperties.getUserName(),dbPersisterProperties.getPassword());
         connection.prepareStatement("DROP ALL OBJECTS").execute();
         SqlFilesSorter sqlFilesSorter = new SqlFilesSorter();
         SqlFilesExecutor executor = new SqlFilesExecutor(connection, sqlFilesSorter, new SqlScriptParser());
@@ -26,7 +29,8 @@ public class LocalDatabaseRunner {
     }
 
     public static void main(String[] args) throws Exception {
-        new LocalDatabaseRunner().runDatabaseServer();
+        DBPersisterProperties dbPersisterProperties = DBPersisterPropertiesLoader.loadDbPersisterProperties(Environment.LOCAL);
+        new LocalDatabaseRunner().runDatabaseServer(dbPersisterProperties);
     }
 
 }
