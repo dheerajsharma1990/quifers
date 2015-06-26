@@ -34,8 +34,8 @@ public class EmailService {
 
     public static void main(String[] args) throws Exception {
         Environment environment = getEnvironment();
-        EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
         loadLog4jProperties(environment);
+        EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
         DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
         startEmailService(emailUtilProperties, daoFactory);
     }
