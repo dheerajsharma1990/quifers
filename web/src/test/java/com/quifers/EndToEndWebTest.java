@@ -366,7 +366,7 @@ public class EndToEndWebTest {
         DBPersisterProperties dbPersisterProperties = DBPersisterPropertiesLoader.loadDbPersisterProperties(Environment.LOCAL);
         new LocalDatabaseRunner().runDatabaseServer(dbPersisterProperties);
         new ActiveMqBroker().startBroker();
-        runJettyServer(9111, 0);
+        runJettyServer(Environment.LOCAL, 9111, 0);
     }
 
     @AfterClass
