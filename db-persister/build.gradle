@@ -5,7 +5,7 @@ dependencies {
     compile project(':domain')
     compile group: 'org.hibernate', name: 'hibernate-core', version: '4.3.6.Final'
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.12'
-    runtime group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.12'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.12'
 
     testCompile group: 'com.h2database', name: 'h2', version: '1.4.187'
 }
