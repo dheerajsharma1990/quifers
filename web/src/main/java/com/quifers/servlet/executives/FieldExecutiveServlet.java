@@ -1,7 +1,5 @@
 package com.quifers.servlet.executives;
 
-import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.dao.OrderDao;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
@@ -13,14 +11,13 @@ import com.quifers.request.FilterRequest;
 import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.response.GeneratePriceResponse;
+import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.executives.request.ReceivableRequest;
 import com.quifers.servlet.executives.request.ReceivableRequestValidator;
-import com.quifers.servlet.listener.WebPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -29,21 +26,10 @@ import java.util.Date;
 
 import static com.quifers.response.Responses.getOrderResponse;
 import static com.quifers.response.Responses.getReceivableResponse;
-import static com.quifers.servlet.listener.StartupContextListener.*;
 
-public class FieldExecutiveServlet extends HttpServlet {
+public class FieldExecutiveServlet extends BaseServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveServlet.class);
-    private OrderDao orderDao;
-    private FieldExecutiveDao fieldExecutiveDao;
-    private WebPublisher webPublisher;
-
-    @Override
-    public void init() throws ServletException {
-        orderDao = (OrderDao) getServletContext().getAttribute(ORDER_DAO);
-        fieldExecutiveDao = (FieldExecutiveDao) getServletContext().getAttribute(FIELD_EXECUTIVE_DAO);
-        webPublisher = (WebPublisher) getServletContext().getAttribute(WEB_PUBLISHER);
-    }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

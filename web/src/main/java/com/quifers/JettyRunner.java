@@ -1,13 +1,10 @@
 package com.quifers;
 
-import com.quifers.servlet.OrderServlet;
-import com.quifers.servlet.admin.AdminLoginServlet;
-import com.quifers.servlet.admin.AdminRegisterServlet;
 import com.quifers.servlet.admin.AdminServlet;
-import com.quifers.servlet.executives.FieldExecutiveLoginServlet;
 import com.quifers.servlet.executives.FieldExecutiveServlet;
 import com.quifers.servlet.filters.AdminAuthenticationFilter;
 import com.quifers.servlet.filters.FieldExecutiveAuthenticationFilter;
+import com.quifers.servlet.guest.GuestServlet;
 import com.quifers.servlet.listener.StartupContextListener;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
@@ -30,15 +27,12 @@ public class JettyRunner {
         context.setInitParameter("env", environment.name());
         context.setInitParameter("lastOrderIdCounter", String.valueOf(lastOrderIdCounter));
         context.addEventListener(new StartupContextListener());
-        context.addServlet(new ServletHolder(new AdminLoginServlet()), "/api/v0/guest/admin/login");
-        context.addServlet(new ServletHolder(new AdminRegisterServlet()), "/api/v0/guest/admin/register");
-        context.addServlet(new ServletHolder(new FieldExecutiveLoginServlet()), "/api/v0/guest/executive/login");
-        context.addServlet(new ServletHolder(new OrderServlet()), "/api/v0/guest/order/book");
+
+        context.addServlet(new ServletHolder(new GuestServlet()), "/api/v0/guest/*");
         context.addServlet(new ServletHolder(new AdminServlet()), "/api/v0/admin/*");
-        context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
-
-
         context.addServlet(new ServletHolder(new FieldExecutiveServlet()), "/api/v0/executive/*");
+
+        context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(new FilterHolder(new FieldExecutiveAuthenticationFilter()), "/api/v0/executive/*", EnumSet.of(DispatcherType.REQUEST));
 
         server.setHandler(context);
