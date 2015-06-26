@@ -45,7 +45,7 @@ public class AdminRegisterRequestValidator implements RequestValidator {
         }
 
         if (password.length() < 8) {
-            throw new InvalidRequestException("Password too shhrt.min characters allowed is 8");
+            throw new InvalidRequestException("Password too short.min characters allowed is 8");
         }
 
         return password;

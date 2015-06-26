@@ -1,13 +1,6 @@
 package com.quifers.servlet.guest;
 
-import com.quifers.authentication.AdminAuthenticationData;
-import com.quifers.domain.AdminAccount;
-import com.quifers.domain.FieldExecutiveAccount;
-import com.quifers.domain.id.AdminId;
-import com.quifers.request.LoginRequest;
 import com.quifers.request.validators.InvalidRequestException;
-import com.quifers.response.AdminLoginResponse;
-import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.RequestHandler;
 import org.slf4j.Logger;
@@ -25,41 +18,8 @@ public class GuestServlet extends BaseServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String requestUri = request.getRequestURI();
-            if ("/api/v0/guest/admin/register".equals(requestUri)) {
-                RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            } else if ("/api/v0/guest/order/book".equals(requestUri)) {
-                RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            } else if ("/api/v0/guest/admin/login".equals(requestUri)) {
-                LoginRequest loginRequest = new LoginRequest(request);
-                AdminAccount adminAccount = new AdminAccount(new AdminId(loginRequest.getUserId()), loginRequest.getPassword());
-                response.setContentType("application/json");
-                String loginResponse;
-                if (!adminAuthenticator.isValidAdmin(adminAccount)) {
-                    loginResponse = AdminLoginResponse.getInvalidLoginResponse();
-                } else {
-                    String accessToken = adminAccount.getAccessToken();
-                    AdminAuthenticationData.putAdminAccessToken(adminAccount.getAdminId().getUserId(), accessToken);
-                    loginResponse = AdminLoginResponse.getSuccessResponse(accessToken);
-                }
-                response.getWriter().write(loginResponse);
-            } else if ("/api/v0/guest/executive/login".equals(requestUri)) {
-                LoginRequest loginRequest = new LoginRequest(request);
-                FieldExecutiveAccount account = new FieldExecutiveAccount(loginRequest.getUserId(), loginRequest.getPassword());
-                String loginResponse;
-                if (!fieldExecutiveAuthenticator.isValidFieldExecutive(account)) {
-                    loginResponse = FieldExecutiveResponse.getInvalidLoginResponse();
-                } else {
-                    String accessToken = account.getAccessToken();
-                    AdminAuthenticationData.putFieldExecutiveToken(account.getFieldExecutiveId().getUserId(), accessToken);
-                    loginResponse = AdminLoginResponse.getSuccessResponse(accessToken);
-                }
-                response.getWriter().write(loginResponse);
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            }
+            RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(request);
+            requestHandler.handleRequest(request, response);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

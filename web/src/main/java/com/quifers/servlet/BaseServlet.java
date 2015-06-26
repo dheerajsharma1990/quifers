@@ -35,15 +35,15 @@ public class BaseServlet extends HttpServlet {
     public void init() throws ServletException {
         daoFactory = (DaoFactory) getServletContext().getAttribute(DAO_FACTORY);
         webPublisher = (WebPublisher) getServletContext().getAttribute(WEB_PUBLISHER);
+        orderIdGeneratorService = new OrderIdGeneratorService(Long.valueOf(getServletContext().getInitParameter("lastOrderIdCounter")));
         fieldExecutiveAccountDao = daoFactory.getFieldExecutiveAccountDao();
         fieldExecutiveDao = daoFactory.getFieldExecutiveDao();
         orderDao = daoFactory.getOrderDao();
         adminAccountDao = daoFactory.getAdminAccountDao();
         adminDao = daoFactory.getAdminDao();
         adminRequestHandlerFactory = new AdminRequestHandlerFactory(fieldExecutiveAccountDao, fieldExecutiveDao, orderDao);
-        orderIdGeneratorService = new OrderIdGeneratorService(Long.valueOf(getServletContext().getInitParameter("lastOrderIdCounter")));
-        guestRequestHandlerFactory = new GuestRequestHandlerFactory(adminAccountDao, adminDao, orderIdGeneratorService, orderDao, webPublisher);
         adminAuthenticator = new AdminAuthenticator(adminAccountDao);
         fieldExecutiveAuthenticator = new FieldExecutiveAuthenticator(fieldExecutiveAccountDao);
+        guestRequestHandlerFactory = new GuestRequestHandlerFactory(adminAccountDao, fieldExecutiveAccountDao, adminDao, orderIdGeneratorService, orderDao, webPublisher);
     }
 }

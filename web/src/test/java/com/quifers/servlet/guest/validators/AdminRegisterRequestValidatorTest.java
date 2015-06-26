@@ -16,6 +16,7 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
 public class AdminRegisterRequestValidatorTest {
+
     private final AdminRegisterRequestValidator validator = new AdminRegisterRequestValidator();
 
     @Test
