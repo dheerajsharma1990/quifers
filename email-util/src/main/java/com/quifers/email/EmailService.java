@@ -13,6 +13,7 @@ import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,7 @@ import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Timer;
 
 import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
@@ -30,19 +32,24 @@ public class EmailService {
 
     private static JsonParser jsonParser = new JsonParser();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        Environment environment = getEnvironment();
+        EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
+        loadLog4jProperties(environment);
+        DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
+        startEmailService(emailUtilProperties, daoFactory);
+    }
+
+    private static void startEmailService(EmailUtilProperties emailUtilProperties, DaoFactory daoFactory) {
         LOGGER.info("Starting quifers email service...");
-        DaoFactory daoFactory = null;
         EmailMessageConsumer messageConsumer = null;
         try {
-            Environment environment = getEnvironment();
-            EmailUtilProperties properties = loadEmailUtilProperties(environment);
-            daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
-            CredentialsService credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
-            scheduleCredentialsRefreshingTask(credentialsService, properties);
 
-            messageConsumer = new EmailMessageConsumer(properties);
-            OrderReceiver orderReceiver = getOrderReceiver(properties, messageConsumer.getMessageConsumer(), credentialsService, daoFactory.getOrderDao());
+            CredentialsService credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
+            scheduleCredentialsRefreshingTask(credentialsService, emailUtilProperties);
+
+            messageConsumer = new EmailMessageConsumer(emailUtilProperties);
+            OrderReceiver orderReceiver = getOrderReceiver(emailUtilProperties, messageConsumer.getMessageConsumer(), credentialsService, daoFactory.getOrderDao());
             receiveOrders(orderReceiver);
         } catch (Throwable e) {
             LOGGER.error("It's all over.Something terrible has happened.Email Service Is Shutting Down..{}", e);
@@ -54,7 +61,6 @@ public class EmailService {
                 messageConsumer.close();
             }
         }
-
     }
 
     private static void receiveOrders(OrderReceiver orderReceiver) throws JMSException, MessagingException, IOException {
@@ -66,13 +72,18 @@ public class EmailService {
     private static Environment getEnvironment() throws Exception {
         String env = System.getProperty("env");
         if (env == null) {
-            throw new Exception("No environment specified.Kindly look at the Environment enum for possible values.");
+            throw new IllegalArgumentException("No environment specified.Kindly look at the Environment enum for possible values.");
         }
         try {
             return Environment.valueOf(env.toUpperCase());
         } catch (IllegalArgumentException e) {
-            throw new Exception("No such environment exists [" + env + "].");
+            throw new IllegalArgumentException("No such environment exists.", e);
         }
+    }
+
+    private static void loadLog4jProperties(Environment environment) {
+        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+        PropertyConfigurator.configure(inputStream);
     }
 
     private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, CredentialsService credentialsService, OrderDao orderDao) throws JMSException, IOException, MessagingException {
