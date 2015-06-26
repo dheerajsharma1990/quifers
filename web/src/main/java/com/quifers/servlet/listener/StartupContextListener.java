@@ -5,9 +5,7 @@ import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
-import com.quifers.request.validators.AdminAccountRegisterRequestValidator;
 import com.quifers.request.validators.AuthenticationRequestValidator;
-import com.quifers.request.validators.OrderBookRequestValidator;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -23,8 +21,6 @@ import java.io.IOException;
 public class StartupContextListener implements ServletContextListener {
 
     public static final String ORDER_ID_SERVICE = "ORDER_ID_SERVICE";
-    public static final String ORDER_BOOK_REQUEST_VALIDATOR = "ORDER_BOOK_REQUEST_VALIDATOR";
-    public static final String ADMIN_ACCOUNT_REQUEST_VALIDATOR = "ADMIN_ACCOUNT_REQUEST_VALIDATOR";
     public static final String ADMIN_REQUEST_VALIDATOR = "ADMIN_REQUEST_VALIDATOR";
     public static final String ADMIN_AUTHENTICATOR = "ADMIN_AUTHENTICATOR";
     public static final String FIELD_EXECUTIVE_AUTHENTICATOR = "FIELD_EXECUTIVE_AUTHENTICATOR";
@@ -51,7 +47,6 @@ public class StartupContextListener implements ServletContextListener {
         OrderIdGeneratorService service = initialiseOrderIdService(servletContext);
         initialiseActiveMqPublisher(servletContext);
         initialiseValidators(servletContext);
-        initialiseValidators(servletContext, service);
     }
 
     private Environment getEnvironment(ServletContext servletContext) {
@@ -79,13 +74,8 @@ public class StartupContextListener implements ServletContextListener {
     }
 
     public void initialiseValidators(ServletContext servletContext) {
-        servletContext.setAttribute(ADMIN_ACCOUNT_REQUEST_VALIDATOR, new AdminAccountRegisterRequestValidator());
         servletContext.setAttribute(ADMIN_REQUEST_VALIDATOR, new AdminRegisterRequestValidator());
         servletContext.setAttribute(AUTHENTICATION_REQUEST_VALIDATOR, new AuthenticationRequestValidator());
-    }
-
-    private void initialiseValidators(ServletContext servletContext, OrderIdGeneratorService service) {
-        servletContext.setAttribute(ORDER_BOOK_REQUEST_VALIDATOR, new OrderBookRequestValidator(service));
     }
 
 

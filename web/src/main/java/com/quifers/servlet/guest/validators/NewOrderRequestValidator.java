@@ -1,69 +1,53 @@
-package com.quifers.request.validators;
+package com.quifers.servlet.guest.validators;
 
-import com.quifers.domain.*;
+import com.quifers.domain.builders.OrderBuilder;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.domain.id.OrderId;
+import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.service.OrderIdGeneratorService;
+import com.quifers.servlet.RequestValidator;
+import com.quifers.servlet.guest.request.NewOrderRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
-public class OrderBookRequestValidator {
+public class NewOrderRequestValidator implements RequestValidator {
 
     private final OrderIdGeneratorService orderIdGeneratorService;
 
-    public OrderBookRequestValidator(OrderIdGeneratorService orderIdGeneratorService) {
+    public NewOrderRequestValidator(OrderIdGeneratorService orderIdGeneratorService) {
         this.orderIdGeneratorService = orderIdGeneratorService;
     }
 
-    public Order validateRequest(HttpServletRequest request) throws InvalidRequestException {
+    @Override
+    public NewOrderRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
 
-        String clientName = validateAndGetClientName(request);
-        long mobileNumber = validateAndGetMobileNumber(request);
-        String email = validateAndGetEmail(request);
-        Date bookingDate = validateAndGetBookingDate(request);
-        String vehicle = validateAndGetVehicleName(request);
+        OrderBuilder orderBuilder = new OrderBuilder(orderIdGeneratorService.getNewOrderId());
 
-        String fromAddressHouseNumber = emptyCheckValidator(request, "house_no_pick", "Pick up House Address");
-        String fromAddressSociety = emptyCheckValidator(request, "society_name_pick", "Pick Up Society Name");
-        String fromAddressArea = emptyCheckValidator(request, "area_pick", "Pickup Area");
-        String fromAddressCity = emptyCheckValidator(request, "city_pick", "Pickup City");
+        orderBuilder
+                .addClient(validateAndGetClientName(servletRequest), validateAndGetMobileNumber(servletRequest), validateAndGetEmail(servletRequest))
+                .addOrderWorkflow(OrderState.BOOKED, validateAndGetBookingDate(servletRequest), true)
+                .addVehicle(validateAndGetVehicleName(servletRequest))
+                .addAddress(AddressType.PICKUP, emptyCheckValidator(servletRequest, "house_no_pick", "Pick up House Address"),
+                        emptyCheckValidator(servletRequest, "society_name_pick", "Pick Up Society Name"),
+                        emptyCheckValidator(servletRequest, "area_pick", "Pickup Area"),
+                        emptyCheckValidator(servletRequest, "city_pick", "Pickup City"))
+                .addAddress(AddressType.DROP, emptyCheckValidator(servletRequest, "house_no_drop", "Drop Off House Address"),
+                        emptyCheckValidator(servletRequest, "society_name_drop", "Drop Off Society Name"),
+                        emptyCheckValidator(servletRequest, "area_drop", "Drop Off Area"),
+                        emptyCheckValidator(servletRequest, "city_drop", "Drop Off City"))
+                .addLabours(validateAndGetInteger(servletRequest, "labour"))
+                .addEstimate(emptyCheckValidator(servletRequest, "estimate_label", "Estimate"))
+                .addPickUpFloors(validateAndGetInteger(servletRequest, "floor_no_pick"))
+                .addPickUpLiftWorking(validateAndGetBoolean(servletRequest, "lift_pickup"))
+                .addDropOffFloors(validateAndGetInteger(servletRequest, "floor_no_drop"))
+                .addDropOffLiftWorking(validateAndGetBoolean(servletRequest, "lift_drop"));
 
-        String toAddressHouseNumber = emptyCheckValidator(request, "house_no_drop", "Drop Off House Address");
-        String toAddressSociety = emptyCheckValidator(request, "society_name_drop", "Drop Off Society Name");
-        String toAddressArea = emptyCheckValidator(request, "area_drop", "Drop Off Area");
-        String toAddressCity = emptyCheckValidator(request, "city_drop", "Drop Off City");
-
-        int labours = validateAndGetInteger(request, "labour");
-
-        String estimate = emptyCheckValidator(request, "estimate_label", "Estimate");
-
-
-        int pickUpFloors = validateAndGetInteger(request, "floor_no_pick");
-        boolean pickupLiftWorking = validateAndGetBoolean(request, "lift_pickup");
-
-        int dropOffFloors = validateAndGetInteger(request, "floor_no_drop");
-        boolean dropOffLiftWorking = validateAndGetBoolean(request, "lift_drop");
-
-        OrderId orderId = new OrderId(orderIdGeneratorService.getNewOrderId());
-
-        Address pickUpAddress = new Address(orderId, AddressType.PICKUP, fromAddressHouseNumber, fromAddressSociety, fromAddressArea, fromAddressCity);
-        Address dropOffAddress = new Address(orderId, AddressType.DROP, toAddressHouseNumber, toAddressSociety, toAddressArea, toAddressCity);
-        Set<Address> addresses = new HashSet<>();
-        addresses.add(pickUpAddress);
-        addresses.add(dropOffAddress);
-        return new Order(orderId, new Client(orderId, clientName, mobileNumber, email), vehicle, addresses, labours,
-                estimate, 0, pickUpFloors, pickupLiftWorking, dropOffFloors, dropOffLiftWorking, null,
-                new HashSet<>(Arrays.asList(new OrderWorkflow(orderId, OrderState.BOOKED, bookingDate, true))), 0, 0);
-
+        return new NewOrderRequest(orderBuilder.buildOrder());
     }
 
     private String validateAndGetClientName(HttpServletRequest request) throws InvalidRequestException {
@@ -139,5 +123,4 @@ public class OrderBookRequestValidator {
         }
         return Boolean.valueOf(value);
     }
-
 }

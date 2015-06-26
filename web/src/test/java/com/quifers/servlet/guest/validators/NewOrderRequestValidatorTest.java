@@ -1,5 +1,6 @@
-package com.quifers.request.validators;
+package com.quifers.servlet.guest.validators;
 
+import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.service.OrderIdGeneratorService;
 import org.testng.annotations.Test;
 
@@ -11,10 +12,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
-public class OrderBookRequestValidatorTest {
+public class NewOrderRequestValidatorTest {
 
     private OrderIdGeneratorService orderIdGeneratorService = mock(OrderIdGeneratorService.class);
-    private final OrderBookRequestValidator validator = new OrderBookRequestValidator(orderIdGeneratorService);
+    private final NewOrderRequestValidator requestValidator = new NewOrderRequestValidator(orderIdGeneratorService);
 
     @Test
     public void shouldThrowInvalidRequestExceptionOnEmptyClientName() {
@@ -24,7 +25,7 @@ public class OrderBookRequestValidatorTest {
 
         //when
         try {
-            validator.validateRequest(request);
+            requestValidator.validateRequest(request);
             fail();
         } catch (InvalidRequestException e) {
             assertThat(e.getMessage(), is("Client Name cannot be empty."));

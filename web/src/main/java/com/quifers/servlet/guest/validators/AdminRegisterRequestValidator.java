@@ -24,15 +24,15 @@ public class AdminRegisterRequestValidator implements RequestValidator {
                 new Admin(new AdminId(userId), name, mobileNumber));
     }
 
-    private String validateAndGetUserId(String fieldExecutiveId) throws InvalidRequestException {
-        if (fieldExecutiveId == null || fieldExecutiveId.trim().equals("")) {
-            throw new InvalidRequestException("Field Executive Id cannot be empty.");
+    private String validateAndGetUserId(String adminId) throws InvalidRequestException {
+        if (adminId == null || adminId.trim().equals("")) {
+            throw new InvalidRequestException("Admin Id cannot be empty.");
         }
 
-        if (fieldExecutiveId.length() > 20) {
-            throw new InvalidRequestException("Field Executive Id too long.Max characters allowed is 20");
+        if (adminId.length() > 20) {
+            throw new InvalidRequestException("Admin Id too long.Max characters allowed is 20");
         }
-        return fieldExecutiveId.trim();
+        return adminId.trim();
     }
 
     private String validatePassword(String password) throws InvalidRequestException {

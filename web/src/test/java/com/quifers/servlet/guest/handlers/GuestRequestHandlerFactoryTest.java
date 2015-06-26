@@ -2,8 +2,11 @@ package com.quifers.servlet.guest.handlers;
 
 import com.quifers.dao.AdminAccountDao;
 import com.quifers.dao.AdminDao;
+import com.quifers.dao.OrderDao;
+import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.listener.WebPublisher;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -17,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class GuestRequestHandlerFactoryTest {
 
     private final GuestRequestHandlerFactory guestRequestHandlerFactory = new GuestRequestHandlerFactory(mock(AdminAccountDao.class),
-            mock(AdminDao.class));
+            mock(AdminDao.class), mock(OrderIdGeneratorService.class), mock(OrderDao.class), mock(WebPublisher.class));
 
     @Test
     public void shouldReturnAdminRegisterRequestHandler() throws Exception {
@@ -30,6 +33,19 @@ public class GuestRequestHandlerFactoryTest {
 
         //then
         assertThat(requestHandler instanceof AdminRegisterRequestHandler, is(true));
+    }
+
+    @Test
+    public void shouldReturnNewOrderRequestHandler() throws Exception {
+        //given
+        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getRequestURI()).thenReturn("/api/v0/guest/order/book");
+
+        //when
+        RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(servletRequest);
+
+        //then
+        assertThat(requestHandler instanceof NewOrderRequestHandler, is(true));
     }
 
     @Test

@@ -3,9 +3,6 @@ package com.quifers.servlet.guest;
 import com.quifers.authentication.AdminAuthenticationData;
 import com.quifers.domain.AdminAccount;
 import com.quifers.domain.FieldExecutiveAccount;
-import com.quifers.domain.Order;
-import com.quifers.domain.enums.EmailType;
-import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.AdminId;
 import com.quifers.request.LoginRequest;
 import com.quifers.request.validators.InvalidRequestException;
@@ -13,7 +10,6 @@ import com.quifers.response.AdminLoginResponse;
 import com.quifers.response.FieldExecutiveResponse;
 import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.RequestHandler;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,15 +30,8 @@ public class GuestServlet extends BaseServlet {
                 RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(request);
                 requestHandler.handleRequest(request, response);
             } else if ("/api/v0/guest/order/book".equals(requestUri)) {
-                Order order = orderBookRequestValidator.validateRequest(request);
-                orderDao.saveOrder(order);
-                webPublisher.publishEmailMessage(EmailType.NEW_ORDER, order.getOrderId());
-                JSONObject object = new JSONObject();
-                object.put("success", "true");
-                object.put("order_state", OrderState.BOOKED.name());
-                object.put("order_id", order.getOrderId().getOrderId());
-                response.setContentType("application/json");
-                response.getWriter().write(object.toString());
+                RequestHandler requestHandler = guestRequestHandlerFactory.getRequestHandler(request);
+                requestHandler.handleRequest(request, response);
             } else if ("/api/v0/guest/admin/login".equals(requestUri)) {
                 LoginRequest loginRequest = new LoginRequest(request);
                 AdminAccount adminAccount = new AdminAccount(new AdminId(loginRequest.getUserId()), loginRequest.getPassword());

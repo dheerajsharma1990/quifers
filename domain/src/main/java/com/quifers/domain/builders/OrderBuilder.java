@@ -56,7 +56,7 @@ public class OrderBuilder {
         return this;
     }
 
-    public OrderBuilder addAddress(AddressType addressType, String houseNumber, String society, String city, String area) {
+    public OrderBuilder addAddress(AddressType addressType, String houseNumber, String society, String area, String city) {
         addresses.add(new Address(orderId, addressType, houseNumber, society, area, city));
         return this;
     }
