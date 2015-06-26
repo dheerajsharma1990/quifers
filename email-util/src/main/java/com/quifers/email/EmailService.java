@@ -44,7 +44,6 @@ public class EmailService {
         LOGGER.info("Starting quifers email service...");
         EmailMessageConsumer messageConsumer = null;
         try {
-
             CredentialsService credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
             scheduleCredentialsRefreshingTask(credentialsService, emailUtilProperties);
 
