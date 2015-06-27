@@ -16,6 +16,6 @@ public class OrderIdGeneratorServiceTest {
         String orderId = service.getNewOrderId();
 
         //then
-        assertThat(orderId,is("QUIFID00011"));
+        assertThat(orderId,is("QUIFID00000011"));
     }
 }

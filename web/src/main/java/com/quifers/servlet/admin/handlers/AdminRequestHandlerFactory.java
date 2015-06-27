@@ -9,6 +9,8 @@ import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.admin.validators.AssignFieldExecutiveRequestValidator;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
+import com.quifers.servlet.validations.OrderIdAttributeValidator;
+import com.quifers.servlet.validations.UserIdAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +36,7 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
         } else if (isEqual("getAllFieldExecutives", command)) {
             return new GetAllFieldExecutivesRequestHandler(fieldExecutiveDao);
         } else if (isEqual("assignFieldExecutive", command)) {
-            return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(), fieldExecutiveDao, orderDao);
+            return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(new UserIdAttributeValidator(), new OrderIdAttributeValidator()), fieldExecutiveDao, orderDao);
         } else if (isEqual("unassignedOrders", command)) {
             return new UnassignedOrdersRequestHandler(orderDao);
         } else if (isEqual("assignedOrders", command)) {

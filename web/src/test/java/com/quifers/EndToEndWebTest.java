@@ -5,7 +5,6 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.properties.DBPersisterProperties;
 import com.quifers.properties.DBPersisterPropertiesLoader;
 import com.quifers.runners.ActiveMqBroker;
-import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
@@ -30,7 +29,7 @@ import static org.hamcrest.Matchers.notNullValue;
 public class EndToEndWebTest {
 
     private static final String BASE_URL = "http://localhost:9111";
-    private static String ORDER_ID = OrderIdGeneratorService.ORDER_ID_PREFIX + "00001";
+    private static String ORDER_ID = "QUIFID00000001";
 
     @Test
     public void shouldRegisterNewAdmin() throws Exception {
