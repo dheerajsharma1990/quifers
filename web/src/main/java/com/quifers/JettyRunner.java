@@ -1,7 +1,7 @@
 package com.quifers;
 
 import com.quifers.servlet.admin.AdminServlet;
-import com.quifers.servlet.executives.FieldExecutiveServlet;
+import com.quifers.servlet.executive.FieldExecutiveServlet;
 import com.quifers.servlet.filters.AdminAuthenticationFilter;
 import com.quifers.servlet.filters.FieldExecutiveAuthenticationFilter;
 import com.quifers.servlet.guest.GuestServlet;

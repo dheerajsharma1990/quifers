@@ -1,4 +1,4 @@
-package com.quifers.servlet.executives.request;
+package com.quifers.servlet.executive.request;
 
 import com.quifers.domain.id.OrderId;
 import com.quifers.servlet.ApiRequest;

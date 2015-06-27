@@ -6,6 +6,7 @@ import com.quifers.dao.*;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.admin.handlers.AdminRequestHandlerFactory;
+import com.quifers.servlet.executive.handlers.FieldExecutiveRequestHandlerFactory;
 import com.quifers.servlet.guest.handlers.GuestRequestHandlerFactory;
 import com.quifers.servlet.listener.WebPublisher;
 
@@ -26,6 +27,7 @@ public class BaseServlet extends HttpServlet {
     protected OrderDao orderDao;
     protected AdminRequestHandlerFactory adminRequestHandlerFactory;
     protected GuestRequestHandlerFactory guestRequestHandlerFactory;
+    protected FieldExecutiveRequestHandlerFactory fieldExecutiveRequestHandlerFactory;
     protected OrderIdGeneratorService orderIdGeneratorService;
     protected WebPublisher webPublisher;
     protected AdminAuthenticator adminAuthenticator;
@@ -45,5 +47,6 @@ public class BaseServlet extends HttpServlet {
         adminAuthenticator = new AdminAuthenticator(adminAccountDao);
         fieldExecutiveAuthenticator = new FieldExecutiveAuthenticator(fieldExecutiveAccountDao);
         guestRequestHandlerFactory = new GuestRequestHandlerFactory(adminAccountDao, fieldExecutiveAccountDao, adminDao, orderIdGeneratorService, orderDao, webPublisher);
+        fieldExecutiveRequestHandlerFactory = new FieldExecutiveRequestHandlerFactory(orderDao, webPublisher);
     }
 }

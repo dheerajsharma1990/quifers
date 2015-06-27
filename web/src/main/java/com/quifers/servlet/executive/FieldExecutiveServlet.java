@@ -1,19 +1,15 @@
-package com.quifers.servlet.executives;
+package com.quifers.servlet.executive;
 
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
-import com.quifers.domain.enums.EmailType;
-import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.FieldExecutiveGetAllOrdersRequest;
 import com.quifers.request.FilterRequest;
-import com.quifers.request.GeneratePriceRequest;
 import com.quifers.request.validators.InvalidRequestException;
-import com.quifers.response.GeneratePriceResponse;
 import com.quifers.servlet.BaseServlet;
-import com.quifers.servlet.executives.request.ReceivableRequest;
-import com.quifers.servlet.executives.request.ReceivableRequestValidator;
+import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.executive.request.ReceivableRequest;
+import com.quifers.servlet.executive.request.ReceivableRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +18,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Date;
 
 import static com.quifers.response.Responses.getOrderResponse;
 import static com.quifers.response.Responses.getReceivableResponse;
@@ -36,22 +31,8 @@ public class FieldExecutiveServlet extends BaseServlet {
         try {
             String requestUri = request.getRequestURI();
             if ("/api/v0/executive/order/create/price".equals(requestUri)) {
-                GeneratePriceRequest priceRequest = new GeneratePriceRequest(request);
-                Order order = orderDao.getOrder(priceRequest.getOrderId());
-                order.setDistance(priceRequest.getDistance());
-                order.setWaitingMinutes(priceRequest.getWaitingMinutes());
-                order.getWorkflow(OrderState.BOOKED).setCurrentState(false);
-                order.addOrderWorkflow(new OrderWorkflow(priceRequest.getOrderId(), OrderState.COMPLETED, new Date(), true));
-
-                order.setPickupFloors(priceRequest.getPickupFloors());
-                order.setPickupLiftWorking(priceRequest.isPickupLiftWorking());
-                order.setDropOffFloors(priceRequest.getDropOffFloors());
-                order.setDropOffLiftWorking(priceRequest.isDropOffLiftWorking());
-
-                orderDao.updateOrder(order);
-                webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, priceRequest.getOrderId());
-                GeneratePriceResponse priceResponse = new GeneratePriceResponse(response);
-                priceResponse.writeResponse(order.getCost());
+                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
+                requestHandler.handleRequest(request, response);
             } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {
                 FilterRequest filterRequest = new FilterRequest(request);
                 FieldExecutiveGetAllOrdersRequest getAllOrdersRequest = new FieldExecutiveGetAllOrdersRequest(request);
