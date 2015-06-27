@@ -31,7 +31,7 @@ public class AdminLoginRequestHandler implements RequestHandler {
             loginResponse = AdminLoginResponse.getInvalidLoginResponse();
         } else {
             String accessToken = adminAccount.getAccessToken();
-            AdminAuthenticationData.putAdminAccessToken(adminAccount.getAdminId().getUserId(), accessToken);
+            AdminAuthenticationData.putAdminAccessToken(adminAccount.getAdminId(), accessToken);
             loginResponse = AdminLoginResponse.getSuccessResponse(accessToken);
         }
         servletResponse.getWriter().write(loginResponse);

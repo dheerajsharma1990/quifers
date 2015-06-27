@@ -1,8 +1,7 @@
 package com.quifers.servlet.admin.validators;
 
-import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.servlet.InvalidRequestException;
 import com.quifers.servlet.admin.request.BookingDateRangeRequest;
-import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;

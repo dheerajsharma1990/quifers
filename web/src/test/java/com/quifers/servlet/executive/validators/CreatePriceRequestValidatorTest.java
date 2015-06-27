@@ -1,9 +1,8 @@
 package com.quifers.servlet.executive.validators;
 
 import com.quifers.domain.id.OrderId;
-import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.servlet.InvalidRequestException;
 import com.quifers.servlet.executive.request.CreatePriceRequest;
-import com.quifers.servlet.executive.validators.CreatePriceRequestValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

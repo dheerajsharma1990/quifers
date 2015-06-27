@@ -2,7 +2,7 @@ package com.quifers.servlet.guest.validators;
 
 import com.quifers.domain.AdminAccount;
 import com.quifers.domain.id.AdminId;
-import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.servlet.InvalidRequestException;
 import com.quifers.servlet.guest.request.AdminLoginRequest;
 import org.testng.annotations.Test;
 

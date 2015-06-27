@@ -1,6 +1,6 @@
 package com.quifers.servlet.admin.validators;
 
-import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.servlet.InvalidRequestException;
 import com.quifers.servlet.admin.request.FieldExecutiveRegisterRequest;
 import org.testng.annotations.Test;
 

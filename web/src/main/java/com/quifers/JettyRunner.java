@@ -1,8 +1,7 @@
 package com.quifers;
 
 import com.quifers.servlet.BaseServlet;
-import com.quifers.servlet.filters.AdminAuthenticationFilter;
-import com.quifers.servlet.filters.FieldExecutiveAuthenticationFilter;
+import com.quifers.servlet.filters.AuthenticationFilter;
 import com.quifers.servlet.listener.StartupContextListener;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
@@ -27,12 +26,9 @@ public class JettyRunner {
         context.addEventListener(new StartupContextListener());
 
         context.addServlet(new ServletHolder(new BaseServlet()), "/*");
-
-        context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
-        context.addFilter(new FilterHolder(new FieldExecutiveAuthenticationFilter()), "/api/v0/executive/*", EnumSet.of(DispatcherType.REQUEST));
+        context.addFilter(new FilterHolder(new AuthenticationFilter()), "/*", EnumSet.of(DispatcherType.REQUEST));
 
         server.setHandler(context);
-
         server.start();
 
         return server;

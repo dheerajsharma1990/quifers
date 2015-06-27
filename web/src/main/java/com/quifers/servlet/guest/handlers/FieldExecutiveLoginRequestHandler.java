@@ -31,7 +31,7 @@ public class FieldExecutiveLoginRequestHandler implements RequestHandler {
             loginResponse = FieldExecutiveResponse.getInvalidLoginResponse();
         } else {
             String accessToken = fieldExecutiveAccount.getAccessToken();
-            AdminAuthenticationData.putFieldExecutiveToken(fieldExecutiveAccount.getFieldExecutiveId().getUserId(), accessToken);
+            AdminAuthenticationData.putFieldExecutiveToken(fieldExecutiveAccount.getFieldExecutiveId(), accessToken);
             loginResponse = AdminLoginResponse.getSuccessResponse(accessToken);
         }
         servletResponse.getWriter().write(loginResponse);

@@ -1,4 +1,4 @@
-package com.quifers.request.validators;
+package com.quifers.servlet;
 
 public class InvalidRequestException extends Exception {
 

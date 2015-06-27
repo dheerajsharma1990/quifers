@@ -3,7 +3,7 @@ package com.quifers.servlet.admin.handlers;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.request.validators.InvalidRequestException;
+import com.quifers.servlet.InvalidRequestException;
 import com.quifers.servlet.RequestHandler;
 import com.quifers.servlet.admin.request.BookingDateRangeRequest;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;

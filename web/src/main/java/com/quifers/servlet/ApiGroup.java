@@ -12,6 +12,10 @@ public class ApiGroup {
         this.path = path;
     }
 
+    public String getPath() {
+        return path;
+    }
+
     public static ApiGroup getMatchingApiGroup(String requestUri) throws CommandNotFoundException {
         if (requestUri.startsWith(GUEST.path)) {
             return GUEST;
