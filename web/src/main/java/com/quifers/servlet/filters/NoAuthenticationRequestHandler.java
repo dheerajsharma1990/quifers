@@ -1,6 +1,6 @@
 package com.quifers.servlet.filters;
 
-import com.quifers.servlet.InvalidRequestException;
+import com.quifers.servlet.validations.InvalidRequestException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

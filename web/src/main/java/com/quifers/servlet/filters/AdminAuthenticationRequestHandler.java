@@ -1,7 +1,7 @@
 package com.quifers.servlet.filters;
 
 import com.quifers.authentication.Authenticator;
-import com.quifers.servlet.InvalidRequestException;
+import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.admin.request.AdminAuthenticationRequest;
 import com.quifers.servlet.admin.validators.AdminAuthenticationRequestValidator;
 

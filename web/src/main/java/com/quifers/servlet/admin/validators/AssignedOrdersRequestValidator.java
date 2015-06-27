@@ -1,6 +1,6 @@
 package com.quifers.servlet.admin.validators;
 
-import com.quifers.servlet.InvalidRequestException;
+import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.ApiRequest;
 import com.quifers.servlet.RequestValidator;
 

@@ -1,66 +1,43 @@
 package com.quifers.servlet.admin.validators;
 
 import com.quifers.domain.id.AdminId;
-import com.quifers.servlet.InvalidRequestException;
 import com.quifers.servlet.admin.request.AdminAuthenticationRequest;
-import org.testng.Assert;
+import com.quifers.servlet.validations.AccessTokenAttributeValidator;
+import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.servlet.validations.UserIdAttributeValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class AdminAuthenticationRequestValidatorTest {
 
-    private final AdminAuthenticationRequestValidator validator = new AdminAuthenticationRequestValidator();
+    private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
+    private final AccessTokenAttributeValidator accessTokenAttributeValidator = mock(AccessTokenAttributeValidator.class);
+
+    private final AdminAuthenticationRequestValidator validator = new AdminAuthenticationRequestValidator(userIdAttributeValidator, accessTokenAttributeValidator);
 
     @Test
-    public void shouldPassAllValidations() throws Exception {
+    public void shouldCallAllValidations() throws InvalidRequestException {
         //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String adminId = "adminId";
+        String userId = "userId";
         String accessToken = "accessToken";
-        when(servletRequest.getParameter("user_id")).thenReturn(adminId);
+        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getParameter("user_id")).thenReturn(userId);
         when(servletRequest.getParameter("access_token")).thenReturn(accessToken);
+        when(userIdAttributeValidator.validate(userId)).thenReturn(userId);
+        when(accessTokenAttributeValidator.validate(accessToken)).thenReturn(accessToken);
 
         //when
-        AdminAuthenticationRequest adminAuthenticationRequest = validator.validateRequest(servletRequest);
+        AdminAuthenticationRequest request = validator.validateRequest(servletRequest);
 
         //then
-        assertThat(adminAuthenticationRequest.getAdminId(), is(new AdminId(adminId)));
-        assertThat(adminAuthenticationRequest.getAccessToken(), is(accessToken));
-    }
-
-    @Test
-    public void shouldFailOnEmptyAdminIdValidations() {
-        //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String accessToken = "accessToken";
-        when(servletRequest.getParameter("access_token")).thenReturn(accessToken);
-
-        //when
-        try {
-            validator.validateRequest(servletRequest);
-            Assert.fail();
-        } catch (InvalidRequestException e) {
-        }
-    }
-
-    @Test
-    public void shouldFailOnEmptyAccessTokenValidations() {
-        //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String accessToken = "";
-        when(servletRequest.getParameter("access_token")).thenReturn(accessToken);
-
-        //when
-        try {
-            validator.validateRequest(servletRequest);
-            Assert.fail();
-        } catch (InvalidRequestException e) {
-        }
+        verify(userIdAttributeValidator, times(1)).validate(userId);
+        verify(accessTokenAttributeValidator, times(1)).validate(accessToken);
+        assertThat(request.getAdminId(), is(new AdminId(userId)));
+        assertThat(request.getAccessToken(), is(accessToken));
     }
 }
