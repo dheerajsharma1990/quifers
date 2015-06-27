@@ -6,6 +6,7 @@ import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.RequestHandler;
 import com.quifers.servlet.executive.validators.CreatePriceRequestValidator;
 import com.quifers.servlet.executive.validators.GetOrdersRequestValidator;
+import com.quifers.servlet.executive.validators.ReceivableRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,8 @@ public class FieldExecutiveRequestHandlerFactory {
             return new CreatePriceRequestHandler(new CreatePriceRequestValidator(), orderDao, webPublisher);
         } else if (isEqual("/api/v0/executive/order/get/all", requestURI)) {
             return new GetOrdersRequestHandler(new GetOrdersRequestValidator(), orderDao, fieldExecutiveDao);
+        } else if (isEqual("/api/v0/executive/order/receivables", requestURI)) {
+            return new ReceivableRequestHandler(new ReceivableRequestValidator(), orderDao);
         }
         throw new CommandNotFoundException(requestURI);
     }

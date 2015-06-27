@@ -26,11 +26,14 @@ public class ReceivableRequestValidator implements RequestValidator {
         if (receivables == null || receivables.trim().equals("")) {
             throw new InvalidRequestException("Receivables cannot be empty.");
         }
-        receivables = receivables.trim();
-        String digitsRegex = "[0-9]+";
-        if (!receivables.matches(digitsRegex)) {
-            throw new InvalidRequestException("Receivables should only contain digits.");
+        try {
+            Integer integer = Integer.valueOf(receivables);
+            if (integer < 0) {
+                throw new InvalidRequestException("Receivables must be greater then or equal to 0.");
+            }
+            return integer;
+        } catch (NumberFormatException e) {
+            throw new InvalidRequestException("Invalid value of receivables entered.");
         }
-        return Integer.valueOf(receivables);
     }
 }

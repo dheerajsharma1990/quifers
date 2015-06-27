@@ -44,6 +44,18 @@ public class FieldExecutiveRequestHandlerFactoryTest {
         assertThat(requestHandler instanceof GetOrdersRequestHandler, is(true));
     }
 
+    @Test
+    public void shouldReturnReceivableRequestHandler() throws Exception {
+        //given
+        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getRequestURI()).thenReturn("/api/v0/executive/order/receivables");
+        //when
+        RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(servletRequest);
+
+        //then
+        assertThat(requestHandler instanceof ReceivableRequestHandler, is(true));
+    }
+
 
     @Test
     public void shouldThrowCommandNotFoundExceptionOnInvalidRequest() {

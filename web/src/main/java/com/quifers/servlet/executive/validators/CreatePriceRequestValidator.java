@@ -20,8 +20,8 @@ public class CreatePriceRequestValidator implements RequestValidator {
                 validateAndGetWaitingMinutes(servletRequest.getParameter("waiting_minutes")),
                 validateAndGetPickupFloors(servletRequest.getParameter("pick_up_floors")),
                 validateAndGetPickupLiftWorking(servletRequest.getParameter("pick_up_lift_working")),
-                validateAndGetPickupFloors(servletRequest.getParameter("drop_off_floors")),
-                validateAndGetPickupLiftWorking(servletRequest.getParameter("drop_off_lift_working")),
+                validateAndGetDropOffFloors(servletRequest.getParameter("drop_off_floors")),
+                validateAndGetDropOffLiftWorking(servletRequest.getParameter("drop_off_lift_working")),
                 new OrderWorkflow(orderId, OrderState.COMPLETED, new Date(), true));
     }
 

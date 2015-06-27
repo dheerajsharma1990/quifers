@@ -1,11 +1,8 @@
 package com.quifers.servlet.executive;
 
-import com.quifers.domain.Order;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.executive.request.ReceivableRequest;
-import com.quifers.servlet.executive.validators.ReceivableRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.quifers.response.Responses.getReceivableResponse;
-
 public class FieldExecutiveServlet extends BaseServlet {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveServlet.class);
@@ -23,23 +18,8 @@ public class FieldExecutiveServlet extends BaseServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            String requestUri = request.getRequestURI();
-            if ("/api/v0/executive/order/create/price".equals(requestUri)) {
-                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {
-                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
-                requestHandler.handleRequest(request, response);
-            } else if ("/api/v0/executive/order/receivables".equals(requestUri)) {
-                ReceivableRequest receivableRequest = new ReceivableRequestValidator().validateRequest(request);
-                Order order = orderDao.getOrder(receivableRequest.getOrderId());
-                order.setReceivables(receivableRequest.getReceivables());
-                orderDao.updateOrder(order);
-                response.setContentType("application/json");
-                response.getWriter().write(getReceivableResponse(order));
-            } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND);
-            }
+            RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
+            requestHandler.handleRequest(request, response);
         } catch (InvalidRequestException e) {
             LOGGER.error("Error in validation.", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
