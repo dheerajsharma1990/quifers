@@ -1,15 +1,11 @@
 package com.quifers.servlet.executive;
 
-import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
-import com.quifers.domain.id.FieldExecutiveId;
-import com.quifers.request.FieldExecutiveGetAllOrdersRequest;
-import com.quifers.request.FilterRequest;
 import com.quifers.request.validators.InvalidRequestException;
 import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.RequestHandler;
 import com.quifers.servlet.executive.request.ReceivableRequest;
-import com.quifers.servlet.executive.request.ReceivableRequestValidator;
+import com.quifers.servlet.executive.validators.ReceivableRequestValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collection;
 
-import static com.quifers.response.Responses.getOrderResponse;
 import static com.quifers.response.Responses.getReceivableResponse;
 
 public class FieldExecutiveServlet extends BaseServlet {
@@ -34,12 +28,8 @@ public class FieldExecutiveServlet extends BaseServlet {
                 RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
                 requestHandler.handleRequest(request, response);
             } else if ("/api/v0/executive/order/get/all".equals(requestUri)) {
-                FilterRequest filterRequest = new FilterRequest(request);
-                FieldExecutiveGetAllOrdersRequest getAllOrdersRequest = new FieldExecutiveGetAllOrdersRequest(request);
-                FieldExecutive fieldExecutive = fieldExecutiveDao.getFieldExecutive(new FieldExecutiveId(filterRequest.getUserId()));
-                Collection<Order> orders = orderDao.getBookedOrders(fieldExecutive, getAllOrdersRequest.getBookingDate());
-                response.setContentType("application/json");
-                response.getWriter().write(getOrderResponse(orders));
+                RequestHandler requestHandler = fieldExecutiveRequestHandlerFactory.getRequestHandler(request);
+                requestHandler.handleRequest(request, response);
             } else if ("/api/v0/executive/order/receivables".equals(requestUri)) {
                 ReceivableRequest receivableRequest = new ReceivableRequestValidator().validateRequest(request);
                 Order order = orderDao.getOrder(receivableRequest.getOrderId());

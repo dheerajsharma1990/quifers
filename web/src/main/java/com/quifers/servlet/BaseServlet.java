@@ -47,6 +47,6 @@ public class BaseServlet extends HttpServlet {
         adminAuthenticator = new AdminAuthenticator(adminAccountDao);
         fieldExecutiveAuthenticator = new FieldExecutiveAuthenticator(fieldExecutiveAccountDao);
         guestRequestHandlerFactory = new GuestRequestHandlerFactory(adminAccountDao, fieldExecutiveAccountDao, adminDao, orderIdGeneratorService, orderDao, webPublisher);
-        fieldExecutiveRequestHandlerFactory = new FieldExecutiveRequestHandlerFactory(orderDao, webPublisher);
+        fieldExecutiveRequestHandlerFactory = new FieldExecutiveRequestHandlerFactory(orderDao, fieldExecutiveDao, webPublisher);
     }
 }
