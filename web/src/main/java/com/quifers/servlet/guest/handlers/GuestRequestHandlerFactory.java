@@ -9,6 +9,7 @@ import com.quifers.dao.OrderDao;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.guest.validators.AdminLoginRequestValidator;
 import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import com.quifers.servlet.guest.validators.FieldExecutiveLoginRequestValidator;
@@ -19,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
 
-public class GuestRequestHandlerFactory {
+public class GuestRequestHandlerFactory implements RequestHandlerFactory {
 
     private final AdminAccountDao adminAccountDao;
     private final FieldExecutiveAccountDao fieldExecutiveAccountDao;
@@ -38,6 +39,7 @@ public class GuestRequestHandlerFactory {
         this.webPublisher = webPublisher;
     }
 
+    @Override
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/guest/admin/register", requestURI)) {

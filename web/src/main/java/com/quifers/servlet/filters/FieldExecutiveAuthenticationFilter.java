@@ -11,17 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.quifers.servlet.listener.StartupContextListener.AUTHENTICATION_REQUEST_VALIDATOR;
 
 public class FieldExecutiveAuthenticationFilter implements Filter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FieldExecutiveAuthenticationFilter.class);
 
-    private AuthenticationRequestValidator validator;
+    private AuthenticationRequestValidator validator = new AuthenticationRequestValidator();
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        validator = (AuthenticationRequestValidator) filterConfig.getServletContext().getAttribute(AUTHENTICATION_REQUEST_VALIDATOR);
     }
 
     @Override

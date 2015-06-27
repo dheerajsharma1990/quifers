@@ -4,6 +4,7 @@ import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.RequestHandler;
+import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.executive.validators.CreatePriceRequestValidator;
 import com.quifers.servlet.executive.validators.GetOrdersRequestValidator;
 import com.quifers.servlet.executive.validators.ReceivableRequestValidator;
@@ -13,7 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
 
-public class FieldExecutiveRequestHandlerFactory {
+public class FieldExecutiveRequestHandlerFactory implements RequestHandlerFactory {
 
     private final OrderDao orderDao;
     private final FieldExecutiveDao fieldExecutiveDao;
@@ -25,7 +26,7 @@ public class FieldExecutiveRequestHandlerFactory {
         this.webPublisher = webPublisher;
     }
 
-
+    @Override
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/executive/order/create/price", requestURI)) {

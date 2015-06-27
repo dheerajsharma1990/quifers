@@ -5,18 +5,22 @@ import com.quifers.authentication.FieldExecutiveAuthenticator;
 import com.quifers.dao.*;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.service.OrderIdGeneratorService;
-import com.quifers.servlet.admin.handlers.AdminRequestHandlerFactory;
-import com.quifers.servlet.executive.handlers.FieldExecutiveRequestHandlerFactory;
-import com.quifers.servlet.guest.handlers.GuestRequestHandlerFactory;
 import com.quifers.servlet.listener.WebPublisher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import static com.quifers.servlet.listener.StartupContextListener.DAO_FACTORY;
 import static com.quifers.servlet.listener.StartupContextListener.WEB_PUBLISHER;
 
 public class BaseServlet extends HttpServlet {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BaseServlet.class);
 
     private DaoFactory daoFactory;
 
@@ -25,13 +29,11 @@ public class BaseServlet extends HttpServlet {
     protected AdminAccountDao adminAccountDao;
     protected AdminDao adminDao;
     protected OrderDao orderDao;
-    protected AdminRequestHandlerFactory adminRequestHandlerFactory;
-    protected GuestRequestHandlerFactory guestRequestHandlerFactory;
-    protected FieldExecutiveRequestHandlerFactory fieldExecutiveRequestHandlerFactory;
     protected OrderIdGeneratorService orderIdGeneratorService;
     protected WebPublisher webPublisher;
     protected AdminAuthenticator adminAuthenticator;
     protected FieldExecutiveAuthenticator fieldExecutiveAuthenticator;
+    protected FactoryOfRequestHandlers factoryOfRequestHandlers;
 
     @Override
     public void init() throws ServletException {
@@ -43,10 +45,23 @@ public class BaseServlet extends HttpServlet {
         orderDao = daoFactory.getOrderDao();
         adminAccountDao = daoFactory.getAdminAccountDao();
         adminDao = daoFactory.getAdminDao();
-        adminRequestHandlerFactory = new AdminRequestHandlerFactory(fieldExecutiveAccountDao, fieldExecutiveDao, orderDao);
         adminAuthenticator = new AdminAuthenticator(adminAccountDao);
         fieldExecutiveAuthenticator = new FieldExecutiveAuthenticator(fieldExecutiveAccountDao);
-        guestRequestHandlerFactory = new GuestRequestHandlerFactory(adminAccountDao, fieldExecutiveAccountDao, adminDao, orderIdGeneratorService, orderDao, webPublisher);
-        fieldExecutiveRequestHandlerFactory = new FieldExecutiveRequestHandlerFactory(orderDao, fieldExecutiveDao, webPublisher);
+        factoryOfRequestHandlers = new FactoryOfRequestHandlers(adminDao, adminAccountDao, fieldExecutiveAccountDao, fieldExecutiveDao, orderDao, webPublisher, orderIdGeneratorService);
+    }
+
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        try {
+            RequestHandlerFactory requestHandlerFactory = factoryOfRequestHandlers.getRequestHandlerFactory(request.getRequestURI());
+            RequestHandler requestHandler = requestHandlerFactory.getRequestHandler(request);
+            requestHandler.handleRequest(request, response);
+        } catch (CommandNotFoundException e) {
+            LOGGER.error("No matching api.", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        } catch (Exception e) {
+            LOGGER.error("An error occurred.", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        }
     }
 }

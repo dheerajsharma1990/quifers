@@ -1,10 +1,8 @@
 package com.quifers;
 
-import com.quifers.servlet.admin.AdminServlet;
-import com.quifers.servlet.executive.FieldExecutiveServlet;
+import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.filters.AdminAuthenticationFilter;
 import com.quifers.servlet.filters.FieldExecutiveAuthenticationFilter;
-import com.quifers.servlet.guest.GuestServlet;
 import com.quifers.servlet.listener.StartupContextListener;
 import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
@@ -28,9 +26,7 @@ public class JettyRunner {
         context.setInitParameter("lastOrderIdCounter", String.valueOf(lastOrderIdCounter));
         context.addEventListener(new StartupContextListener());
 
-        context.addServlet(new ServletHolder(new GuestServlet()), "/api/v0/guest/*");
-        context.addServlet(new ServletHolder(new AdminServlet()), "/api/v0/admin/*");
-        context.addServlet(new ServletHolder(new FieldExecutiveServlet()), "/api/v0/executive/*");
+        context.addServlet(new ServletHolder(new BaseServlet()), "/*");
 
         context.addFilter(new FilterHolder(new AdminAuthenticationFilter()), "/api/v0/admin/*", EnumSet.of(DispatcherType.REQUEST));
         context.addFilter(new FilterHolder(new FieldExecutiveAuthenticationFilter()), "/api/v0/executive/*", EnumSet.of(DispatcherType.REQUEST));
