@@ -17,7 +17,7 @@ public class AuthenticationRequestHandlerFactory {
         if (ApiGroup.ADMIN.equals(apiGroup)) {
             return new AdminAuthenticationRequestHandler(new AdminAuthenticationRequestValidator(new UserIdAttributeValidator(), new AccessTokenAttributeValidator()), new Authenticator());
         } else if (ApiGroup.FIELD_EXECUTIVE.equals(apiGroup)) {
-            return new FieldExecutiveAuthenticationRequestHandler(new FieldExecutiveAuthenticationRequestValidator(), new Authenticator());
+            return new FieldExecutiveAuthenticationRequestHandler(new FieldExecutiveAuthenticationRequestValidator(new UserIdAttributeValidator(), new AccessTokenAttributeValidator()), new Authenticator());
         } else {
             return new NoAuthenticationRequestHandler();
         }
