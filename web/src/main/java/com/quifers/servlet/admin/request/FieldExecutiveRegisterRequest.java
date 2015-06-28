@@ -1,34 +1,24 @@
 package com.quifers.servlet.admin.request;
 
+import com.quifers.domain.FieldExecutive;
+import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.servlet.ApiRequest;
 
 public class FieldExecutiveRegisterRequest implements ApiRequest {
 
-    private String fieldExecutiveId;
-    private String password;
-    private String name;
-    private long mobileNumber;
+    private final FieldExecutiveAccount fieldExecutiveAccount;
+    private final FieldExecutive fieldExecutive;
 
-    public FieldExecutiveRegisterRequest(String fieldExecutiveId, String password, String name, long mobileNumber) {
-        this.fieldExecutiveId = fieldExecutiveId;
-        this.password = password;
-        this.name = name;
-        this.mobileNumber = mobileNumber;
+    public FieldExecutiveRegisterRequest(FieldExecutiveAccount fieldExecutiveAccount, FieldExecutive fieldExecutive) {
+        this.fieldExecutiveAccount = fieldExecutiveAccount;
+        this.fieldExecutive = fieldExecutive;
     }
 
-    public String getFieldExecutiveId() {
-        return fieldExecutiveId;
+    public FieldExecutiveAccount getFieldExecutiveAccount() {
+        return fieldExecutiveAccount;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public long getMobileNumber() {
-        return mobileNumber;
+    public FieldExecutive getFieldExecutive() {
+        return fieldExecutive;
     }
 }

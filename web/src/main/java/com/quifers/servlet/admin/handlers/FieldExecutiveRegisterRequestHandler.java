@@ -2,9 +2,6 @@ package com.quifers.servlet.admin.handlers;
 
 import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
-import com.quifers.domain.FieldExecutive;
-import com.quifers.domain.FieldExecutiveAccount;
-import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.servlet.RequestHandler;
 import com.quifers.servlet.admin.request.FieldExecutiveRegisterRequest;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
@@ -29,9 +26,8 @@ public class FieldExecutiveRegisterRequestHandler implements RequestHandler {
     @Override
     public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws Exception {
         FieldExecutiveRegisterRequest request = registerRequestValidator.validateRequest(servletRequest);
-        FieldExecutiveId fieldExecutiveId = new FieldExecutiveId(request.getFieldExecutiveId());
-        fieldExecutiveAccountDao.saveFieldExecutiveAccount(new FieldExecutiveAccount(fieldExecutiveId, request.getPassword()));
-        fieldExecutiveDao.saveFieldExecutive(new FieldExecutive(fieldExecutiveId, request.getName(), request.getMobileNumber()));
+        fieldExecutiveAccountDao.saveFieldExecutiveAccount(request.getFieldExecutiveAccount());
+        fieldExecutiveDao.saveFieldExecutive(request.getFieldExecutive());
         servletResponse.setContentType("application/json");
         servletResponse.getWriter().write(getSuccessResponse());
     }

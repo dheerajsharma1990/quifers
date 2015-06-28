@@ -9,9 +9,7 @@ import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.admin.validators.AssignFieldExecutiveRequestValidator;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
-import com.quifers.servlet.validations.DayAttributeValidator;
-import com.quifers.servlet.validations.OrderIdAttributeValidator;
-import com.quifers.servlet.validations.UserIdAttributeValidator;
+import com.quifers.servlet.validations.*;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -33,7 +31,8 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String command = servletRequest.getParameter("cmd");
         if (isEqual("registerFieldExecutive", command)) {
-            return new FieldExecutiveRegisterRequestHandler(new FieldExecutiveRegisterRequestValidator(), fieldExecutiveAccountDao, fieldExecutiveDao);
+            return new FieldExecutiveRegisterRequestHandler(new FieldExecutiveRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
+                    new NameAttributeValidator(), new MobileNumberAttributeValidator()), fieldExecutiveAccountDao, fieldExecutiveDao);
         } else if (isEqual("getAllFieldExecutives", command)) {
             return new GetAllFieldExecutivesRequestHandler(fieldExecutiveDao);
         } else if (isEqual("assignFieldExecutive", command)) {
