@@ -21,6 +21,10 @@ public class Admin {
         this.mobileNumber = mobileNumber;
     }
 
+    public Admin(String adminId, String name, long mobileNumber) {
+        this(new AdminId(adminId), name, mobileNumber);
+    }
+
     public AdminId getAdminId() {
         return adminId;
     }

@@ -22,8 +22,7 @@ public class AdminAccount {
     }
 
     public AdminAccount(String adminId, String password) {
-        this.adminId = new AdminId(adminId);
-        this.password = password;
+        this(new AdminId(adminId), password);
     }
 
     public AdminId getAdminId() {

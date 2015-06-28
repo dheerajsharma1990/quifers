@@ -15,6 +15,8 @@ import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import com.quifers.servlet.guest.validators.FieldExecutiveLoginRequestValidator;
 import com.quifers.servlet.guest.validators.NewOrderRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
+import com.quifers.validations.MobileNumberAttributeValidator;
+import com.quifers.validations.NameAttributeValidator;
 import com.quifers.validations.PasswordAttributeValidator;
 import com.quifers.validations.UserIdAttributeValidator;
 
@@ -45,7 +47,8 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/guest/admin/register", requestURI)) {
-            return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(), adminAccountDao, adminDao);
+            return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
+                    new NameAttributeValidator(), new MobileNumberAttributeValidator()), adminAccountDao, adminDao);
         } else if (isEqual("/api/v0/guest/order/book", requestURI)) {
             return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService), orderDao, webPublisher);
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {
