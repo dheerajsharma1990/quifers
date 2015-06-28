@@ -1,11 +1,11 @@
 package com.quifers.servlet.admin.validators;
 
 import com.quifers.domain.id.AdminId;
-import com.quifers.servlet.validations.AccessTokenAttributeValidator;
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.AccessTokenAttributeValidator;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.request.admin.AdminAuthenticationRequest;
-import com.quifers.servlet.validations.UserIdAttributeValidator;
+import com.quifers.validations.UserIdAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 

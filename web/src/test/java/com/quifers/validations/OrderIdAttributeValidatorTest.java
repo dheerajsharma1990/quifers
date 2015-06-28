@@ -1,8 +1,6 @@
 package com.quifers.validations;
 
 import com.quifers.domain.id.OrderId;
-import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.validations.OrderIdAttributeValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

@@ -1,6 +1,6 @@
 package com.quifers.servlet;
 
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 

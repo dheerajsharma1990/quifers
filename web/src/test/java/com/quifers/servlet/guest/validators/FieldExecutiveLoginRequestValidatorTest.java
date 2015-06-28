@@ -2,7 +2,7 @@ package com.quifers.servlet.guest.validators;
 
 import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.id.FieldExecutiveId;
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.request.guest.FieldExecutiveLoginRequest;
 import org.testng.annotations.Test;
 

@@ -4,7 +4,7 @@ import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.admin.FieldExecutiveRegisterRequest;
-import com.quifers.servlet.validations.*;
+import com.quifers.validations.*;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;

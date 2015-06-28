@@ -1,7 +1,5 @@
 package com.quifers.validations;
 
-import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.validations.PasswordAttributeValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

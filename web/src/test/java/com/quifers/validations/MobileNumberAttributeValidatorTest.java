@@ -1,7 +1,5 @@
 package com.quifers.validations;
 
-import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.validations.MobileNumberAttributeValidator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

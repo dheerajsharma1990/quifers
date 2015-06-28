@@ -5,7 +5,7 @@ import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.request.admin.FieldExecutiveRegisterRequest;
-import com.quifers.servlet.validations.*;
+import com.quifers.validations.*;
 
 import javax.servlet.http.HttpServletRequest;
 

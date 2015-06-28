@@ -1,6 +1,6 @@
 package com.quifers.servlet.filters;
 
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.servlet.CommandNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

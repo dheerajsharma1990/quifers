@@ -1,4 +1,4 @@
-package com.quifers.servlet.validations;
+package com.quifers.validations;
 
 import com.quifers.domain.Day;
 

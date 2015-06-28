@@ -3,8 +3,8 @@ package com.quifers.servlet.admin.validators;
 import com.quifers.domain.Day;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.request.admin.BookingDateRangeRequest;
-import com.quifers.servlet.validations.DayAttributeValidator;
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.DayAttributeValidator;
+import com.quifers.validations.InvalidRequestException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;

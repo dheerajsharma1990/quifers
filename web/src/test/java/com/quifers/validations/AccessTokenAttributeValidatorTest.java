@@ -1,7 +1,5 @@
 package com.quifers.validations;
 
-import com.quifers.servlet.validations.AccessTokenAttributeValidator;
-import com.quifers.servlet.validations.InvalidRequestException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

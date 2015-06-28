@@ -9,7 +9,7 @@ import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.admin.validators.AssignFieldExecutiveRequestValidator;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
-import com.quifers.servlet.validations.*;
+import com.quifers.validations.*;
 
 import javax.servlet.http.HttpServletRequest;
 

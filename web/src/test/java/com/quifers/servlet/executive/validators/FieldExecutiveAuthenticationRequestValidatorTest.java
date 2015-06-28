@@ -1,7 +1,7 @@
 package com.quifers.servlet.executive.validators;
 
 import com.quifers.domain.id.FieldExecutiveId;
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.request.executive.FieldExecutiveAuthenticationRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;

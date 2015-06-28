@@ -1,6 +1,6 @@
 package com.quifers.servlet.guest.validators;
 
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.service.OrderIdGeneratorService;
 import org.testng.annotations.Test;
 

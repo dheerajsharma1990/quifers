@@ -3,7 +3,7 @@ package com.quifers.servlet.guest.validators;
 import com.quifers.domain.builders.OrderBuilder;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.request.guest.NewOrderRequest;

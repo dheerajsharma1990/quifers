@@ -3,9 +3,9 @@ package com.quifers.servlet.admin.validators;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
 import com.quifers.request.admin.AssignFieldExecutiveRequest;
-import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.validations.OrderIdAttributeValidator;
-import com.quifers.servlet.validations.UserIdAttributeValidator;
+import com.quifers.validations.InvalidRequestException;
+import com.quifers.validations.OrderIdAttributeValidator;
+import com.quifers.validations.UserIdAttributeValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;

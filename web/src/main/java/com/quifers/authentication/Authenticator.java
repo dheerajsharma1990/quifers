@@ -1,6 +1,6 @@
 package com.quifers.authentication;
 
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.request.admin.AdminAuthenticationRequest;
 import com.quifers.request.executive.FieldExecutiveAuthenticationRequest;
 

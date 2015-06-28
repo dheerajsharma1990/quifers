@@ -1,8 +1,6 @@
 package com.quifers.validations;
 
 import com.quifers.domain.Day;
-import com.quifers.servlet.validations.DayAttributeValidator;
-import com.quifers.servlet.validations.InvalidRequestException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

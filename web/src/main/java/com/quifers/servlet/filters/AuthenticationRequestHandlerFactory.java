@@ -5,8 +5,8 @@ import com.quifers.servlet.ApiGroup;
 import com.quifers.servlet.CommandNotFoundException;
 import com.quifers.servlet.admin.validators.AdminAuthenticationRequestValidator;
 import com.quifers.servlet.executive.validators.FieldExecutiveAuthenticationRequestValidator;
-import com.quifers.servlet.validations.AccessTokenAttributeValidator;
-import com.quifers.servlet.validations.UserIdAttributeValidator;
+import com.quifers.validations.AccessTokenAttributeValidator;
+import com.quifers.validations.UserIdAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 

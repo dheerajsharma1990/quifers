@@ -1,4 +1,4 @@
-package com.quifers.servlet.validations;
+package com.quifers.validations;
 
 public interface AttributeValidator<T> {
 

@@ -1,4 +1,4 @@
-package com.quifers.servlet.validations;
+package com.quifers.validations;
 
 import static java.lang.Long.valueOf;
 import static org.apache.commons.lang3.StringUtils.isEmpty;

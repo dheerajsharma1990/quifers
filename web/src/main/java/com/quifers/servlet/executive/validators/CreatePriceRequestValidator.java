@@ -3,7 +3,7 @@ package com.quifers.servlet.executive.validators;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
-import com.quifers.servlet.validations.InvalidRequestException;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.request.executive.CreatePriceRequest;
 
