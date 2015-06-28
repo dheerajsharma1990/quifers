@@ -4,7 +4,7 @@ package com.quifers.servlet.guest.handlers;
 import com.quifers.dao.AdminAccountDao;
 import com.quifers.dao.AdminDao;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.guest.request.AdminRegisterRequest;
+import com.quifers.request.guest.AdminRegisterRequest;
 import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import org.json.JSONObject;
 

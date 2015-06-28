@@ -2,7 +2,7 @@ package com.quifers.servlet.filters;
 
 import com.quifers.authentication.Authenticator;
 import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.executive.request.FieldExecutiveAuthenticationRequest;
+import com.quifers.request.executive.FieldExecutiveAuthenticationRequest;
 import com.quifers.servlet.executive.validators.FieldExecutiveAuthenticationRequestValidator;
 
 import javax.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package com.quifers.servlet.executive.request;
+package com.quifers.request.executive;
 
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.id.OrderId;

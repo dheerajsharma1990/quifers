@@ -5,7 +5,7 @@ import com.quifers.domain.Order;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.admin.request.BookingDateRangeRequest;
+import com.quifers.request.admin.BookingDateRangeRequest;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 
 import javax.servlet.ServletException;

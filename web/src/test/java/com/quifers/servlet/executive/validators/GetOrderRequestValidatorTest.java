@@ -2,7 +2,7 @@ package com.quifers.servlet.executive.validators;
 
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.executive.request.GetOrdersRequest;
+import com.quifers.request.executive.GetOrdersRequest;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;

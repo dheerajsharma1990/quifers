@@ -2,7 +2,7 @@ package com.quifers.servlet.admin.validators;
 
 import com.quifers.domain.Day;
 import com.quifers.servlet.RequestValidator;
-import com.quifers.servlet.admin.request.BookingDateRangeRequest;
+import com.quifers.request.admin.BookingDateRangeRequest;
 import com.quifers.servlet.validations.DayAttributeValidator;
 import com.quifers.servlet.validations.InvalidRequestException;
 

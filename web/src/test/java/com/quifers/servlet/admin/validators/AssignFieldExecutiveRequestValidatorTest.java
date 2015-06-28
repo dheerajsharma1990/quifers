@@ -2,7 +2,7 @@ package com.quifers.servlet.admin.validators;
 
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
-import com.quifers.servlet.admin.request.AssignFieldExecutiveRequest;
+import com.quifers.request.admin.AssignFieldExecutiveRequest;
 import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.validations.OrderIdAttributeValidator;
 import com.quifers.servlet.validations.UserIdAttributeValidator;

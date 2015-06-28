@@ -6,7 +6,7 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.service.OrderIdGeneratorService;
 import com.quifers.servlet.RequestValidator;
-import com.quifers.servlet.guest.request.NewOrderRequest;
+import com.quifers.request.guest.NewOrderRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;

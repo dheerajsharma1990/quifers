@@ -4,7 +4,7 @@ import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.admin.request.AssignFieldExecutiveRequest;
+import com.quifers.request.admin.AssignFieldExecutiveRequest;
 import com.quifers.servlet.admin.validators.AssignFieldExecutiveRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;

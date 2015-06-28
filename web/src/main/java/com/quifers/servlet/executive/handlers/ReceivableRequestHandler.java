@@ -3,7 +3,7 @@ package com.quifers.servlet.executive.handlers;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.Order;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.executive.request.ReceivableRequest;
+import com.quifers.request.executive.ReceivableRequest;
 import com.quifers.servlet.executive.validators.ReceivableRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;

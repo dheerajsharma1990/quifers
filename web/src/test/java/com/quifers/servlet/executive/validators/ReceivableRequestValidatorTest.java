@@ -2,7 +2,7 @@ package com.quifers.servlet.executive.validators;
 
 import com.quifers.domain.id.OrderId;
 import com.quifers.servlet.validations.InvalidRequestException;
-import com.quifers.servlet.executive.request.ReceivableRequest;
+import com.quifers.request.executive.ReceivableRequest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

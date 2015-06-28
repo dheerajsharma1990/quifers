@@ -1,4 +1,4 @@
-package com.quifers.servlet.guest.request;
+package com.quifers.request.guest;
 
 import com.quifers.domain.Order;
 import com.quifers.servlet.ApiRequest;

@@ -5,7 +5,7 @@ import com.quifers.dao.OrderDao;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.executive.request.GetOrdersRequest;
+import com.quifers.request.executive.GetOrdersRequest;
 import com.quifers.servlet.executive.validators.GetOrdersRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;

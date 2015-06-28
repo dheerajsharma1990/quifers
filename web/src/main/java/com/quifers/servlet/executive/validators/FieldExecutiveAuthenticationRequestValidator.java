@@ -3,7 +3,7 @@ package com.quifers.servlet.executive.validators;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
-import com.quifers.servlet.executive.request.FieldExecutiveAuthenticationRequest;
+import com.quifers.request.executive.FieldExecutiveAuthenticationRequest;
 
 import javax.servlet.http.HttpServletRequest;
 

@@ -4,7 +4,7 @@ import com.quifers.domain.AdminAccount;
 import com.quifers.domain.id.AdminId;
 import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
-import com.quifers.servlet.guest.request.AdminLoginRequest;
+import com.quifers.request.guest.AdminLoginRequest;
 
 import javax.servlet.http.HttpServletRequest;
 

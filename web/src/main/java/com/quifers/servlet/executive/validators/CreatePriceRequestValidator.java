@@ -5,7 +5,7 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
 import com.quifers.servlet.validations.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
-import com.quifers.servlet.executive.request.CreatePriceRequest;
+import com.quifers.request.executive.CreatePriceRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;

@@ -6,7 +6,7 @@ import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.response.GeneratePriceResponse;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.executive.request.CreatePriceRequest;
+import com.quifers.request.executive.CreatePriceRequest;
 import com.quifers.servlet.executive.validators.CreatePriceRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
 

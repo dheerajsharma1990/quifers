@@ -3,7 +3,7 @@ package com.quifers.servlet.admin.handlers;
 import com.quifers.dao.FieldExecutiveAccountDao;
 import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.admin.request.FieldExecutiveRegisterRequest;
+import com.quifers.request.admin.FieldExecutiveRegisterRequest;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;

@@ -5,7 +5,7 @@ import com.quifers.authentication.AdminAuthenticator;
 import com.quifers.domain.AdminAccount;
 import com.quifers.response.AdminLoginResponse;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.guest.request.AdminLoginRequest;
+import com.quifers.request.guest.AdminLoginRequest;
 import com.quifers.servlet.guest.validators.AdminLoginRequestValidator;
 
 import javax.servlet.http.HttpServletRequest;

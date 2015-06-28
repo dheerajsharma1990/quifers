@@ -1,4 +1,4 @@
-package com.quifers.servlet.admin.request;
+package com.quifers.request.admin;
 
 import com.quifers.domain.id.AdminId;
 import com.quifers.servlet.ApiRequest;

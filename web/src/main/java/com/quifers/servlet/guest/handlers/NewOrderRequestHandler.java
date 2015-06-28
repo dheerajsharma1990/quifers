@@ -5,7 +5,7 @@ import com.quifers.domain.Order;
 import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.servlet.RequestHandler;
-import com.quifers.servlet.guest.request.NewOrderRequest;
+import com.quifers.request.guest.NewOrderRequest;
 import com.quifers.servlet.guest.validators.NewOrderRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
 import org.json.JSONObject;
