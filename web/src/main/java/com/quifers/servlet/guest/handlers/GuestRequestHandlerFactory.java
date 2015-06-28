@@ -54,7 +54,7 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {
             return new AdminLoginRequestHandler(new AdminLoginRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator()), new AdminAuthenticator(adminAccountDao));
         } else if (isEqual("/api/v0/guest/executive/login", requestURI)) {
-            return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
+            return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator()), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
         }
         throw new CommandNotFoundException(requestURI);
     }
