@@ -21,6 +21,11 @@ public class AdminAccount {
         this.password = password;
     }
 
+    public AdminAccount(String adminId, String password) {
+        this.adminId = new AdminId(adminId);
+        this.password = password;
+    }
+
     public AdminId getAdminId() {
         return adminId;
     }

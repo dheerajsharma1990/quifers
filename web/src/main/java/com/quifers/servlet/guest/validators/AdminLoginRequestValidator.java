@@ -1,32 +1,37 @@
 package com.quifers.servlet.guest.validators;
 
 import com.quifers.domain.AdminAccount;
-import com.quifers.domain.id.AdminId;
-import com.quifers.validations.InvalidRequestException;
-import com.quifers.servlet.RequestValidator;
 import com.quifers.request.guest.AdminLoginRequest;
+import com.quifers.servlet.RequestValidator;
+import com.quifers.validations.InvalidRequestException;
+import com.quifers.validations.PasswordAttributeValidator;
+import com.quifers.validations.UserIdAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class AdminLoginRequestValidator implements RequestValidator {
 
+    private final UserIdAttributeValidator userIdAttributeValidator;
+    private final PasswordAttributeValidator passwordAttributeValidator;
+
+    public AdminLoginRequestValidator(UserIdAttributeValidator userIdAttributeValidator, PasswordAttributeValidator passwordAttributeValidator) {
+        this.userIdAttributeValidator = userIdAttributeValidator;
+        this.passwordAttributeValidator = passwordAttributeValidator;
+    }
+
     @Override
     public AdminLoginRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
-        return new AdminLoginRequest(new AdminAccount(new AdminId(validateAndGetUserId(servletRequest.getParameter("user_id"))),
-                validatePassword(servletRequest.getParameter("password"))));
+        AdminAccount adminAccount = new AdminAccount(userIdAttributeValidator.validate(getUserId(servletRequest)),
+                passwordAttributeValidator.validate(getPassword(servletRequest)));
+        return new AdminLoginRequest(adminAccount);
     }
 
-    private String validateAndGetUserId(String adminId) throws InvalidRequestException {
-        if (adminId == null || adminId.trim().equals("")) {
-            throw new InvalidRequestException("Admin Id cannot be empty.");
-        }
-        return adminId.trim();
+    private String getPassword(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("password");
     }
 
-    private String validatePassword(String password) throws InvalidRequestException {
-        if (password == null || password.trim().equals("")) {
-            throw new InvalidRequestException("Password cannot be empty.");
-        }
-        return password;
+    private String getUserId(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("user_id");
     }
+
 }

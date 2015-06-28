@@ -15,6 +15,8 @@ import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import com.quifers.servlet.guest.validators.FieldExecutiveLoginRequestValidator;
 import com.quifers.servlet.guest.validators.NewOrderRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
+import com.quifers.validations.PasswordAttributeValidator;
+import com.quifers.validations.UserIdAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,7 +49,7 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
         } else if (isEqual("/api/v0/guest/order/book", requestURI)) {
             return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService), orderDao, webPublisher);
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {
-            return new AdminLoginRequestHandler(new AdminLoginRequestValidator(), new AdminAuthenticator(adminAccountDao));
+            return new AdminLoginRequestHandler(new AdminLoginRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator()), new AdminAuthenticator(adminAccountDao));
         } else if (isEqual("/api/v0/guest/executive/login", requestURI)) {
             return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
         }
