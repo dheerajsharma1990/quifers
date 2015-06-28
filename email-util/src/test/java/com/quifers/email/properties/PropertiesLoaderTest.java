@@ -13,7 +13,6 @@ public class PropertiesLoaderTest {
         EmailUtilProperties properties = PropertiesLoader.loadEmailUtilProperties(Environment.LOCAL);
 
         assertThat(properties, notNullValue());
-
     }
 
 }
