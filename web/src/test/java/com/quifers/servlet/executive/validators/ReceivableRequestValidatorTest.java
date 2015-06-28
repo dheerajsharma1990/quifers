@@ -1,70 +1,45 @@
 package com.quifers.servlet.executive.validators;
 
 import com.quifers.domain.id.OrderId;
-import com.quifers.validations.InvalidRequestException;
 import com.quifers.request.executive.ReceivableRequest;
-import org.testng.Assert;
+import com.quifers.validations.InvalidRequestException;
+import com.quifers.validations.OrderIdAttributeValidator;
+import com.quifers.validations.PositiveIntegerAttributeValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 
-import static java.lang.String.valueOf;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class ReceivableRequestValidatorTest {
 
-    private final ReceivableRequestValidator receivableRequestValidator = new ReceivableRequestValidator();
+    private final OrderIdAttributeValidator orderIdAttributeValidator = mock(OrderIdAttributeValidator.class);
+    private final PositiveIntegerAttributeValidator positiveIntegerAttributeValidator = mock(PositiveIntegerAttributeValidator.class);
+
+    private final ReceivableRequestValidator validator = new ReceivableRequestValidator(orderIdAttributeValidator, positiveIntegerAttributeValidator);
 
     @Test
-    public void shouldPassAllValidations() throws Exception {
+    public void shouldCallAllValidations() throws InvalidRequestException, ParseException {
         //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String orderId = "QUIFID";
+        OrderId orderId = new OrderId("QUIFID");
         int receivables = 500;
-        when(servletRequest.getParameter("order_id")).thenReturn(orderId);
-        when(servletRequest.getParameter("receivables")).thenReturn(valueOf(receivables));
+        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(servletRequest.getParameter("order_id")).thenReturn(orderId.getOrderId());
+        when(servletRequest.getParameter("receivables")).thenReturn(String.valueOf(receivables));
+        when(orderIdAttributeValidator.validate(orderId.getOrderId())).thenReturn(orderId);
+        when(positiveIntegerAttributeValidator.validate(String.valueOf(receivables))).thenReturn(receivables);
 
         //when
-        ReceivableRequest receivableRequest = receivableRequestValidator.validateRequest(servletRequest);
+        ReceivableRequest request = validator.validateRequest(servletRequest);
 
         //then
-        assertThat(receivableRequest.getOrderId(), is(new OrderId(orderId)));
-        assertThat(receivableRequest.getReceivables(), is(500));
-    }
-
-    @Test
-    public void shouldFailEmptyOrderIdValidations() {
-        //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String orderId = "";
-        int receivables = 500;
-        when(servletRequest.getParameter("order_id")).thenReturn(orderId);
-        when(servletRequest.getParameter("receivables")).thenReturn(valueOf(receivables));
-
-        try {
-            receivableRequestValidator.validateRequest(servletRequest);
-            Assert.fail();
-        } catch (InvalidRequestException e) {
-        }
-    }
-
-    @Test
-    public void shouldFailInvalidReceivablesValidations() {
-        //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String orderId = "QUIFID";
-        int receivables = -500;
-        when(servletRequest.getParameter("order_id")).thenReturn(orderId);
-        when(servletRequest.getParameter("receivables")).thenReturn(valueOf(receivables));
-
-        try {
-            receivableRequestValidator.validateRequest(servletRequest);
-            Assert.fail();
-        } catch (InvalidRequestException e) {
-        }
+        verify(orderIdAttributeValidator, times(1)).validate(orderId.getOrderId());
+        verify(positiveIntegerAttributeValidator, times(1)).validate(String.valueOf(receivables));
+        assertThat(request.getOrderId(), is(orderId));
+        assertThat(request.getReceivables(), is(receivables));
     }
 
 }

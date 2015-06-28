@@ -29,7 +29,7 @@ public class CompletedOrdersRequestHandler implements RequestHandler {
     @Override
     public void handleRequest(HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws ServletException, IOException, InvalidRequestException {
         BookingDateRangeRequest request = requestValidator.validateRequest(servletRequest);
-        Collection<Order> assignedOrders = orderDao.getOrders(OrderState.COMPLETED, request.getBeginBookingDate(), request.getEndBookingDate());
+        Collection<Order> assignedOrders = orderDao.getOrders(OrderState.COMPLETED, request.getBeginBookingDay(), request.getEndBookingDay());
         servletResponse.setContentType("application/json");
         servletResponse.getWriter().write(getOrderResponse(assignedOrders));
     }

@@ -11,7 +11,6 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.util.SerializationHelper;
 
 import java.util.Collection;
-import java.util.Date;
 
 public class OrderDaoImpl implements OrderDao {
 
@@ -66,10 +65,11 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Collection<Order> getOrders(OrderState orderState,Date beginBookingDate,Date endBookingDate) {
+    public Collection<Order> getOrders(OrderState orderState, Day beginBookingDay, Day endBookingDay) {
         Criteria criteria = wrapper.createCriteria(Order.class, "order");
         criteria.createAlias("order.orderWorkflows", "orderWorkflow");
-        criteria.add(Restrictions.between("orderWorkflow.effectiveTime", beginBookingDate, endBookingDate));
+        criteria.add(Restrictions.ge("orderWorkflow.effectiveTime", beginBookingDay.getDate()));
+        criteria.add(Restrictions.lt("orderWorkflow.effectiveTime", endBookingDay.getDate()));
         criteria.add(Restrictions.eq("orderWorkflow.orderWorkflowId.orderState", orderState));
         criteria.add(Restrictions.eq("orderWorkflow.currentState", true));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);

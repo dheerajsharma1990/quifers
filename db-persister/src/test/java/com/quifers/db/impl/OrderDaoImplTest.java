@@ -73,7 +73,7 @@ public class OrderDaoImplTest {
                 .addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("28/06/2015 15:15"), true).buildOrder());
 
         //when
-        Collection<Order> assignedOrders = orderDao.getOrders(OrderState.BOOKED, dayFormat.parse("24/06/2015"), dayFormat.parse("28/06/2015"));
+        Collection<Order> assignedOrders = orderDao.getOrders(OrderState.BOOKED, new Day("26/06/2015"), new Day("28/06/2015"));
 
         //then
         assertThat(assignedOrders.size(), is(1));
@@ -87,8 +87,8 @@ public class OrderDaoImplTest {
         orderDao.saveOrder(buildOrder(new OrderId("QUIF3"), OrderState.COMPLETED, "18/06/2015 15:15", true));
 
         //when
-        Collection<Order> completedOrders = orderDao.getOrders(OrderState.COMPLETED, dateFormat.parse("18/06/2015 00:00"),
-                dateFormat.parse("20/06/2015 00:00"));
+        Collection<Order> completedOrders = orderDao.getOrders(OrderState.COMPLETED, new Day("18/06/2015"),
+                new Day("29/06/2015"));
 
         //then
         assertThat(completedOrders.size(), is(2));

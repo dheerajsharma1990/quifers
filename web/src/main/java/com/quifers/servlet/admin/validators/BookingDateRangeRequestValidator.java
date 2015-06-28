@@ -22,7 +22,7 @@ public class BookingDateRangeRequestValidator implements RequestValidator {
         Day beginBookingDay = dayAttributeValidator.validate(getBeginBookingDay(servletRequest));
         Day endBookingDay = dayAttributeValidator.validate(getEndBookingDay(servletRequest));
         try {
-            return new BookingDateRangeRequest(beginBookingDay.getDate(), endBookingDay.add1Day().getDate());
+            return new BookingDateRangeRequest(beginBookingDay, endBookingDay.add1Day());
         } catch (ParseException e) {
             throw new InvalidRequestException("An error occurred adding a day to the end booking day.");
         }

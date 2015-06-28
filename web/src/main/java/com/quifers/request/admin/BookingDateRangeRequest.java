@@ -1,24 +1,23 @@
 package com.quifers.request.admin;
 
+import com.quifers.domain.Day;
 import com.quifers.servlet.ApiRequest;
-
-import java.util.Date;
 
 public class BookingDateRangeRequest implements ApiRequest {
 
-    private Date beginBookingDate;
-    private Date endBookingDate;
+    private final Day beginBookingDay;
+    private final Day endBookingDay;
 
-    public BookingDateRangeRequest(Date beginBookingDate, Date endBookingDate) {
-        this.beginBookingDate = beginBookingDate;
-        this.endBookingDate = endBookingDate;
+    public BookingDateRangeRequest(Day beginBookingDay, Day endBookingDay) {
+        this.beginBookingDay = beginBookingDay;
+        this.endBookingDay = endBookingDay;
     }
 
-    public Date getBeginBookingDate() {
-        return beginBookingDate;
+    public Day getBeginBookingDay() {
+        return beginBookingDay;
     }
 
-    public Date getEndBookingDate() {
-        return endBookingDate;
+    public Day getEndBookingDay() {
+        return endBookingDay;
     }
 }

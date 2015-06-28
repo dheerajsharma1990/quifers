@@ -37,8 +37,8 @@ public class BookingDateRangeRequestValidatorTest {
         //then
         verify(dayAttributeValidator, times(1)).validate(beginBookingDay);
         verify(dayAttributeValidator, times(1)).validate(endBookingDay);
-        assertThat(request.getBeginBookingDate(), is(dateFormat.parse(beginBookingDay)));
-        assertThat(request.getEndBookingDate(), is(dateFormat.parse("29/06/2015")));
+        assertThat(request.getBeginBookingDay(), is(new Day(beginBookingDay)));
+        assertThat(request.getEndBookingDay(), is(new Day("29/06/2015")));
     }
 
 }

@@ -35,7 +35,7 @@ public class FieldExecutiveRequestHandlerFactory implements RequestHandlerFactor
         } else if (isEqual("/api/v0/executive/order/get/all", requestURI)) {
             return new GetOrdersRequestHandler(new GetOrdersRequestValidator(new UserIdAttributeValidator(), new DayAttributeValidator()), orderDao, fieldExecutiveDao);
         } else if (isEqual("/api/v0/executive/order/receivables", requestURI)) {
-            return new ReceivableRequestHandler(new ReceivableRequestValidator(), orderDao);
+            return new ReceivableRequestHandler(new ReceivableRequestValidator(new OrderIdAttributeValidator(), new PositiveIntegerAttributeValidator()), orderDao);
         }
         throw new CommandNotFoundException(requestURI);
     }
