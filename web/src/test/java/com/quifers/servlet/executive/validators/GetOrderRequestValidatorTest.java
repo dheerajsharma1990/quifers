@@ -1,66 +1,46 @@
 package com.quifers.servlet.executive.validators;
 
+import com.quifers.domain.Day;
 import com.quifers.domain.id.FieldExecutiveId;
-import com.quifers.validations.InvalidRequestException;
 import com.quifers.request.executive.GetOrdersRequest;
+import com.quifers.validations.DayAttributeValidator;
+import com.quifers.validations.InvalidRequestException;
+import com.quifers.validations.UserIdAttributeValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.ParseException;
 
+import static com.quifers.utils.DateUtils.getDate;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class GetOrderRequestValidatorTest {
 
-    private final GetOrdersRequestValidator requestValidator = new GetOrdersRequestValidator();
+    private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
+    private final DayAttributeValidator dayAttributeValidator = mock(DayAttributeValidator.class);
+    private final GetOrdersRequestValidator validator = new GetOrdersRequestValidator(userIdAttributeValidator, dayAttributeValidator);
 
     @Test
-    public void shouldPassAllValidations() throws InvalidRequestException {
+    public void shouldCallAllValidations() throws InvalidRequestException, ParseException {
         //given
+        String userId = "userId";
+        String bookingDay = "25/09/2015";
         HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String myFieldExecutiveId = "myFieldExecutiveId";
-        when(servletRequest.getParameter("user_id")).thenReturn(myFieldExecutiveId);
-        when(servletRequest.getParameter("booking_date")).thenReturn("25/06/2015");
+        when(servletRequest.getParameter("user_id")).thenReturn(userId);
+        when(servletRequest.getParameter("booking_date")).thenReturn(bookingDay);
+        when(userIdAttributeValidator.validate(userId)).thenReturn(userId);
+        when(dayAttributeValidator.validate(bookingDay)).thenReturn(new Day(bookingDay));
 
         //when
-        GetOrdersRequest getOrdersRequest = requestValidator.validateRequest(servletRequest);
+        GetOrdersRequest request = validator.validateRequest(servletRequest);
 
         //then
-        assertThat(getOrdersRequest.getFieldExecutiveId(), is(new FieldExecutiveId(myFieldExecutiveId)));
-        assertThat(getOrdersRequest.getBookingDate(), notNullValue());
-    }
-
-    @Test
-    public void shouldFailForEmptyUserIdValidations() {
-        //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String myFieldExecutiveId = "";
-        when(servletRequest.getParameter("user_id")).thenReturn(myFieldExecutiveId);
-        when(servletRequest.getParameter("booking_date")).thenReturn("25/06/2015");
-
-        try {
-            requestValidator.validateRequest(servletRequest);
-        } catch (InvalidRequestException e) {
-
-        }
-    }
-
-    @Test
-    public void shouldFailForInvalidBookingDateValidations() {
-        //given
-        HttpServletRequest servletRequest = mock(HttpServletRequest.class);
-        String myFieldExecutiveId = "myFieldExecutiveId";
-        when(servletRequest.getParameter("user_id")).thenReturn(myFieldExecutiveId);
-        when(servletRequest.getParameter("booking_date")).thenReturn("25-06-2015");
-
-        try {
-            requestValidator.validateRequest(servletRequest);
-        } catch (InvalidRequestException e) {
-
-        }
+        verify(userIdAttributeValidator, times(1)).validate(userId);
+        verify(dayAttributeValidator, times(1)).validate(bookingDay);
+        assertThat(request.getFieldExecutiveId(), is(new FieldExecutiveId(userId)));
+        assertThat(request.getBookingDate(), is(getDate(bookingDay)));
     }
 
 }

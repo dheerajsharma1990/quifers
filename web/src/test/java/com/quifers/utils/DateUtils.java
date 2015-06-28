@@ -1,5 +1,6 @@
 package com.quifers.utils;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -12,6 +13,14 @@ public class DateUtils {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.DATE, -1);
         return calendar.getTime();
+    }
+
+    public static Date getCurrentDay() throws ParseException {
+        return DAY_FORMAT.parse(getTodayString());
+    }
+
+    public static Date getDate(String day) throws ParseException {
+        return DAY_FORMAT.parse(day);
     }
 
     public static Date getCurrentDate() {
