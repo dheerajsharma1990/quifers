@@ -9,6 +9,7 @@ import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.admin.validators.AssignFieldExecutiveRequestValidator;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
+import com.quifers.servlet.validations.DayAttributeValidator;
 import com.quifers.servlet.validations.OrderIdAttributeValidator;
 import com.quifers.servlet.validations.UserIdAttributeValidator;
 
@@ -40,9 +41,9 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
         } else if (isEqual("unassignedOrders", command)) {
             return new UnassignedOrdersRequestHandler(orderDao);
         } else if (isEqual("assignedOrders", command)) {
-            return new AssignedOrdersRequestHandler(new BookingDateRangeRequestValidator(), orderDao);
+            return new AssignedOrdersRequestHandler(new BookingDateRangeRequestValidator(new DayAttributeValidator()), orderDao);
         } else if (isEqual("completedOrders", command)) {
-            return new CompletedOrdersRequestHandler(new BookingDateRangeRequestValidator(), orderDao);
+            return new CompletedOrdersRequestHandler(new BookingDateRangeRequestValidator(new DayAttributeValidator()), orderDao);
         }
         throw new CommandNotFoundException(command);
     }
