@@ -3,117 +3,67 @@ package com.quifers.servlet.executive.validators;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
+import com.quifers.validations.BooleanAttributeValidator;
 import com.quifers.validations.InvalidRequestException;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.request.executive.CreatePriceRequest;
+import com.quifers.validations.OrderIdAttributeValidator;
+import com.quifers.validations.PositiveIntegerAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 public class CreatePriceRequestValidator implements RequestValidator {
 
+    private final OrderIdAttributeValidator orderIdAttributeValidator;
+    private final PositiveIntegerAttributeValidator positiveIntegerAttributeValidator;
+    private final BooleanAttributeValidator booleanAttributeValidator;
+
+    public CreatePriceRequestValidator(OrderIdAttributeValidator orderIdAttributeValidator, PositiveIntegerAttributeValidator positiveIntegerAttributeValidator,
+                                       BooleanAttributeValidator booleanAttributeValidator) {
+        this.orderIdAttributeValidator = orderIdAttributeValidator;
+        this.positiveIntegerAttributeValidator = positiveIntegerAttributeValidator;
+        this.booleanAttributeValidator = booleanAttributeValidator;
+    }
+
     @Override
     public CreatePriceRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
-        OrderId orderId = validateAndGetOrderId(servletRequest.getParameter("order_id"));
+        OrderId orderId = orderIdAttributeValidator.validate(getOrderId(servletRequest));
         return new CreatePriceRequest(orderId,
-                validateAndGetDistance(servletRequest.getParameter("distance")),
-                validateAndGetWaitingMinutes(servletRequest.getParameter("waiting_minutes")),
-                validateAndGetPickupFloors(servletRequest.getParameter("pick_up_floors")),
-                validateAndGetPickupLiftWorking(servletRequest.getParameter("pick_up_lift_working")),
-                validateAndGetDropOffFloors(servletRequest.getParameter("drop_off_floors")),
-                validateAndGetDropOffLiftWorking(servletRequest.getParameter("drop_off_lift_working")),
+                positiveIntegerAttributeValidator.validate(getDistance(servletRequest)),
+                positiveIntegerAttributeValidator.validate(getWaitingMinutes(servletRequest)),
+                positiveIntegerAttributeValidator.validate(getPickUpFloors(servletRequest)),
+                booleanAttributeValidator.validate(getPickUpLiftWorking(servletRequest)),
+                positiveIntegerAttributeValidator.validate(getDropOffFloors(servletRequest)),
+                booleanAttributeValidator.validate(getDropOffLiftWorking(servletRequest)),
                 new OrderWorkflow(orderId, OrderState.COMPLETED, new Date(), true));
     }
 
-    private OrderId validateAndGetOrderId(String orderId) throws InvalidRequestException {
-        if (orderId == null || orderId.trim().equals("")) {
-            throw new InvalidRequestException("Order Id cannot be empty.");
-        }
-        return new OrderId(orderId.trim());
+    private String getDropOffLiftWorking(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("drop_off_lift_working");
     }
 
-    private int validateAndGetDistance(String distance) throws InvalidRequestException {
-        if (distance == null || distance.trim().equals("")) {
-            throw new InvalidRequestException("Distance cannot be empty.");
-        }
-        try {
-            Integer integer = Integer.valueOf(distance);
-            if (integer < 0) {
-                throw new InvalidRequestException("Distance must be greater then or equal to 0.");
-            }
-            return integer;
-        } catch (NumberFormatException e) {
-            throw new InvalidRequestException("Invalid value of distance entered.");
-        }
+    private String getDropOffFloors(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("drop_off_floors");
     }
 
-    private int validateAndGetWaitingMinutes(String waitingMinutes) throws InvalidRequestException {
-        if (waitingMinutes == null || waitingMinutes.trim().equals("")) {
-            throw new InvalidRequestException("Waiting Minutes cannot be empty.");
-        }
-        try {
-            Integer integer = Integer.valueOf(waitingMinutes);
-            if (integer < 0) {
-                throw new InvalidRequestException("Waiting Minutes must be greater then or equal to 0.");
-            }
-            return integer;
-        } catch (NumberFormatException e) {
-            throw new InvalidRequestException("Invalid value of Waiting Minutes entered.");
-        }
+    private String getPickUpLiftWorking(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("pick_up_lift_working");
     }
 
-    private int validateAndGetPickupFloors(String pickUpFloors) throws InvalidRequestException {
-        if (pickUpFloors == null || pickUpFloors.trim().equals("")) {
-            throw new InvalidRequestException("Pick up floors cannot be empty.");
-        }
-        try {
-            Integer integer = Integer.valueOf(pickUpFloors);
-            if (integer < 0) {
-                throw new InvalidRequestException("Pick up floors must be greater then or equal to 0.");
-            }
-            return integer;
-        } catch (NumberFormatException e) {
-            throw new InvalidRequestException("Invalid value of pick up floors entered.");
-        }
+    private String getPickUpFloors(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("pick_up_floors");
     }
 
-    private boolean validateAndGetPickupLiftWorking(String pickupLiftWorking) throws InvalidRequestException {
-        if (pickupLiftWorking == null || pickupLiftWorking.trim().equals("")) {
-            throw new InvalidRequestException("Pick up lift working cannot be empty.");
-        }
-        pickupLiftWorking = pickupLiftWorking.toLowerCase();
-        if (pickupLiftWorking.equals("false") || pickupLiftWorking.equals("true")) {
-            return Boolean.valueOf(pickupLiftWorking);
-        }
-
-        throw new InvalidRequestException("Invalid value of Pick Up Lift Working");
+    private String getWaitingMinutes(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("waiting_minutes");
     }
 
-    private int validateAndGetDropOffFloors(String dropOffFloors) throws InvalidRequestException {
-        if (dropOffFloors == null || dropOffFloors.trim().equals("")) {
-            throw new InvalidRequestException("Drop off floors cannot be empty.");
-        }
-        try {
-            Integer integer = Integer.valueOf(dropOffFloors);
-            if (integer < 0) {
-                throw new InvalidRequestException("Drop off floors must be greater then or equal to 0.");
-            }
-            return integer;
-        } catch (NumberFormatException e) {
-            throw new InvalidRequestException("Invalid value of drop off floors entered.");
-        }
+    private String getDistance(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("distance");
     }
 
-    private boolean validateAndGetDropOffLiftWorking(String dropOffLiftWorking) throws InvalidRequestException {
-        if (dropOffLiftWorking == null || dropOffLiftWorking.trim().equals("")) {
-            throw new InvalidRequestException("Pick up lift working cannot be empty.");
-        }
-        dropOffLiftWorking = dropOffLiftWorking.toLowerCase();
-        if (dropOffLiftWorking.equals("false") || dropOffLiftWorking.equals("true")) {
-            return Boolean.valueOf(dropOffLiftWorking);
-        }
-
-        throw new InvalidRequestException("Invalid value of Drop Off Lift Working");
+    private String getOrderId(HttpServletRequest servletRequest) {
+        return servletRequest.getParameter("order_id");
     }
-
 }

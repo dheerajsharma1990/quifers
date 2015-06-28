@@ -8,7 +8,7 @@ import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.executive.validators.CreatePriceRequestValidator;
 import com.quifers.servlet.executive.validators.GetOrdersRequestValidator;
 import com.quifers.servlet.executive.validators.ReceivableRequestValidator;
-import com.quifers.servlet.listener.WebPublisher;
+import com.quifers.servlet.listener.WebPublisher;import com.quifers.validations.BooleanAttributeValidator;import com.quifers.validations.OrderIdAttributeValidator;import com.quifers.validations.PositiveIntegerAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -30,7 +30,7 @@ public class FieldExecutiveRequestHandlerFactory implements RequestHandlerFactor
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/executive/order/create/price", requestURI)) {
-            return new CreatePriceRequestHandler(new CreatePriceRequestValidator(), orderDao, webPublisher);
+            return new CreatePriceRequestHandler(new CreatePriceRequestValidator(new OrderIdAttributeValidator(), new PositiveIntegerAttributeValidator(), new BooleanAttributeValidator()), orderDao, webPublisher);
         } else if (isEqual("/api/v0/executive/order/get/all", requestURI)) {
             return new GetOrdersRequestHandler(new GetOrdersRequestValidator(), orderDao, fieldExecutiveDao);
         } else if (isEqual("/api/v0/executive/order/receivables", requestURI)) {
