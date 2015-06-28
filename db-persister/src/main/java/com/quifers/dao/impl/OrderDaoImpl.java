@@ -1,6 +1,7 @@
 package com.quifers.dao.impl;
 
 import com.quifers.dao.OrderDao;
+import com.quifers.domain.Day;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.enums.OrderState;
@@ -9,7 +10,6 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.internal.util.SerializationHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 
@@ -46,16 +46,12 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public Collection<Order> getBookedOrders(FieldExecutive fieldExecutive, Date bookingDateTime) throws Exception {
+    public Collection<Order> getBookedOrders(FieldExecutive fieldExecutive, Day bookingDay) throws Exception {
         Criteria criteria = wrapper.createCriteria(Order.class, "order");
         criteria.createAlias("order.orderWorkflows", "orderWorkflow");
         criteria.add(Restrictions.eq("order.fieldExecutive", fieldExecutive));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        String bookingDateAsString = dateFormat.format(bookingDateTime);
-        Date startTime = dateTimeFormat.parse(bookingDateAsString + " " + "00:00");
-        Date endTime = dateTimeFormat.parse(bookingDateAsString + " " + "23:59");
-        criteria.add(Restrictions.between("orderWorkflow.effectiveTime", startTime, endTime));
+        criteria.add(Restrictions.ge("orderWorkflow.effectiveTime", bookingDay.getDate()));
+        criteria.add(Restrictions.lt("orderWorkflow.effectiveTime", bookingDay.add1Day().getDate()));
         criteria.add(Restrictions.eq("orderWorkflow.orderWorkflowId.orderState", OrderState.BOOKED));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return wrapper.get(criteria);

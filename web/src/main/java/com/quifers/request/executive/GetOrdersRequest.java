@@ -1,25 +1,24 @@
 package com.quifers.request.executive;
 
+import com.quifers.domain.Day;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.servlet.ApiRequest;
-
-import java.util.Date;
 
 public class GetOrdersRequest implements ApiRequest {
 
     private final FieldExecutiveId fieldExecutiveId;
-    private final Date bookingDate;
+    private final Day bookingDay;
 
-    public GetOrdersRequest(FieldExecutiveId fieldExecutiveId, Date bookingDate) {
+    public GetOrdersRequest(FieldExecutiveId fieldExecutiveId, Day bookingDay) {
         this.fieldExecutiveId = fieldExecutiveId;
-        this.bookingDate = bookingDate;
+        this.bookingDay = bookingDay;
     }
 
     public FieldExecutiveId getFieldExecutiveId() {
         return fieldExecutiveId;
     }
 
-    public Date getBookingDate() {
-        return bookingDate;
+    public Day getBookingDate() {
+        return bookingDay;
     }
 }

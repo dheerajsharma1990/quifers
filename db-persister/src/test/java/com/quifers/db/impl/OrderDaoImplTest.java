@@ -3,10 +3,7 @@ package com.quifers.db.impl;
 import com.quifers.Environment;
 import com.quifers.dao.OrderDao;
 import com.quifers.db.LocalDatabaseRunner;
-import com.quifers.domain.FieldExecutive;
-import com.quifers.domain.FieldExecutiveAccount;
-import com.quifers.domain.Order;
-import com.quifers.domain.OrderWorkflow;
+import com.quifers.domain.*;
 import com.quifers.domain.builders.OrderBuilder;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
@@ -20,7 +17,6 @@ import org.testng.annotations.Test;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
-import java.util.Date;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -40,10 +36,10 @@ public class OrderDaoImplTest {
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
         //given
         orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15", true));
+        orderDao.saveOrder(buildOrder(new OrderId("QUIFID11"), OrderState.BOOKED, "29/06/2015 00:00", true));
 
         //when
-        Date bookingDateTime = dateFormat.parse("28/06/2015 00:00");
-        Collection<Order> ordersFromDb = orderDao.getBookedOrders(fieldExecutive, bookingDateTime);
+        Collection<Order> ordersFromDb = orderDao.getBookedOrders(fieldExecutive, new Day("28/06/2015"));
 
         //then
         assertThat(ordersFromDb.size(), is(1));

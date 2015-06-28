@@ -1,5 +1,6 @@
 package com.quifers.dao;
 
+import com.quifers.domain.Day;
 import com.quifers.domain.FieldExecutive;
 import com.quifers.domain.Order;
 import com.quifers.domain.enums.OrderState;
@@ -18,7 +19,7 @@ public interface OrderDao {
 
     void updateOrder(Order order) throws Exception;
 
-    Collection<Order> getBookedOrders(FieldExecutive fieldExecutive, Date bookingDateTime) throws Exception;
+    Collection<Order> getBookedOrders(FieldExecutive fieldExecutive, Day bookingDay) throws Exception;
 
     Collection<Order> getUnassignedOrders();
 

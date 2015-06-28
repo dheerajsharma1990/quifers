@@ -11,12 +11,11 @@ import org.testng.annotations.Test;
 import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 
-import static com.quifers.utils.DateUtils.getDate;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
-public class GetOrderRequestValidatorTest {
+public class GetOrdersRequestValidatorTest {
 
     private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
     private final DayAttributeValidator dayAttributeValidator = mock(DayAttributeValidator.class);
@@ -40,7 +39,7 @@ public class GetOrderRequestValidatorTest {
         verify(userIdAttributeValidator, times(1)).validate(userId);
         verify(dayAttributeValidator, times(1)).validate(bookingDay);
         assertThat(request.getFieldExecutiveId(), is(new FieldExecutiveId(userId)));
-        assertThat(request.getBookingDate(), is(getDate(bookingDay)));
+        assertThat(request.getBookingDate(), is(new Day(bookingDay)));
     }
 
 }

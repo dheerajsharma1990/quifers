@@ -22,7 +22,7 @@ public class GetOrdersRequestValidator implements RequestValidator {
     @Override
     public GetOrdersRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
         return new GetOrdersRequest(new FieldExecutiveId(userIdAttributeValidator.validate(getUserId(servletRequest))),
-                dayAttributeValidator.validate(getBookingDate(servletRequest)).getDate());
+                dayAttributeValidator.validate(getBookingDate(servletRequest)));
     }
 
     private String getBookingDate(HttpServletRequest servletRequest) {
