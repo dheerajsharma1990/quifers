@@ -15,12 +15,12 @@ public class PasswordAttributeValidator implements AttributeValidator<String> {
         if (password.contains(" ")) {
             throw new InvalidRequestException("Password contains spaces.");
         }
-        if (password.length() < MINIMUM_PASSWORD_LENGTH) {
+        /*if (password.length() < MINIMUM_PASSWORD_LENGTH) {
             throw new InvalidRequestException("Password is too short.Minimum length is [" + MINIMUM_PASSWORD_LENGTH + "].");
         }
         if (password.length() > MAXIMUM_PASSWORD_LENGTH) {
             throw new InvalidRequestException("Password is too long.Maximum length is [" + MAXIMUM_PASSWORD_LENGTH + "].");
-        }
+        }*/
         return password;
     }
 }

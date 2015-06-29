@@ -13,12 +13,12 @@ public class UserIdAttributeValidator implements AttributeValidator<String> {
             throw new InvalidRequestException("UserId is empty.");
         }
         userId = userId.trim();
-        if (userId.length() < MIN_USER_ID_LENGTH) {
+        /*if (userId.length() < MIN_USER_ID_LENGTH) {
             throw new InvalidRequestException("[" + userId + "] is too short.Minimum length is " + MIN_USER_ID_LENGTH + ".");
         }
         if (userId.length() > MAX_USER_ID_LENGTH) {
             throw new InvalidRequestException("[" + userId + "] is too long.Maximum length is " + MAX_USER_ID_LENGTH + ".");
-        }
+        }*/
         return userId;
     }
 
