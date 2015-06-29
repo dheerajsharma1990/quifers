@@ -52,7 +52,6 @@ public class OrderDaoImpl implements OrderDao {
         criteria.add(Restrictions.ge("orderWorkflow.effectiveTime", bookingDay.getDate()));
         criteria.add(Restrictions.lt("orderWorkflow.effectiveTime", bookingDay.add1Day().getDate()));
         criteria.add(Restrictions.eq("orderWorkflow.orderWorkflowId.orderState", OrderState.BOOKED));
-        criteria.add(Restrictions.eq("orderWorkflow.currentState", true));
         criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);
         return wrapper.get(criteria);
     }
