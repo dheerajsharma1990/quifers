@@ -29,7 +29,6 @@ public class OrderDaoImplTest {
     private OrderId orderId = new OrderId("QUIFID1");
     private DaoFactory daoFactory;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-    private SimpleDateFormat dayFormat = new SimpleDateFormat("dd/MM/yyyy");
     private OrderDao orderDao;
 
     @Test
@@ -37,6 +36,11 @@ public class OrderDaoImplTest {
         //given
         orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15", true));
         orderDao.saveOrder(buildOrder(new OrderId("QUIFID11"), OrderState.BOOKED, "29/06/2015 00:00", true));
+        orderDao.saveOrder(new OrderBuilder("QUIFID90").addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("28/06/2015 10:10"), false)
+                .addOrderWorkflow(OrderState.COMPLETED, dateFormat.parse("28/06/2015 15:15"), true)
+                .addFieldExecutive(fieldExecutive.getFieldExecutiveId().getUserId(), fieldExecutive.getName(), fieldExecutive.getMobileNumber())
+                .buildOrder());
+
 
         //when
         Collection<Order> ordersFromDb = orderDao.getBookedOrders(fieldExecutive, new Day("28/06/2015"));
