@@ -1,6 +1,7 @@
+import org.gradle.api.tasks.Copy
+
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'application'
 
 dependencies {
     compile project(':domain')
@@ -13,8 +14,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.12'
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.0.M2'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.35'
-
-    compile (group: 'org.apache.activemq', name: 'activemq-all', version: '5.5.1') {
+    compile(group: 'org.apache.activemq', name: 'activemq-all', version: '5.5.1') {
         exclude group: 'org.slf4j'
     }
 
@@ -22,7 +22,57 @@ dependencies {
 
 }
 
-mainClassName = 'com.quifers.JettyRunner'
+task makeWebJar(type: Jar, dependsOn: compileJava) {
+    manifest {
+        String manifestVersion = 'Manifest-Version';
+        String createdBy = 'Created-By';
+        String createdAt = 'Created-At';
+        String mainClass = 'Main-Class';
+        def map = [(manifestVersion): 1.0, (createdBy): 'Quifers Tech', (createdAt): new Date(), (mainClass): 'com.quifers.JettyRunner']
+        attributes map
+    }
+    from sourceSets.main.output
+}
+
+def classpathJars = {
+    sourceSets.main.runtimeClasspath.filter { file ->
+        return file.name.endsWith(".jar")
+    }
+}
+
+def classPathJarsName = {
+    def jarNames = []
+    classpathJars().files.each { f ->
+        jarNames << f.name
+    }
+    return jarNames
+}
+
+task createJarFolder(type: Copy, dependsOn: makeWebJar) {
+    from(classpathJars)
+    from('build/libs') {
+        include '**/*.jar'
+    }
+    into 'build/dist/libs/'
+}
+
+task createUnixScriptFile(type: UnixScript, dependsOn: createJarFolder) {
+    environment = System.getProperty("env")
+    mainClass = 'com.quifers.JettyRunner'
+    baseJarName = 'web.jar'
+    classpath = classPathJarsName()
+    file('build/dist/').mkdir();
+    def unixFile = file('build/dist/web.sh')
+    unixFile.executable = true
+    unixFile.createNewFile();
+    unixFile.write unixScriptContent
+}
+
+task webZip(type: Zip, dependsOn: createUnixScriptFile) {
+    archiveName = 'web.zip'
+    from('build/dist')
+    destinationDir = file('build')
+}
 
 idea {
     module {
