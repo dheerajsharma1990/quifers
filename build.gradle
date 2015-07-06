@@ -1,29 +1,11 @@
-apply plugin: 'idea'
-
 allprojects {
     repositories {
         mavenCentral()
     }
-
-    idea {
-        project {
-            jdkName = '1.7'
-            languageLevel = '1.7'
-
-            vcs = 'Git'
-        }
-
-        module {
-            downloadJavadoc = false
-            downloadSources = false
-        }
-    }
-
 }
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'idea'
 
     dependencies {
 

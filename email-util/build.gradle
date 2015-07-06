@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'idea'
 apply plugin: 'application'
 
 task credentialFile {
@@ -45,10 +44,4 @@ dependencies {
 
 }
 
-idea {
-    module {
-        downloadJavadoc = false
-        downloadSources = false
-    }
-}
 

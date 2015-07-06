@@ -1,7 +1,6 @@
 import org.gradle.api.tasks.Copy
 
 apply plugin: 'java'
-apply plugin: 'idea'
 
 dependencies {
     compile project(':domain')
@@ -72,11 +71,4 @@ task webZip(type: Zip, dependsOn: createUnixScriptFile) {
     archiveName = 'web.zip'
     from('build/dist')
     destinationDir = file('build')
-}
-
-idea {
-    module {
-        downloadJavadoc = false
-        downloadSources = false
-    }
 }
