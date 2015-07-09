@@ -1,4 +1,4 @@
-package com.quifers.utils;
+package com.quifers.api.test;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

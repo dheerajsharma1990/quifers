@@ -1,6 +1,7 @@
-include ':web',':email-util', ':domain', ':db-persister'
+include ':web',':email-util', ':domain', ':db-persister', ':api-test'
 
 rootProject.children.each { project ->
     project.buildFileName = "${project.name}.gradle"
 }
+
 

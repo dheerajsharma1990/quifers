@@ -21,6 +21,7 @@ import java.util.Collection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+@Test(enabled = false)
 public class OrderDaoImplTest {
 
     private FieldExecutiveId fieldExecutiveId = new FieldExecutiveId("fe");
@@ -31,7 +32,7 @@ public class OrderDaoImplTest {
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private OrderDao orderDao;
 
-    @Test
+    @Test(enabled = false)
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
         //given
         orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15", true));
@@ -49,7 +50,7 @@ public class OrderDaoImplTest {
         assertThat(ordersFromDb.size(), is(1));
     }
 
-    @Test
+    @Test(enabled = false)
     public void shouldGetUnassignedOrders() throws Exception {
         //given
         orderDao.saveOrder(new Order(new OrderId("QUIFID10")));
@@ -65,7 +66,7 @@ public class OrderDaoImplTest {
         assertThat(unassignedOrders.size(), is(2));
     }
 
-    @Test
+    @Test(enabled = false)
     public void shouldGetAssignedOrders() throws Exception {
         //given
         orderDao.saveOrder(new OrderBuilder("QUIFID20")
@@ -83,7 +84,7 @@ public class OrderDaoImplTest {
         assertThat(assignedOrders.size(), is(1));
     }
 
-    @Test
+    @Test(enabled = false)
     public void shouldGetAllCompletedOrders() throws Exception {
         //given
         orderDao.saveOrder(buildOrder(new OrderId("QUIF1"), OrderState.BOOKED, "20/06/2015 15:15", true));

@@ -1,9 +1,8 @@
-package com.quifers;
+package com.quifers.api.test;
 
+import com.quifers.Environment;
 import com.quifers.db.LocalDatabaseRunner;
 import com.quifers.domain.enums.OrderState;
-import com.quifers.runners.ActiveMqBroker;
-import com.quifers.utils.ParametersBuilder;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -19,10 +18,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import static com.quifers.JettyRunner.runJettyServer;
-import static com.quifers.utils.DateUtils.getTodayString;
+import static com.quifers.api.test.DateUtils.getTodayString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 
 public class EndToEndWebTest {
 

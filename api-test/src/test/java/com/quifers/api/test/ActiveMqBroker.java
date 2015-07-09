@@ -1,4 +1,4 @@
-package com.quifers.runners;
+package com.quifers.api.test;
 
 import org.apache.activemq.broker.BrokerService;
 

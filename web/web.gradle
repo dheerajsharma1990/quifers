@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.Copy
-
 apply plugin: 'java'
 
 dependencies {
@@ -16,8 +14,6 @@ dependencies {
     compile(group: 'org.apache.activemq', name: 'activemq-all', version: '5.5.1') {
         exclude group: 'org.slf4j'
     }
-
-    testCompile project(path: ':db-persister', configuration: 'testOutput')
 
 }
 
@@ -60,10 +56,11 @@ task createUnixScriptFile(type: UnixScript, dependsOn: createJarFolder) {
     mainClass = 'com.quifers.JettyRunner'
     baseJarName = 'web.jar'
     classpath = classPathJarsName()
-    file('build/dist/').mkdir();
+    file('build').mkdir()
+    file('build/dist').mkdir()
     def unixFile = file('build/dist/web.sh')
-    unixFile.executable = true
     unixFile.createNewFile();
+    unixFile.executable = true
     unixFile.write unixScriptContent
 }
 

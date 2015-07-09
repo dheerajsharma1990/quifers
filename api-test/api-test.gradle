@@ -1,0 +1,4 @@
+dependencies {
+    testCompile project(':web')
+    testCompile project(path: ':db-persister', configuration: 'testOutput')
+}
