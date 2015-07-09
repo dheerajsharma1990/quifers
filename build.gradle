@@ -22,7 +22,7 @@ subprojects {
 
         forkEvery = 5
         maxParallelForks = Runtime.runtime.availableProcessors()
-
+        exclude('**OrderDaoImplTest.class','**EndToEndEmailTest.class')
         testLogging {
             events('failed')
             showStandardStreams = true

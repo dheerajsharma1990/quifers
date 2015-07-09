@@ -15,13 +15,11 @@ import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import com.quifers.servlet.guest.validators.FieldExecutiveLoginRequestValidator;
 import com.quifers.servlet.guest.validators.NewOrderRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
-import com.quifers.validations.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
-import static com.quifers.validations.AttributeValidatorFactory.getMobileNumberAttributeValidator;
-import static com.quifers.validations.AttributeValidatorFactory.getStringLengthAttributeValidator;
+import static com.quifers.validations.AttributeValidatorFactory.*;
 
 public class GuestRequestHandlerFactory implements RequestHandlerFactory {
 
@@ -46,14 +44,14 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/guest/admin/register", requestURI)) {
-            return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8,20),
+            return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8, 20),
                     getStringLengthAttributeValidator(0, 50), getMobileNumberAttributeValidator()), adminAccountDao, adminDao);
         } else if (isEqual("/api/v0/guest/order/book", requestURI)) {
-            return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService), orderDao, webPublisher);
+            return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService, getMobileNumberAttributeValidator(), getEmptyStringAttributeValidator(), getBooleanAttributeValidator(), getPositiveIntegerAttributeValidator(), getDateAttributeValidator()), orderDao, webPublisher);
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {
-            return new AdminLoginRequestHandler(new AdminLoginRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8,20)), new AdminAuthenticator(adminAccountDao));
+            return new AdminLoginRequestHandler(new AdminLoginRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8, 20)), new AdminAuthenticator(adminAccountDao));
         } else if (isEqual("/api/v0/guest/executive/login", requestURI)) {
-            return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8,20)), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
+            return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8, 20)), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
         }
         throw new CommandNotFoundException(requestURI);
     }
