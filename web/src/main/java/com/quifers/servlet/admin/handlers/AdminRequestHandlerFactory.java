@@ -14,6 +14,9 @@ import com.quifers.validations.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
+import static com.quifers.validations.AttributeValidatorFactory.getDayAttributeValidator;
+import static com.quifers.validations.AttributeValidatorFactory.getMobileNumberAttributeValidator;
+import static com.quifers.validations.AttributeValidatorFactory.getStringLengthAttributeValidator;
 
 public class AdminRequestHandlerFactory implements RequestHandlerFactory {
 
@@ -32,17 +35,19 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
         String command = servletRequest.getParameter("cmd");
         if (isEqual("registerFieldExecutive", command)) {
             return new FieldExecutiveRegisterRequestHandler(new FieldExecutiveRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
-                    new NameAttributeValidator(), new MobileNumberAttributeValidator()), fieldExecutiveAccountDao, fieldExecutiveDao);
+                    getStringLengthAttributeValidator(), getMobileNumberAttributeValidator()), fieldExecutiveAccountDao, fieldExecutiveDao);
         } else if (isEqual("getAllFieldExecutives", command)) {
             return new GetAllFieldExecutivesRequestHandler(fieldExecutiveDao);
         } else if (isEqual("assignFieldExecutive", command)) {
             return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(new UserIdAttributeValidator(), new OrderIdAttributeValidator()), fieldExecutiveDao, orderDao);
         } else if (isEqual("unassignedOrders", command)) {
             return new UnassignedOrdersRequestHandler(orderDao);
-        } else if (isEqual("assignedOrders", command)) {
-            return new AssignedOrdersRequestHandler(new BookingDateRangeRequestValidator(new DayAttributeValidator()), orderDao);
-        } else if (isEqual("completedOrders", command)) {
-            return new CompletedOrdersRequestHandler(new BookingDateRangeRequestValidator(new DayAttributeValidator()), orderDao);
+        } else {
+            if (isEqual("assignedOrders", command)) {
+                return new AssignedOrdersRequestHandler(new BookingDateRangeRequestValidator(getDayAttributeValidator()), orderDao);
+            } else if (isEqual("completedOrders", command)) {
+                return new CompletedOrdersRequestHandler(new BookingDateRangeRequestValidator(getDayAttributeValidator()), orderDao);
+            }
         }
         throw new CommandNotFoundException(command);
     }

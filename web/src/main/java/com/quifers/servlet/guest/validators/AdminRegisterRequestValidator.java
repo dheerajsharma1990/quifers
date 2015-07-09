@@ -13,14 +13,14 @@ public class AdminRegisterRequestValidator implements RequestValidator {
 
     private final UserIdAttributeValidator userIdAttributeValidator;
     private final PasswordAttributeValidator passwordAttributeValidator;
-    private final NameAttributeValidator nameAttributeValidator;
+    private final StringLengthAttributeValidator stringLengthAttributeValidator;
     private final MobileNumberAttributeValidator mobileNumberAttributeValidator;
 
     public AdminRegisterRequestValidator(UserIdAttributeValidator userIdAttributeValidator, PasswordAttributeValidator passwordAttributeValidator,
-                                         NameAttributeValidator nameAttributeValidator, MobileNumberAttributeValidator mobileNumberAttributeValidator) {
+                                         StringLengthAttributeValidator stringLengthAttributeValidator, MobileNumberAttributeValidator mobileNumberAttributeValidator) {
         this.userIdAttributeValidator = userIdAttributeValidator;
         this.passwordAttributeValidator = passwordAttributeValidator;
-        this.nameAttributeValidator = nameAttributeValidator;
+        this.stringLengthAttributeValidator = stringLengthAttributeValidator;
         this.mobileNumberAttributeValidator = mobileNumberAttributeValidator;
     }
 
@@ -29,7 +29,7 @@ public class AdminRegisterRequestValidator implements RequestValidator {
         String adminId = userIdAttributeValidator.validate(getUserId(servletRequest));
         AdminAccount adminAccount = new AdminAccount(adminId,
                 passwordAttributeValidator.validate(getPassword(servletRequest)));
-        Admin admin = new Admin(adminId, nameAttributeValidator.validate(getName(servletRequest)), mobileNumberAttributeValidator.validate(getMobileNumber(servletRequest)));
+        Admin admin = new Admin(adminId, stringLengthAttributeValidator.validate(getName(servletRequest)), mobileNumberAttributeValidator.validate(getMobileNumber(servletRequest)));
         return new AdminRegisterRequest(adminAccount, admin);
     }
 

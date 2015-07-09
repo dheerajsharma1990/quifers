@@ -5,38 +5,24 @@ import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-public class NameAttributeValidatorTest {
+public class StringLengthAttributeValidatorTest {
 
-    private final NameAttributeValidator validator = new NameAttributeValidator();
+    private final EmptyStringAttributeValidator emptyStringAttributeValidator = mock(EmptyStringAttributeValidator.class);
 
-    @Test
-    public void shouldThrowExceptionForEmptyName() {
-        //when
-        try {
-            validator.validate("");
-            Assert.fail();
-        } catch (InvalidRequestException e) {
-            assertThat(e.getMessage(), is("Name is empty."));
-        }
-    }
-
-    @Test
-    public void shouldThrowExceptionForNullName() {
-        //when
-        try {
-            validator.validate(null);
-            Assert.fail();
-        } catch (InvalidRequestException e) {
-            assertThat(e.getMessage(), is("Name is empty."));
-        }
-    }
+    private final StringLengthAttributeValidator validator = new StringLengthAttributeValidator(emptyStringAttributeValidator);
 
     @Test
     public void shouldThrowExceptionForLongName() {
-        //when
         try {
-            validator.validate("Sometimes the name can be very long.But there has to be some limit.");
+            //given
+            String longName = "Sometimes the name can be very long.But there has to be some limit.";
+            when(emptyStringAttributeValidator.validate(longName)).thenReturn(longName);
+
+            //when
+            validator.validate(longName);
             Assert.fail();
         } catch (InvalidRequestException e) {
             assertThat(e.getMessage(), is("Name [Sometimes the name can be very long.But there has to be some limit.] is too long.Maximum length is [50]."));
@@ -47,6 +33,7 @@ public class NameAttributeValidatorTest {
     public void shouldPassValidationAndReturnName() throws InvalidRequestException {
         //given
         String givenName = "  Name Is Bond ";
+        when(emptyStringAttributeValidator.validate(givenName)).thenReturn(givenName);
 
         //when
         String name = validator.validate(givenName);

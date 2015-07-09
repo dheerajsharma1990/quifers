@@ -1,17 +1,19 @@
 package com.quifers.validations;
 
 import static java.lang.Long.valueOf;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 public class MobileNumberAttributeValidator implements AttributeValidator<Long> {
 
+    private final EmptyStringAttributeValidator emptyStringAttributeValidator;
     private final int MOBILE_NUMBER_LENGTH = 10;
+
+    public MobileNumberAttributeValidator(EmptyStringAttributeValidator emptyStringAttributeValidator) {
+        this.emptyStringAttributeValidator = emptyStringAttributeValidator;
+    }
 
     @Override
     public Long validate(String mobileNumber) throws InvalidRequestException {
-        if (isEmpty(mobileNumber)) {
-            throw new InvalidRequestException("Mobile Number is empty.");
-        }
+        mobileNumber = emptyStringAttributeValidator.validate(mobileNumber);
         mobileNumber = mobileNumber.trim();
         if (mobileNumber.length() != MOBILE_NUMBER_LENGTH) {
             throw new InvalidRequestException("Mobile Number [" + mobileNumber + "] contains [" + mobileNumber.length() + "] digits." +

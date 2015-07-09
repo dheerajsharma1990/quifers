@@ -18,10 +18,10 @@ public class AdminRegisterRequestValidatorTest {
 
     private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
     private final PasswordAttributeValidator passwordAttributeValidator = mock(PasswordAttributeValidator.class);
-    private final NameAttributeValidator nameAttributeValidator = mock(NameAttributeValidator.class);
+    private final StringLengthAttributeValidator stringLengthAttributeValidator = mock(StringLengthAttributeValidator.class);
     private final MobileNumberAttributeValidator mobileNumberAttributeValidator = mock(MobileNumberAttributeValidator.class);
     private final AdminRegisterRequestValidator validator = new AdminRegisterRequestValidator(userIdAttributeValidator, passwordAttributeValidator,
-            nameAttributeValidator, mobileNumberAttributeValidator);
+            stringLengthAttributeValidator, mobileNumberAttributeValidator);
 
     @Test
     public void shouldCallAllValidations() throws InvalidRequestException {
@@ -39,7 +39,7 @@ public class AdminRegisterRequestValidatorTest {
 
         when(userIdAttributeValidator.validate(adminId.getUserId())).thenReturn(adminId.getUserId());
         when(passwordAttributeValidator.validate(password)).thenReturn(password);
-        when(nameAttributeValidator.validate(name)).thenReturn(name);
+        when(stringLengthAttributeValidator.validate(name)).thenReturn(name);
         when(mobileNumberAttributeValidator.validate(valueOf(mobileNumber))).thenReturn(mobileNumber);
 
         //when
@@ -48,7 +48,7 @@ public class AdminRegisterRequestValidatorTest {
         //then
         verify(userIdAttributeValidator, times(1)).validate(adminId.getUserId());
         verify(passwordAttributeValidator, times(1)).validate(password);
-        verify(nameAttributeValidator, times(1)).validate(name);
+        verify(stringLengthAttributeValidator, times(1)).validate(name);
         verify(mobileNumberAttributeValidator, times(1)).validate(valueOf(mobileNumber));
         assertThat(request.getAdminAccount(), is(new AdminAccount(adminId, password)));
         assertThat(request.getAdmin(), is(new Admin(adminId, name, mobileNumber)));

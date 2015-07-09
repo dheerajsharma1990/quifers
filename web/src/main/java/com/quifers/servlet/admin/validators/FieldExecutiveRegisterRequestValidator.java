@@ -13,14 +13,14 @@ public class FieldExecutiveRegisterRequestValidator implements RequestValidator 
 
     private final UserIdAttributeValidator userIdAttributeValidator;
     private final PasswordAttributeValidator passwordAttributeValidator;
-    private final NameAttributeValidator nameAttributeValidator;
+    private final StringLengthAttributeValidator stringLengthAttributeValidator;
     private final MobileNumberAttributeValidator mobileNumberAttributeValidator;
 
     public FieldExecutiveRegisterRequestValidator(UserIdAttributeValidator userIdAttributeValidator, PasswordAttributeValidator passwordAttributeValidator,
-                                                  NameAttributeValidator nameAttributeValidator, MobileNumberAttributeValidator mobileNumberAttributeValidator) {
+                                                  StringLengthAttributeValidator stringLengthAttributeValidator, MobileNumberAttributeValidator mobileNumberAttributeValidator) {
         this.userIdAttributeValidator = userIdAttributeValidator;
         this.passwordAttributeValidator = passwordAttributeValidator;
-        this.nameAttributeValidator = nameAttributeValidator;
+        this.stringLengthAttributeValidator = stringLengthAttributeValidator;
         this.mobileNumberAttributeValidator = mobileNumberAttributeValidator;
     }
 
@@ -28,7 +28,7 @@ public class FieldExecutiveRegisterRequestValidator implements RequestValidator 
     public FieldExecutiveRegisterRequest validateRequest(HttpServletRequest servletRequest) throws InvalidRequestException {
         FieldExecutiveId fieldExecutiveId = new FieldExecutiveId(userIdAttributeValidator.validate(getFieldExecutiveId(servletRequest)));
         FieldExecutiveAccount fieldExecutiveAccount = new FieldExecutiveAccount(fieldExecutiveId, passwordAttributeValidator.validate(getPassword(servletRequest)));
-        FieldExecutive fieldExecutive = new FieldExecutive(fieldExecutiveId, nameAttributeValidator.validate(getName(servletRequest)),
+        FieldExecutive fieldExecutive = new FieldExecutive(fieldExecutiveId, stringLengthAttributeValidator.validate(getName(servletRequest)),
                 mobileNumberAttributeValidator.validate(getMobileNumber(servletRequest)));
         return new FieldExecutiveRegisterRequest(fieldExecutiveAccount,fieldExecutive);
     }

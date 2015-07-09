@@ -15,14 +15,13 @@ import com.quifers.servlet.guest.validators.AdminRegisterRequestValidator;
 import com.quifers.servlet.guest.validators.FieldExecutiveLoginRequestValidator;
 import com.quifers.servlet.guest.validators.NewOrderRequestValidator;
 import com.quifers.servlet.listener.WebPublisher;
-import com.quifers.validations.MobileNumberAttributeValidator;
-import com.quifers.validations.NameAttributeValidator;
-import com.quifers.validations.PasswordAttributeValidator;
-import com.quifers.validations.UserIdAttributeValidator;
+import com.quifers.validations.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
+import static com.quifers.validations.AttributeValidatorFactory.getMobileNumberAttributeValidator;
+import static com.quifers.validations.AttributeValidatorFactory.getStringLengthAttributeValidator;
 
 public class GuestRequestHandlerFactory implements RequestHandlerFactory {
 
@@ -48,7 +47,7 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/guest/admin/register", requestURI)) {
             return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
-                    new NameAttributeValidator(), new MobileNumberAttributeValidator()), adminAccountDao, adminDao);
+                    getStringLengthAttributeValidator(), getMobileNumberAttributeValidator()), adminAccountDao, adminDao);
         } else if (isEqual("/api/v0/guest/order/book", requestURI)) {
             return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService), orderDao, webPublisher);
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {

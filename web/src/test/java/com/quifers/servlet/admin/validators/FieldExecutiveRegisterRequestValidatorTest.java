@@ -18,10 +18,10 @@ public class FieldExecutiveRegisterRequestValidatorTest {
 
     private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
     private final PasswordAttributeValidator passwordAttributeValidator = mock(PasswordAttributeValidator.class);
-    private final NameAttributeValidator nameAttributeValidator = mock(NameAttributeValidator.class);
+    private final StringLengthAttributeValidator stringLengthAttributeValidator = mock(StringLengthAttributeValidator.class);
     private final MobileNumberAttributeValidator mobileNumberAttributeValidator = mock(MobileNumberAttributeValidator.class);
     private final FieldExecutiveRegisterRequestValidator validator = new FieldExecutiveRegisterRequestValidator(userIdAttributeValidator, passwordAttributeValidator,
-            nameAttributeValidator, mobileNumberAttributeValidator);
+            stringLengthAttributeValidator, mobileNumberAttributeValidator);
 
     @Test
     public void shouldCallAllValidations() throws InvalidRequestException {
@@ -39,7 +39,7 @@ public class FieldExecutiveRegisterRequestValidatorTest {
 
         when(userIdAttributeValidator.validate(fieldExecutiveId.getUserId())).thenReturn(fieldExecutiveId.getUserId());
         when(passwordAttributeValidator.validate(password)).thenReturn(password);
-        when(nameAttributeValidator.validate(name)).thenReturn(name);
+        when(stringLengthAttributeValidator.validate(name)).thenReturn(name);
         when(mobileNumberAttributeValidator.validate(valueOf(mobileNumber))).thenReturn(mobileNumber);
 
         //when
@@ -48,7 +48,7 @@ public class FieldExecutiveRegisterRequestValidatorTest {
         //then
         verify(userIdAttributeValidator, times(1)).validate(fieldExecutiveId.getUserId());
         verify(passwordAttributeValidator, times(1)).validate(password);
-        verify(nameAttributeValidator, times(1)).validate(name);
+        verify(stringLengthAttributeValidator, times(1)).validate(name);
         verify(mobileNumberAttributeValidator, times(1)).validate(valueOf(mobileNumber));
         assertThat(request.getFieldExecutiveAccount(), is(new FieldExecutiveAccount(fieldExecutiveId, password)));
         assertThat(request.getFieldExecutive(), is(new FieldExecutive(fieldExecutiveId, name,mobileNumber)));
