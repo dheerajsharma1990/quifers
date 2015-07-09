@@ -9,14 +9,11 @@ import com.quifers.servlet.RequestHandlerFactory;
 import com.quifers.servlet.admin.validators.AssignFieldExecutiveRequestValidator;
 import com.quifers.servlet.admin.validators.BookingDateRangeRequestValidator;
 import com.quifers.servlet.admin.validators.FieldExecutiveRegisterRequestValidator;
-import com.quifers.validations.*;
 
 import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
-import static com.quifers.validations.AttributeValidatorFactory.getDayAttributeValidator;
-import static com.quifers.validations.AttributeValidatorFactory.getMobileNumberAttributeValidator;
-import static com.quifers.validations.AttributeValidatorFactory.getStringLengthAttributeValidator;
+import static com.quifers.validations.AttributeValidatorFactory.*;
 
 public class AdminRequestHandlerFactory implements RequestHandlerFactory {
 
@@ -39,7 +36,7 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
         } else if (isEqual("getAllFieldExecutives", command)) {
             return new GetAllFieldExecutivesRequestHandler(fieldExecutiveDao);
         } else if (isEqual("assignFieldExecutive", command)) {
-            return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(getStringLengthAttributeValidator(8, 30), new OrderIdAttributeValidator()), fieldExecutiveDao, orderDao);
+            return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(getStringLengthAttributeValidator(8, 30), getOrderIdAttributeValidator()), fieldExecutiveDao, orderDao);
         } else if (isEqual("unassignedOrders", command)) {
             return new UnassignedOrdersRequestHandler(orderDao);
         } else {

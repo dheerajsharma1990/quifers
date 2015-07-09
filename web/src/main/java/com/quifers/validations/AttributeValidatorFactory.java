@@ -7,6 +7,7 @@ public class AttributeValidatorFactory {
     private static final DayAttributeValidator DAY_ATTRIBUTE_VALIDATOR = new DayAttributeValidator(EMPTY_STRING_ATTRIBUTE_VALIDATOR);
     private static final MobileNumberAttributeValidator MOBILE_NUMBER_ATTRIBUTE_VALIDATOR = new MobileNumberAttributeValidator(EMPTY_STRING_ATTRIBUTE_VALIDATOR);
     private static final PositiveIntegerAttributeValidator POSITIVE_INTEGER_ATTRIBUTE_VALIDATOR = new PositiveIntegerAttributeValidator(EMPTY_STRING_ATTRIBUTE_VALIDATOR);
+    private static final OrderIdAttributeValidator ORDER_ID_ATTRIBUTE_VALIDATOR = new OrderIdAttributeValidator(EMPTY_STRING_ATTRIBUTE_VALIDATOR);
 
     public static EmptyStringAttributeValidator getEmptyStringAttributeValidator() {
         return EMPTY_STRING_ATTRIBUTE_VALIDATOR;
@@ -30,5 +31,9 @@ public class AttributeValidatorFactory {
 
     public static PositiveIntegerAttributeValidator getPositiveIntegerAttributeValidator() {
         return POSITIVE_INTEGER_ATTRIBUTE_VALIDATOR;
+    }
+
+    public static OrderIdAttributeValidator getOrderIdAttributeValidator() {
+        return ORDER_ID_ATTRIBUTE_VALIDATOR;
     }
 }
