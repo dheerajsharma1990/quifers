@@ -2,20 +2,20 @@ package com.quifers.servlet.admin.validators;
 
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
-import com.quifers.validations.InvalidRequestException;
-import com.quifers.servlet.RequestValidator;
 import com.quifers.request.admin.AssignFieldExecutiveRequest;
+import com.quifers.servlet.RequestValidator;
+import com.quifers.validations.InvalidRequestException;
 import com.quifers.validations.OrderIdAttributeValidator;
-import com.quifers.validations.UserIdAttributeValidator;
+import com.quifers.validations.StringLengthAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class AssignFieldExecutiveRequestValidator implements RequestValidator {
 
-    private final UserIdAttributeValidator userIdAttributeValidator;
+    private final StringLengthAttributeValidator userIdAttributeValidator;
     private final OrderIdAttributeValidator orderIdAttributeValidator;
 
-    public AssignFieldExecutiveRequestValidator(UserIdAttributeValidator userIdAttributeValidator, OrderIdAttributeValidator orderIdAttributeValidator) {
+    public AssignFieldExecutiveRequestValidator(StringLengthAttributeValidator userIdAttributeValidator, OrderIdAttributeValidator orderIdAttributeValidator) {
         this.userIdAttributeValidator = userIdAttributeValidator;
         this.orderIdAttributeValidator = orderIdAttributeValidator;
     }

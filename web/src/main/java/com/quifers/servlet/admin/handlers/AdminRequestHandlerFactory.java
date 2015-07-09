@@ -34,12 +34,12 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String command = servletRequest.getParameter("cmd");
         if (isEqual("registerFieldExecutive", command)) {
-            return new FieldExecutiveRegisterRequestHandler(new FieldExecutiveRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
+            return new FieldExecutiveRegisterRequestHandler(new FieldExecutiveRegisterRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8, 20),
                     getStringLengthAttributeValidator(0, 50), getMobileNumberAttributeValidator()), fieldExecutiveAccountDao, fieldExecutiveDao);
         } else if (isEqual("getAllFieldExecutives", command)) {
             return new GetAllFieldExecutivesRequestHandler(fieldExecutiveDao);
         } else if (isEqual("assignFieldExecutive", command)) {
-            return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(new UserIdAttributeValidator(), new OrderIdAttributeValidator()), fieldExecutiveDao, orderDao);
+            return new AssignFieldExecutiveRequestHandler(new AssignFieldExecutiveRequestValidator(getStringLengthAttributeValidator(8, 30), new OrderIdAttributeValidator()), fieldExecutiveDao, orderDao);
         } else if (isEqual("unassignedOrders", command)) {
             return new UnassignedOrdersRequestHandler(orderDao);
         } else {

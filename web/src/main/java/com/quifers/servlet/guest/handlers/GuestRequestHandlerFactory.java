@@ -46,14 +46,14 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
     public RequestHandler getRequestHandler(HttpServletRequest servletRequest) throws CommandNotFoundException {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/guest/admin/register", requestURI)) {
-            return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
+            return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8,20),
                     getStringLengthAttributeValidator(0, 50), getMobileNumberAttributeValidator()), adminAccountDao, adminDao);
         } else if (isEqual("/api/v0/guest/order/book", requestURI)) {
             return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService), orderDao, webPublisher);
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {
-            return new AdminLoginRequestHandler(new AdminLoginRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator()), new AdminAuthenticator(adminAccountDao));
+            return new AdminLoginRequestHandler(new AdminLoginRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8,20)), new AdminAuthenticator(adminAccountDao));
         } else if (isEqual("/api/v0/guest/executive/login", requestURI)) {
-            return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator()), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
+            return new FieldExecutiveLoginRequestHandler(new FieldExecutiveLoginRequestValidator(getStringLengthAttributeValidator(8, 30), getStringLengthAttributeValidator(8,20)), new FieldExecutiveAuthenticator(fieldExecutiveAccountDao));
         }
         throw new CommandNotFoundException(requestURI);
     }

@@ -5,16 +5,16 @@ import com.quifers.request.executive.GetOrdersRequest;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.validations.DayAttributeValidator;
 import com.quifers.validations.InvalidRequestException;
-import com.quifers.validations.UserIdAttributeValidator;
+import com.quifers.validations.StringLengthAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class GetOrdersRequestValidator implements RequestValidator {
 
-    private final UserIdAttributeValidator userIdAttributeValidator;
+    private final StringLengthAttributeValidator userIdAttributeValidator;
     private final DayAttributeValidator dayAttributeValidator;
 
-    public GetOrdersRequestValidator(UserIdAttributeValidator userIdAttributeValidator, DayAttributeValidator dayAttributeValidator) {
+    public GetOrdersRequestValidator(StringLengthAttributeValidator userIdAttributeValidator, DayAttributeValidator dayAttributeValidator) {
         this.userIdAttributeValidator = userIdAttributeValidator;
         this.dayAttributeValidator = dayAttributeValidator;
     }

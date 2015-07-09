@@ -16,8 +16,8 @@ import static org.mockito.Mockito.*;
 
 public class AdminRegisterRequestValidatorTest {
 
-    private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
-    private final PasswordAttributeValidator passwordAttributeValidator = mock(PasswordAttributeValidator.class);
+    private final StringLengthAttributeValidator userIdAttributeValidator = mock(StringLengthAttributeValidator.class);
+    private final StringLengthAttributeValidator passwordAttributeValidator = mock(StringLengthAttributeValidator.class);
     private final StringLengthAttributeValidator stringLengthAttributeValidator = mock(StringLengthAttributeValidator.class);
     private final MobileNumberAttributeValidator mobileNumberAttributeValidator = mock(MobileNumberAttributeValidator.class);
     private final AdminRegisterRequestValidator validator = new AdminRegisterRequestValidator(userIdAttributeValidator, passwordAttributeValidator,

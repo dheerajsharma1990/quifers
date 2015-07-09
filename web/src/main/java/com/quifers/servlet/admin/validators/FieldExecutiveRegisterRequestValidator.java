@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 
 public class FieldExecutiveRegisterRequestValidator implements RequestValidator {
 
-    private final UserIdAttributeValidator userIdAttributeValidator;
-    private final PasswordAttributeValidator passwordAttributeValidator;
+    private final StringLengthAttributeValidator userIdAttributeValidator;
+    private final StringLengthAttributeValidator passwordAttributeValidator;
     private final StringLengthAttributeValidator nameValidator;
     private final MobileNumberAttributeValidator mobileNumberAttributeValidator;
 
-    public FieldExecutiveRegisterRequestValidator(UserIdAttributeValidator userIdAttributeValidator, PasswordAttributeValidator passwordAttributeValidator,
+    public FieldExecutiveRegisterRequestValidator(StringLengthAttributeValidator userIdAttributeValidator, StringLengthAttributeValidator passwordAttributeValidator,
                                                   StringLengthAttributeValidator nameValidator, MobileNumberAttributeValidator mobileNumberAttributeValidator) {
         this.userIdAttributeValidator = userIdAttributeValidator;
         this.passwordAttributeValidator = passwordAttributeValidator;

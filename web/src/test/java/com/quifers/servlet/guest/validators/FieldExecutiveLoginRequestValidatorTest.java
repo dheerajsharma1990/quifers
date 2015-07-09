@@ -4,8 +4,7 @@ import com.quifers.domain.FieldExecutiveAccount;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.request.guest.FieldExecutiveLoginRequest;
 import com.quifers.validations.InvalidRequestException;
-import com.quifers.validations.PasswordAttributeValidator;
-import com.quifers.validations.UserIdAttributeValidator;
+import com.quifers.validations.StringLengthAttributeValidator;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,8 +15,8 @@ import static org.mockito.Mockito.*;
 
 public class FieldExecutiveLoginRequestValidatorTest {
 
-    private final UserIdAttributeValidator userIdAttributeValidator = mock(UserIdAttributeValidator.class);
-    private final PasswordAttributeValidator passwordAttributeValidator = mock(PasswordAttributeValidator.class);
+    private final StringLengthAttributeValidator userIdAttributeValidator = mock(StringLengthAttributeValidator.class);
+    private final StringLengthAttributeValidator passwordAttributeValidator = mock(StringLengthAttributeValidator.class);
     private final FieldExecutiveLoginRequestValidator validator = new FieldExecutiveLoginRequestValidator(userIdAttributeValidator, passwordAttributeValidator);
 
     @Test

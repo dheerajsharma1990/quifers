@@ -14,9 +14,7 @@ import com.quifers.validations.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static com.quifers.servlet.CommandComparator.isEqual;
-import static com.quifers.validations.AttributeValidatorFactory.getBooleanAttributeValidator;
-import static com.quifers.validations.AttributeValidatorFactory.getDayAttributeValidator;
-import static com.quifers.validations.AttributeValidatorFactory.getPositiveIntegerAttributeValidator;
+import static com.quifers.validations.AttributeValidatorFactory.*;
 
 public class FieldExecutiveRequestHandlerFactory implements RequestHandlerFactory {
 
@@ -36,7 +34,7 @@ public class FieldExecutiveRequestHandlerFactory implements RequestHandlerFactor
         if (isEqual("/api/v0/executive/order/create/price", requestURI)) {
             return new CreatePriceRequestHandler(new CreatePriceRequestValidator(new OrderIdAttributeValidator(), getPositiveIntegerAttributeValidator(), getBooleanAttributeValidator()), orderDao, webPublisher);
         } else if (isEqual("/api/v0/executive/order/get/all", requestURI)) {
-            return new GetOrdersRequestHandler(new GetOrdersRequestValidator(new UserIdAttributeValidator(), getDayAttributeValidator()), orderDao, fieldExecutiveDao);
+            return new GetOrdersRequestHandler(new GetOrdersRequestValidator(getStringLengthAttributeValidator(8,30), getDayAttributeValidator()), orderDao, fieldExecutiveDao);
         } else if (isEqual("/api/v0/executive/order/receivables", requestURI)) {
             return new ReceivableRequestHandler(new ReceivableRequestValidator(new OrderIdAttributeValidator(), getPositiveIntegerAttributeValidator()), orderDao);
         }

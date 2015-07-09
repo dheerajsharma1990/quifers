@@ -5,16 +5,16 @@ import com.quifers.request.admin.AdminAuthenticationRequest;
 import com.quifers.servlet.RequestValidator;
 import com.quifers.validations.EmptyStringAttributeValidator;
 import com.quifers.validations.InvalidRequestException;
-import com.quifers.validations.UserIdAttributeValidator;
+import com.quifers.validations.StringLengthAttributeValidator;
 
 import javax.servlet.http.HttpServletRequest;
 
 public class AdminAuthenticationRequestValidator implements RequestValidator {
 
-    private final UserIdAttributeValidator userIdAttributeValidator;
+    private final StringLengthAttributeValidator userIdAttributeValidator;
     private final EmptyStringAttributeValidator emptyStringValidator;
 
-    public AdminAuthenticationRequestValidator(UserIdAttributeValidator userIdAttributeValidator, EmptyStringAttributeValidator emptyStringValidator) {
+    public AdminAuthenticationRequestValidator(StringLengthAttributeValidator userIdAttributeValidator, EmptyStringAttributeValidator emptyStringValidator) {
         this.userIdAttributeValidator = userIdAttributeValidator;
         this.emptyStringValidator = emptyStringValidator;
     }
