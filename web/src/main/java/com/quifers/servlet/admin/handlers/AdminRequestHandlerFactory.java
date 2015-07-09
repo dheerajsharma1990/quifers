@@ -35,7 +35,7 @@ public class AdminRequestHandlerFactory implements RequestHandlerFactory {
         String command = servletRequest.getParameter("cmd");
         if (isEqual("registerFieldExecutive", command)) {
             return new FieldExecutiveRegisterRequestHandler(new FieldExecutiveRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
-                    getStringLengthAttributeValidator(), getMobileNumberAttributeValidator()), fieldExecutiveAccountDao, fieldExecutiveDao);
+                    getStringLengthAttributeValidator(0, 50), getMobileNumberAttributeValidator()), fieldExecutiveAccountDao, fieldExecutiveDao);
         } else if (isEqual("getAllFieldExecutives", command)) {
             return new GetAllFieldExecutivesRequestHandler(fieldExecutiveDao);
         } else if (isEqual("assignFieldExecutive", command)) {

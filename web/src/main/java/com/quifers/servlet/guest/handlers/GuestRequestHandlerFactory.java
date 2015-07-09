@@ -47,7 +47,7 @@ public class GuestRequestHandlerFactory implements RequestHandlerFactory {
         String requestURI = servletRequest.getRequestURI();
         if (isEqual("/api/v0/guest/admin/register", requestURI)) {
             return new AdminRegisterRequestHandler(new AdminRegisterRequestValidator(new UserIdAttributeValidator(), new PasswordAttributeValidator(),
-                    getStringLengthAttributeValidator(), getMobileNumberAttributeValidator()), adminAccountDao, adminDao);
+                    getStringLengthAttributeValidator(0, 50), getMobileNumberAttributeValidator()), adminAccountDao, adminDao);
         } else if (isEqual("/api/v0/guest/order/book", requestURI)) {
             return new NewOrderRequestHandler(new NewOrderRequestValidator(orderIdGeneratorService), orderDao, webPublisher);
         } else if (isEqual("/api/v0/guest/admin/login", requestURI)) {

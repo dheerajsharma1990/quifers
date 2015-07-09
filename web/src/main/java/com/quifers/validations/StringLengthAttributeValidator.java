@@ -3,19 +3,25 @@ package com.quifers.validations;
 public class StringLengthAttributeValidator implements AttributeValidator<String> {
 
     private final EmptyStringAttributeValidator emptyStringAttributeValidator;
-    private final int MAXIMUM_NAME_LENGTH = 50;
+    private final int minLength;
+    private final int maxLength;
 
-    public StringLengthAttributeValidator(EmptyStringAttributeValidator emptyStringAttributeValidator) {
+    public StringLengthAttributeValidator(EmptyStringAttributeValidator emptyStringAttributeValidator, int minLength, int maxLength) {
         this.emptyStringAttributeValidator = emptyStringAttributeValidator;
+        this.minLength = minLength;
+        this.maxLength = maxLength;
     }
 
     @Override
-    public String validate(String name) throws InvalidRequestException {
-        name = emptyStringAttributeValidator.validate(name);
-        name = name.trim();
-        if (name.length() > MAXIMUM_NAME_LENGTH) {
-            throw new InvalidRequestException("Name [" + name + "] is too long.Maximum length is [" + MAXIMUM_NAME_LENGTH + "].");
+    public String validate(String value) throws InvalidRequestException {
+        value = emptyStringAttributeValidator.validate(value);
+        value = value.trim();
+        if (value.length() < minLength) {
+            throw new InvalidRequestException("Value [" + value + "] is too short.Minimum length is [" + minLength + "].");
         }
-        return name;
+        if (value.length() > maxLength) {
+            throw new InvalidRequestException("Value [" + value + "] is too long.Maximum length is [" + maxLength + "].");
+        }
+        return value;
     }
 }

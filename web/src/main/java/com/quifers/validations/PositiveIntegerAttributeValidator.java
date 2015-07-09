@@ -1,14 +1,16 @@
 package com.quifers.validations;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
 public class PositiveIntegerAttributeValidator implements AttributeValidator<Integer> {
+
+    private final EmptyStringAttributeValidator emptyStringAttributeValidator;
+
+    public PositiveIntegerAttributeValidator(EmptyStringAttributeValidator emptyStringAttributeValidator) {
+        this.emptyStringAttributeValidator = emptyStringAttributeValidator;
+    }
 
     @Override
     public Integer validate(String value) throws InvalidRequestException {
-        if (isEmpty(value)) {
-            throw new InvalidRequestException("Value is empty.");
-        }
+        value = emptyStringAttributeValidator.validate(value);
         value = value.trim();
         String digitsRegex = "[0-9]+";
         if (!value.matches(digitsRegex)) {
