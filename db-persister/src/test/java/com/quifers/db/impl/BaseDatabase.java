@@ -2,7 +2,6 @@ package com.quifers.db.impl;
 
 import com.quifers.Environment;
 import com.quifers.db.LocalDatabaseHelper;
-import com.quifers.db.LocalDatabaseServer;
 import com.quifers.hibernate.DaoFactory;
 import com.quifers.hibernate.DaoFactoryBuilder;
 import com.quifers.properties.DBPersisterProperties;
@@ -14,11 +13,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import static com.quifers.db.LocalDatabaseServer.startServer;
+import static com.quifers.db.LocalDatabaseServer.stopServer;
 import static com.quifers.properties.DBPersisterPropertiesLoader.loadDbPersisterProperties;
 
 public class BaseDatabase {
 
-    private final LocalDatabaseServer localDatabaseServer = new LocalDatabaseServer();
     protected static LocalDatabaseHelper databaseHelper;
     protected static DaoFactory daoFactory;
 
@@ -26,7 +26,7 @@ public class BaseDatabase {
     public void initialiseDBAndExecuteScripts() throws IOException, SQLException, ClassNotFoundException {
         Environment environment = getEnvironment();
         DBPersisterProperties dbPersisterProperties = loadDbPersisterProperties(environment);
-        localDatabaseServer.startServer(9092);
+        startServer(9092);
         Connection connection = connectToDb(dbPersisterProperties);
         databaseHelper = new LocalDatabaseHelper(connection);
         databaseHelper.executeSQLs();
@@ -45,7 +45,7 @@ public class BaseDatabase {
 
     @AfterSuite
     public void shutdownDB() {
-        localDatabaseServer.stopServer();
+        stopServer();
     }
 
 }

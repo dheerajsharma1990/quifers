@@ -9,9 +9,9 @@ import java.sql.SQLException;
 public class LocalDatabaseServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LocalDatabaseServer.class);
-    private Server server;
+    private static Server server;
 
-    public void startServer(int port) throws SQLException {
+    public static void startServer(int port) throws SQLException {
         if (server == null) {
             server = Server.createTcpServer("-tcpPort", String.valueOf(port));
         }
@@ -23,7 +23,7 @@ public class LocalDatabaseServer {
         }
     }
 
-    public void stopServer() {
+    public static void stopServer() {
         if (server != null) {
             server.stop();
         }
