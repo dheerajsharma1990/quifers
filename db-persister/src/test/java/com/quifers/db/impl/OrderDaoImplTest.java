@@ -1,11 +1,15 @@
 package com.quifers.db.impl;
 
+import com.quifers.dao.FieldExecutiveAccountDao;
+import com.quifers.dao.FieldExecutiveDao;
 import com.quifers.dao.OrderDao;
 import com.quifers.domain.*;
 import com.quifers.domain.builders.OrderBuilder;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -25,6 +29,8 @@ public class OrderDaoImplTest extends BaseDatabase {
     private OrderId orderId = new OrderId("QUIFID1");
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private OrderDao orderDao;
+    private FieldExecutiveAccountDao fieldExecutiveAccountDao;
+    private FieldExecutiveDao fieldExecutiveDao;
 
     @Test
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
@@ -105,12 +111,21 @@ public class OrderDaoImplTest extends BaseDatabase {
         return order;
     }
 
-    @BeforeMethod
+    @BeforeClass
     public void saveFieldExecutive() throws Exception {
-        databaseHelper.cleanAllTables();
-        daoFactory.getFieldExecutiveAccountDao().saveFieldExecutiveAccount(fieldExecutiveAccount);
-        daoFactory.getFieldExecutiveDao().saveFieldExecutive(fieldExecutive);
+        orderDao = daoFactory.getOrderDao();
+        fieldExecutiveAccountDao = daoFactory.getFieldExecutiveAccountDao();
+        fieldExecutiveDao = daoFactory.getFieldExecutiveDao();
     }
 
+    @BeforeMethod
+    public void addFieldExecutive() throws Exception {
+        fieldExecutiveAccountDao.saveFieldExecutiveAccount(fieldExecutiveAccount);
+        fieldExecutiveDao.saveFieldExecutive(fieldExecutive);
+    }
 
+    @AfterMethod
+    public void clearTables() throws Exception {
+        databaseHelper.cleanAllTables();
+    }
 }

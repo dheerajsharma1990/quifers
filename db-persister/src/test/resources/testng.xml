@@ -1,0 +1,8 @@
+<suite name="db-persister-suite" parallel="false">
+    <test name="db-persister-suite-tests" parallel="false">
+        <packages>
+            <package name="com.quifers.db.impl" />
+            <package name="com.quifers.db" />
+        </packages>
+    </test>
+</suite>

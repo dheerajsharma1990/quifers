@@ -19,8 +19,8 @@ import static com.quifers.properties.DBPersisterPropertiesLoader.loadDbPersister
 public class BaseDatabase {
 
     private final LocalDatabaseServer localDatabaseServer = new LocalDatabaseServer();
-    protected LocalDatabaseHelper databaseHelper;
-    protected DaoFactory daoFactory;
+    protected static LocalDatabaseHelper databaseHelper;
+    protected static DaoFactory daoFactory;
 
     @BeforeSuite
     public void initialiseDBAndExecuteScripts() throws IOException, SQLException, ClassNotFoundException {

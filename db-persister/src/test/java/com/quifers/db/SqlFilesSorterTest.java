@@ -56,7 +56,6 @@ public class SqlFilesSorterTest {
 
         //then
         assertThat(sqlFilesInOrder.size(), is(0));
-
     }
 
 }
