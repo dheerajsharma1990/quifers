@@ -35,7 +35,6 @@ public class OrderDaoImplTest extends BaseDatabase {
     @Test
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
         //given
-        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15", true));
         orderDao.saveOrder(buildOrder(new OrderId("QUIFID11"), OrderState.BOOKED, "29/06/2015 00:00", true));
         orderDao.saveOrder(new OrderBuilder("QUIFID90").addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("28/06/2015 10:10"), false)
@@ -54,7 +53,6 @@ public class OrderDaoImplTest extends BaseDatabase {
     @Test
     public void shouldGetUnassignedOrders() throws Exception {
         //given
-        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(new Order(new OrderId("QUIFID10")));
         orderDao.saveOrder(new Order(new OrderId("QUIFID11")));
         Order order = new Order(new OrderId("QUIFID12"));
@@ -71,7 +69,6 @@ public class OrderDaoImplTest extends BaseDatabase {
     @Test
     public void shouldGetAssignedOrders() throws Exception {
         //given
-        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(new OrderBuilder("QUIFID20")
                 .addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("25/06/2015 15:15"), false)
                 .addOrderWorkflow(OrderState.COMPLETED, dateFormat.parse("27/06/2015 15:15"), true).buildOrder());
