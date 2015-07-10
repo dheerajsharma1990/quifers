@@ -22,3 +22,16 @@ task testJar (type: Jar, dependsOn: testClasses) {
 artifacts {
     testOutput testJar
 }
+
+
+test {
+    useTestNG();
+
+    forkEvery = 1
+    maxParallelForks = 1
+    testLogging {
+        events('failed')
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}

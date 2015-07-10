@@ -69,3 +69,15 @@ task webZip(type: Zip, dependsOn: createUnixScriptFile) {
     from('build/dist')
     destinationDir = file('build')
 }
+
+test {
+    useTestNG();
+
+    forkEvery = 5
+    maxParallelForks = Runtime.runtime.availableProcessors()
+    testLogging {
+        events('failed')
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+}

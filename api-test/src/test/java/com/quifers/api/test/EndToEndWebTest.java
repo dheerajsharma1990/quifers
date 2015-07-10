@@ -1,13 +1,12 @@
 package com.quifers.api.test;
 
 import com.quifers.Environment;
-import com.quifers.db.LocalDatabaseRunner;
+import com.quifers.db.impl.BaseDatabase;
 import com.quifers.domain.enums.OrderState;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -23,7 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
 
-public class EndToEndWebTest {
+public class EndToEndWebTest extends BaseDatabase {
 
     private static final String BASE_URL = "http://localhost:9111";
     private static String ORDER_ID = "QUIFID00000001";
@@ -359,14 +358,8 @@ public class EndToEndWebTest {
 
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
-        new LocalDatabaseRunner().runDatabaseServer(Environment.LOCAL);
         new ActiveMqBroker().startBroker();
         runJettyServer(Environment.LOCAL, 9111, 0);
-    }
-
-    @AfterClass
-    public void shutDownDatabase() {
-        new LocalDatabaseRunner().stopDatabaseServer();
     }
 
     private String buildRequest() throws UnsupportedEncodingException {

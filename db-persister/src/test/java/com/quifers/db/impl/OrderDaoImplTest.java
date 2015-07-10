@@ -1,16 +1,11 @@
 package com.quifers.db.impl;
 
-import com.quifers.Environment;
 import com.quifers.dao.OrderDao;
-import com.quifers.db.LocalDatabaseRunner;
 import com.quifers.domain.*;
 import com.quifers.domain.builders.OrderBuilder;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.FieldExecutiveId;
 import com.quifers.domain.id.OrderId;
-import com.quifers.hibernate.DaoFactory;
-import com.quifers.hibernate.DaoFactoryBuilder;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,20 +16,20 @@ import java.util.Collection;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-@Test(enabled = false)
-public class OrderDaoImplTest {
+@Test
+public class OrderDaoImplTest extends BaseDatabase {
 
     private FieldExecutiveId fieldExecutiveId = new FieldExecutiveId("fe");
     private FieldExecutiveAccount fieldExecutiveAccount = new FieldExecutiveAccount(fieldExecutiveId, "pass");
     private FieldExecutive fieldExecutive = new FieldExecutive(fieldExecutiveId, "name", 99l);
     private OrderId orderId = new OrderId("QUIFID1");
-    private DaoFactory daoFactory;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     private OrderDao orderDao;
 
-    @Test(enabled = false)
+    @Test
     public void shouldGetOrdersIfBookingDateIsWithinRange() throws Exception {
         //given
+        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(buildOrder(orderId, OrderState.BOOKED, "28/06/2015 15:15", true));
         orderDao.saveOrder(buildOrder(new OrderId("QUIFID11"), OrderState.BOOKED, "29/06/2015 00:00", true));
         orderDao.saveOrder(new OrderBuilder("QUIFID90").addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("28/06/2015 10:10"), false)
@@ -50,9 +45,10 @@ public class OrderDaoImplTest {
         assertThat(ordersFromDb.size(), is(1));
     }
 
-    @Test(enabled = false)
+    @Test
     public void shouldGetUnassignedOrders() throws Exception {
         //given
+        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(new Order(new OrderId("QUIFID10")));
         orderDao.saveOrder(new Order(new OrderId("QUIFID11")));
         Order order = new Order(new OrderId("QUIFID12"));
@@ -66,9 +62,10 @@ public class OrderDaoImplTest {
         assertThat(unassignedOrders.size(), is(2));
     }
 
-    @Test(enabled = false)
+    @Test
     public void shouldGetAssignedOrders() throws Exception {
         //given
+        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(new OrderBuilder("QUIFID20")
                 .addOrderWorkflow(OrderState.BOOKED, dateFormat.parse("25/06/2015 15:15"), false)
                 .addOrderWorkflow(OrderState.COMPLETED, dateFormat.parse("27/06/2015 15:15"), true).buildOrder());
@@ -84,9 +81,10 @@ public class OrderDaoImplTest {
         assertThat(assignedOrders.size(), is(1));
     }
 
-    @Test(enabled = false)
+    @Test
     public void shouldGetAllCompletedOrders() throws Exception {
         //given
+        orderDao = daoFactory.getOrderDao();
         orderDao.saveOrder(buildOrder(new OrderId("QUIF1"), OrderState.BOOKED, "20/06/2015 15:15", true));
         orderDao.saveOrder(buildOrder(new OrderId("QUIF2"), OrderState.COMPLETED, "19/06/2015 15:15", true));
         orderDao.saveOrder(buildOrder(new OrderId("QUIF3"), OrderState.COMPLETED, "18/06/2015 15:15", true));
@@ -107,23 +105,12 @@ public class OrderDaoImplTest {
         return order;
     }
 
-
     @BeforeMethod
-    public void startDatabaseAndAddFieldExecutives() throws Exception {
-        new LocalDatabaseRunner().runDatabaseServer(Environment.LOCAL);
-        daoFactory = DaoFactoryBuilder.getDaoFactory(Environment.LOCAL);
-        saveFieldExecutive();
-        orderDao = daoFactory.getOrderDao();
-    }
-
-    private void saveFieldExecutive() throws Exception {
+    public void saveFieldExecutive() throws Exception {
+        databaseHelper.cleanAllTables();
         daoFactory.getFieldExecutiveAccountDao().saveFieldExecutiveAccount(fieldExecutiveAccount);
         daoFactory.getFieldExecutiveDao().saveFieldExecutive(fieldExecutive);
     }
 
-    @AfterMethod
-    public void stopDatabase() throws Exception {
-        new LocalDatabaseRunner().stopDatabaseServer();
-    }
 
 }
