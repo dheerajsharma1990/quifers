@@ -27,11 +27,14 @@ subprojects {
             exceptionFormat = 'full'
         }
 
-        addTestListener(new ModuleTestListener(project.name))
+        addTestListener(new ProjectTestListener(project.name))
     }
 }
 
 
+gradle.buildFinished { BuildResult result ->
+
+}
 
 
 

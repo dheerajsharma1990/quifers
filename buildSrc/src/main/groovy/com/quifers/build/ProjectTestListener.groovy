@@ -4,13 +4,13 @@ import org.gradle.api.tasks.testing.TestResult
 
 import java.util.concurrent.atomic.AtomicLong
 
-class ModuleTestListener implements TestListener {
+class ProjectTestListener implements TestListener {
 
     private AtomicLong delay = new AtomicLong(0);
     private static final String GRADLE_SUITE_NAME = "Gradle suite"
     private final String projectName;
 
-    ModuleTestListener(String projectName) {
+    ProjectTestListener(String projectName) {
         this.projectName = projectName
     }
 
