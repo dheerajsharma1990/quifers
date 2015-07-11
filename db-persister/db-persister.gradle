@@ -22,17 +22,3 @@ task testJar(type: Jar, dependsOn: testClasses) {
 artifacts {
     testOutput testJar
 }
-
-test {
-    useTestNG() {
-        suites 'src/test/resources/testng.xml'
-        parallel 'false'
-    }
-    forkEvery = 0
-    maxParallelForks = 1
-    testLogging {
-        events('failed')
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-}

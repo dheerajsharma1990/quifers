@@ -44,17 +44,4 @@ dependencies {
 
 }
 
-test {
-    useTestNG();
-
-    forkEvery = 5
-    maxParallelForks = Runtime.runtime.availableProcessors()
-    exclude('**EndToEndEmailTest.class')
-    testLogging {
-        events('failed')
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-}
-
 

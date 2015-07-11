@@ -17,5 +17,21 @@ subprojects {
 
     }
 
+    test {
+        useTestNG()
+        forkEvery = 0
+        maxParallelForks = 1
+        testLogging {
+            events('failed')
+            showStandardStreams = true
+            exceptionFormat = 'full'
+        }
+
+        addTestListener(new ModuleTestListener(project.name))
+    }
 }
+
+
+
+
 

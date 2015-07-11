@@ -2,15 +2,3 @@ dependencies {
     testCompile project(':web')
     testCompile project(path: ':db-persister', configuration: 'testOutput')
 }
-
-test {
-    useTestNG();
-
-    forkEvery = 1
-    maxParallelForks = 1
-    testLogging {
-        events('failed')
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-}
