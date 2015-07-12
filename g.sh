@@ -1,2 +1,2 @@
 #!/bin/bash
-./sandbox/gradle*/bin/gradle "$@"
+./sandbox/gradle*/bin/gradle --daemon "$@"
