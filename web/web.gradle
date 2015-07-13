@@ -1,4 +1,7 @@
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = 'com.quifers.JettyRunner'
 
 dependencies {
     compile project(':domain')
@@ -17,55 +20,10 @@ dependencies {
 
 }
 
-task makeWebJar(type: Jar, dependsOn: compileJava) {
-    manifest {
-        String manifestVersion = 'Manifest-Version';
-        String createdBy = 'Created-By';
-        String createdAt = 'Created-At';
-        String mainClass = 'Main-Class';
-        def map = [(manifestVersion): 1.0, (createdBy): 'Quifers Tech', (createdAt): new Date(), (mainClass): 'com.quifers.JettyRunner']
-        attributes map
+startScripts {
+    if (!project.hasProperty('env')) {
+        throw new GradleException('No Environment Specified.')
     }
-    from sourceSets.main.output
+    applicationDefaultJvmArgs = ["-Denv=${project.property("env")}"]
 }
 
-def classpathJars = {
-    sourceSets.main.runtimeClasspath.filter { file ->
-        return file.name.endsWith(".jar")
-    }
-}
-
-def classPathJarsName = {
-    def jarNames = []
-    classpathJars().files.each { f ->
-        jarNames << f.name
-    }
-    return jarNames
-}
-
-task createJarFolder(type: Copy, dependsOn: makeWebJar) {
-    from(classpathJars)
-    from('build/libs') {
-        include '**/*.jar'
-    }
-    into 'build/dist/libs/'
-}
-
-task createUnixScriptFile(type: UnixScript, dependsOn: createJarFolder) {
-    environment = System.getProperty("env")
-    mainClass = 'com.quifers.JettyRunner'
-    baseJarName = 'web.jar'
-    classpath = classPathJarsName()
-    file('build').mkdir()
-    file('build/dist').mkdir()
-    def unixFile = file('build/dist/web.sh')
-    unixFile.createNewFile();
-    unixFile.executable = true
-    unixFile.write unixScriptContent
-}
-
-task webZip(type: Zip, dependsOn: createUnixScriptFile) {
-    archiveName = 'web.zip'
-    from('build/dist')
-    destinationDir = file('build')
-}

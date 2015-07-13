@@ -1,20 +1,28 @@
 apply plugin: 'java'
 apply plugin: 'application'
 
+mainClassName = 'com.quifers.email.EmailService'
+
 task credentialFile {
     outputs.dir file("target/credentials.json")
 }
 
-mainClassName = 'com.quifers.email.EmailService'
 
 distributions {
     main {
         contents {
-                from(credentialFile) {
-                    into "bin/target"
-                }
+            from(credentialFile) {
+                into "bin/target"
+            }
         }
     }
+}
+
+startScripts {
+    if (!project.hasProperty('env')) {
+        throw new GradleException('No Environment Specified.')
+    }
+    applicationDefaultJvmArgs = ["-Denv=${project.property("env")}"]
 }
 
 dependencies {
@@ -28,13 +36,13 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.12'
     compile group: 'org.eclipse.jetty', name: 'jetty-webapp', version: '9.3.0.M2'
 
-    compile (group: 'org.apache.activemq', name: 'activemq-all', version: '5.5.1') {
+    compile(group: 'org.apache.activemq', name: 'activemq-all', version: '5.5.1') {
         exclude group: 'org.slf4j'
     }
 
-    compile (group: 'com.sun.mail', name: 'javax.mail', version: '1.5.3')
-    compile (group: 'commons-codec', name: 'commons-codec', version: '1.9')
-    compile (group: 'com.google.http-client', name: 'google-http-client', version: '1.20.0')
+    compile(group: 'com.sun.mail', name: 'javax.mail', version: '1.5.3')
+    compile(group: 'commons-codec', name: 'commons-codec', version: '1.9')
+    compile(group: 'com.google.http-client', name: 'google-http-client', version: '1.20.0')
     compile group: 'com.h2database', name: 'h2', version: '1.4.187'
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.35'
 
