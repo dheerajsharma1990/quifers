@@ -9,8 +9,6 @@ import java.io.IOException;
 
 public class CredentialsRefresher {
 
-    private final String REFRESH_URL = "https://www.googleapis.com/oauth2/v3/token";
-
     private final HttpRequestSender httpRequestSender;
     private final AccessTokenRefreshRequestBuilder builder;
     private final JsonParser jsonParser;
@@ -25,7 +23,7 @@ public class CredentialsRefresher {
 
     public Credentials getRefreshedCredentials() throws IOException {
         String request = builder.buildAccessTokenRefreshRequest(refreshToken);
-        String response = httpRequestSender.sendRequestAndGetResponse(REFRESH_URL, "POST", request);
+        String response = httpRequestSender.sendRequestAndGetResponse("https://www.googleapis.com/oauth2/v3/token",request);
         return jsonParser.parseRefreshResponse(refreshToken, response);
     }
 

@@ -20,7 +20,7 @@ public class EmailHttpRequestSender {
         HttpURLConnection urlConnection = getConnection(EMAIL_URL);
         urlConnection.addRequestProperty("Content-Type", "application/json");
         urlConnection.addRequestProperty("Authorization", "Bearer" + " " + credentials.getAccessToken());
-        return requestSender.sendRequestAndGetResponse(urlConnection, "POST", request);
+        return requestSender.sendRequestAndGetResponse(urlConnection,request);
     }
 
     private HttpURLConnection getConnection(String url) throws IOException {

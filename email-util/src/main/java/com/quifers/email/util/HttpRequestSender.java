@@ -10,32 +10,30 @@ import java.net.URL;
 
 public class HttpRequestSender {
 
-    public String sendRequestAndGetResponse(HttpURLConnection urlConnection, String method, String request) throws IOException {
-        urlConnection.setRequestMethod(method);
+    public String sendRequestAndGetResponse(HttpURLConnection urlConnection, String request) throws IOException {
+        urlConnection.setRequestMethod("POST");
         int responseCode = sendRequest(urlConnection, request);
-        return parseResponse(urlConnection.getURL().toString(), method, request, urlConnection, responseCode);
+        return parseResponse(urlConnection.getURL().toString(), request, urlConnection, responseCode);
     }
 
-    public String sendRequestAndGetResponse(String url, String method, String request) throws IOException {
-        HttpURLConnection urlConnection = getConnection(url, method);
+    public String sendRequestAndGetResponse(String url, String request) throws IOException {
+        HttpURLConnection urlConnection = getConnection(url);
         int responseCode = sendRequest(urlConnection, request);
-        return parseResponse(url, method, request, urlConnection, responseCode);
+        return parseResponse(url, request, urlConnection, responseCode);
     }
 
-    private String parseResponse(String url, String method, String request, HttpURLConnection urlConnection, int responseCode) throws IOException {
+    private String parseResponse(String url, String request, HttpURLConnection urlConnection, int responseCode) throws IOException {
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException("An error occurred in sending " + method +
-                    " request " + request +
-                    " to url " + url + "." +
+            throw new IOException("An error occurred in sending request " + request + " to url " + url + "." +
                     getResponse(urlConnection.getErrorStream()));
         }
         return getResponse(urlConnection.getInputStream());
     }
 
-    private HttpURLConnection getConnection(String url, String method) throws IOException {
+    private HttpURLConnection getConnection(String url) throws IOException {
         URL obj = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) obj.openConnection();
-        connection.setRequestMethod(method);
+        connection.setRequestMethod("POST");
         connection.setDoOutput(true);
         connection.setDoInput(true);
         return connection;

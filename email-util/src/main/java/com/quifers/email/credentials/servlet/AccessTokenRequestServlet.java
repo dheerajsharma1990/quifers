@@ -38,7 +38,7 @@ public class AccessTokenRequestServlet extends HttpServlet {
 
         String accessCode = request.getParameter("code");
         String requestParams = requestBuilder.buildAccessTokenRequest(accessCode, properties.getCallbackUrl(), properties.getClientId(), properties.getClientSecretKey());
-        String responseString = httpRequestSender.sendRequestAndGetResponse(ACCESS_TOKEN_URL, "POST", requestParams);
+        String responseString = httpRequestSender.sendRequestAndGetResponse(ACCESS_TOKEN_URL, requestParams);
         response.getWriter().write("Credentials:\n\n" + responseString);
     }
 
