@@ -4,11 +4,13 @@ import com.quifers.Environment;
 import com.quifers.dao.OrderDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
 import com.quifers.email.builders.EmailRequestBuilder;
-import com.quifers.email.helpers.*;
+import com.quifers.email.helpers.CredentialsRefresher;
+import com.quifers.email.helpers.EmailCreatorFactory;
+import com.quifers.email.helpers.EmailHttpRequestSender;
+import com.quifers.email.helpers.EmailSender;
 import com.quifers.email.jms.EmailMessageConsumer;
 import com.quifers.email.jms.OrderReceiver;
 import com.quifers.email.properties.EmailUtilProperties;
-import com.quifers.email.util.CredentialsService;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
 import com.quifers.hibernate.DaoFactory;
@@ -22,7 +24,6 @@ import javax.jms.MessageConsumer;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Timer;
 
 import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
 
@@ -44,11 +45,9 @@ public class EmailService {
         LOGGER.info("Starting quifers email service...");
         EmailMessageConsumer messageConsumer = null;
         try {
-            CredentialsService credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
-            scheduleCredentialsRefreshingTask(credentialsService, emailUtilProperties);
-
+            CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(emailUtilProperties), jsonParser, emailUtilProperties.getRefreshToken());
             messageConsumer = new EmailMessageConsumer(emailUtilProperties);
-            OrderReceiver orderReceiver = getOrderReceiver(emailUtilProperties, messageConsumer.getMessageConsumer(), credentialsService, daoFactory.getOrderDao());
+            OrderReceiver orderReceiver = getOrderReceiver(emailUtilProperties, messageConsumer.getMessageConsumer(), credentialsRefresher, daoFactory.getOrderDao());
             receiveOrders(orderReceiver);
         } catch (Throwable e) {
             LOGGER.error("It's all over.Something terrible has happened.Email Service Is Shutting Down..{}", e);
@@ -85,19 +84,12 @@ public class EmailService {
         PropertyConfigurator.configure(inputStream);
     }
 
-    private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, CredentialsService credentialsService, OrderDao orderDao) throws JMSException, IOException, MessagingException {
+    private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, CredentialsRefresher credentialsRefresher, OrderDao orderDao) throws JMSException, IOException, MessagingException {
         EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
         EmailRequestBuilder builder = new EmailRequestBuilder();
         EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        return new OrderReceiver(messageConsumer, emailSender, new EmailCreatorFactory(properties.getEmailAccount()), credentialsService, orderDao);
+        return new OrderReceiver(messageConsumer, emailSender, new EmailCreatorFactory(properties.getEmailAccount()), credentialsRefresher, orderDao);
     }
 
-    private static void scheduleCredentialsRefreshingTask(CredentialsService credentialsService, EmailUtilProperties properties) {
-        LOGGER.info("Scheduling credential refresher task with delay of {} milliseconds...", properties.getCredentialsRefreshDelayInSeconds());
-        CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(properties), jsonParser);
-        CredentialsRefresherTask refresherTask = new CredentialsRefresherTask(credentialsService, credentialsRefresher);
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(refresherTask, 0, properties.getCredentialsRefreshDelayInSeconds() * 1000);
-    }
 
 }

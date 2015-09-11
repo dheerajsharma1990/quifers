@@ -34,8 +34,8 @@ public class EmailUtilProperties {
         return properties.getProperty("EMAIL_QUEUE_NAME");
     }
 
-    public int getCredentialsRefreshDelayInSeconds() {
-        return Integer.valueOf(properties.getProperty("CREDENTIALS_REFRESH_DELAY_IN_SECONDS"));
+    public String getRefreshToken() {
+        return properties.getProperty("REFRESH_TOKEN");
     }
 
 }

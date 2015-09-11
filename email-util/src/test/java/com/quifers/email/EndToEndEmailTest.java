@@ -1,50 +1,58 @@
 package com.quifers.email;
 
-import com.quifers.domain.*;
+import com.quifers.Environment;
+import com.quifers.domain.Address;
+import com.quifers.domain.Client;
+import com.quifers.domain.Order;
+import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
+import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
 import com.quifers.email.builders.EmailRequestBuilder;
-import com.quifers.email.helpers.BillDetailsEmailCreator;
-import com.quifers.email.helpers.EmailHttpRequestSender;
-import com.quifers.email.helpers.EmailSender;
-import com.quifers.email.helpers.NewOrderEmailCreator;
-import com.quifers.email.util.CredentialsService;
+import com.quifers.email.helpers.*;
+import com.quifers.email.properties.EmailUtilProperties;
+import com.quifers.email.properties.PropertiesLoader;
+import com.quifers.email.util.Credentials;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
+import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Test(enabled = false)
+@Test
 public class EndToEndEmailTest {
 
-    private CredentialsService credentialsService;
+    private Credentials credentials;
 
-    /**
-     * Kindly generate credentials from CredentialsGenerator.java before running this test..
-     */
-    @Test(enabled = false)
+    @Test
     public void shouldSendEmailsSuccessfully() throws Exception {
         //given
         EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
         Order order = getOrder();
 
         //when
-        emailSender.sendEmail(credentialsService.getCredentials(), new NewOrderEmailCreator("quifersdev@gmail.com"), order);
-        emailSender.sendEmail(credentialsService.getCredentials(), new BillDetailsEmailCreator("quifersdev@gmail.com"), order);
-
-        //then
+        emailSender.sendEmail(credentials, new NewOrderEmailCreator("quifersdev@gmail.com"), order);
+        emailSender.sendEmail(credentials, new BillDetailsEmailCreator("quifersdev@gmail.com"), order);
     }
 
 
     @BeforeClass
     public void initialiseEmailService() throws Exception {
-        System.setProperty("env", "local");
-        credentialsService = new CredentialsService(CredentialsService.DEFAULT_DIR, new JsonParser());
+        Environment local = Environment.LOCAL;
+        loadLog4jProperties(local);
+        EmailUtilProperties emailUtilProperties = PropertiesLoader.loadEmailUtilProperties(local);
+        credentials = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(emailUtilProperties), new JsonParser(), emailUtilProperties.getRefreshToken()).getRefreshedCredentials();
+    }
+
+    private void loadLog4jProperties(Environment environment) {
+        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+        PropertyConfigurator.configure(inputStream);
     }
 
     private Order getOrder() {
@@ -58,8 +66,7 @@ public class EndToEndEmailTest {
         Set<Address> addresses = new HashSet<>();
         addresses.add(pickUpAddress);
         addresses.add(dropOffAddress);
-        Order order = new Order(orderId, client, "vehicle", addresses, 1, "estimate", 10, 1, false, 2, true, null, workflowSet, 0, 0);
-        return order;
+        return new Order(orderId, client, "vehicle", addresses, 1, "estimate", 10, 1, false, 2, true, null, workflowSet, 0, 0);
     }
 
 }

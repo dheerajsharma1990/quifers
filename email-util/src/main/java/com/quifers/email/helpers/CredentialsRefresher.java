@@ -14,17 +14,19 @@ public class CredentialsRefresher {
     private final HttpRequestSender httpRequestSender;
     private final AccessTokenRefreshRequestBuilder builder;
     private final JsonParser jsonParser;
+    private final String refreshToken;
 
-    public CredentialsRefresher(HttpRequestSender httpRequestSender, AccessTokenRefreshRequestBuilder builder, JsonParser jsonParser) {
+    public CredentialsRefresher(HttpRequestSender httpRequestSender, AccessTokenRefreshRequestBuilder builder, JsonParser jsonParser, String refreshToken) {
         this.httpRequestSender = httpRequestSender;
         this.builder = builder;
         this.jsonParser = jsonParser;
+        this.refreshToken = refreshToken;
     }
 
-    public Credentials getRefreshedCredentials(Credentials oldCredentials) throws IOException {
-        String request = builder.buildAccessTokenRefreshRequest(oldCredentials.getRefreshToken());
+    public Credentials getRefreshedCredentials() throws IOException {
+        String request = builder.buildAccessTokenRefreshRequest(refreshToken);
         String response = httpRequestSender.sendRequestAndGetResponse(REFRESH_URL, "POST", request);
-        return jsonParser.parseRefreshResponse(oldCredentials.getRefreshToken(), response);
+        return jsonParser.parseRefreshResponse(refreshToken, response);
     }
 
 }
