@@ -76,8 +76,10 @@ public class EmailService {
     }
 
     private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
-        PropertyConfigurator.configure(inputStream);
+        if (Environment.LOCAL != environment) {
+            InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+            PropertyConfigurator.configure(inputStream);
+        }
     }
 
 }
