@@ -6,5 +6,4 @@ public interface AdminDao {
 
     void saveAdmin(Admin admin) throws Exception;
 
-    Admin getAdmin(String userId);
 }

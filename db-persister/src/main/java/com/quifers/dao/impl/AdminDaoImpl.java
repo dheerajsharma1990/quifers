@@ -16,8 +16,4 @@ public class AdminDaoImpl implements AdminDao {
         wrapper.save(admin);
     }
 
-    @Override
-    public Admin getAdmin(String userId) {
-        return (Admin) wrapper.get(Admin.class, userId);
-    }
 }
