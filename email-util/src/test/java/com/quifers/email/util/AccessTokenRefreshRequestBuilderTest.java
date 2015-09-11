@@ -19,9 +19,10 @@ public class AccessTokenRefreshRequestBuilderTest {
         //given
         when(emailUtilProperties.getClientId()).thenReturn("11.22");
         when(emailUtilProperties.getClientSecretKey()).thenReturn("44.55");
+        when(emailUtilProperties.getRefreshToken()).thenReturn("55.66");
 
         //when
-        String request = builder.buildAccessTokenRefreshRequest("55.66");
+        String request = builder.buildAccessTokenRefreshRequest();
 
         //then
         assertThat(request, is("refresh_token=55.66&" +

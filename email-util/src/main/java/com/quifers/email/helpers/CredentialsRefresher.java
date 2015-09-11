@@ -22,8 +22,8 @@ public class CredentialsRefresher {
     }
 
     public Credentials getRefreshedCredentials() throws IOException {
-        String request = builder.buildAccessTokenRefreshRequest(refreshToken);
-        String response = httpRequestSender.sendRequestAndGetResponse("https://www.googleapis.com/oauth2/v3/token",request);
+        String request = builder.buildAccessTokenRefreshRequest();
+        String response = httpRequestSender.sendRequestAndGetResponse("https://www.googleapis.com/oauth2/v3/token", request);
         return jsonParser.parseRefreshResponse(refreshToken, response);
     }
 

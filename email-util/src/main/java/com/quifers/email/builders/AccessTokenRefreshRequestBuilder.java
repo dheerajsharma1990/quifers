@@ -13,9 +13,9 @@ public class AccessTokenRefreshRequestBuilder {
         this.properties = properties;
     }
 
-    public String buildAccessTokenRefreshRequest(String refreshToken) throws UnsupportedEncodingException {
+    public String buildAccessTokenRefreshRequest() throws UnsupportedEncodingException {
         RequestParamBuilder builder = new RequestParamBuilder();
-        return builder.addParam("refresh_token", refreshToken)
+        return builder.addParam("refresh_token", properties.getRefreshToken())
                 .addParam("client_id", properties.getClientId())
                 .addParam("client_secret", properties.getClientSecretKey())
                 .addParam("grant_type", "refresh_token").build();
