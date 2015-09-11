@@ -6,20 +6,16 @@ import com.quifers.domain.Client;
 import com.quifers.domain.Order;
 import com.quifers.domain.OrderWorkflow;
 import com.quifers.domain.enums.AddressType;
+import com.quifers.domain.enums.EmailType;
 import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
-import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
-import com.quifers.email.builders.EmailRequestBuilder;
-import com.quifers.email.helpers.*;
-import com.quifers.email.properties.EmailUtilProperties;
-import com.quifers.email.properties.PropertiesLoader;
-import com.quifers.email.util.Credentials;
-import com.quifers.email.util.HttpRequestSender;
-import com.quifers.email.util.JsonParser;
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.BrokerService;
 import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import javax.jms.*;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,26 +24,44 @@ import java.util.Set;
 @Test
 public class EndToEndEmailTest {
 
-    private Credentials credentials;
-
     @Test
     public void shouldSendEmailsSuccessfully() throws Exception {
         //given
-        EmailSender emailSender = new EmailSender(new EmailHttpRequestSender(new HttpRequestSender()), new EmailRequestBuilder());
-        Order order = getOrder();
+        System.setProperty("env", "local");
+        EmailService.main(null);
 
         //when
-        emailSender.sendEmail(credentials, new NewOrderEmailCreator("quifersdev@gmail.com"), order);
-        emailSender.sendEmail(credentials, new BillDetailsEmailCreator("quifersdev@gmail.com"), order);
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
+        Connection connection = connectionFactory.createConnection();
+        connection.setClientID("EMAIL.ACTIVEMQ.SEND.CLIENT");
+        Session session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
+        Destination queue = session.createQueue("QUIFERS.EMAIL.QUEUE");
+        MessageProducer producer = session.createProducer(queue);
+        producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
+        ObjectMessage objectMessage = session.createObjectMessage();
+        objectMessage.setObject(getOrder());
+        objectMessage.setStringProperty("EMAIL_TYPE", EmailType.NEW_ORDER.name());
+        producer.send(objectMessage);
+
+        //then
+        Thread.sleep(10 * 1000);
     }
 
 
     @BeforeClass
     public void initialiseEmailService() throws Exception {
-        Environment local = Environment.LOCAL;
-        loadLog4jProperties(local);
-        EmailUtilProperties emailUtilProperties = PropertiesLoader.loadEmailUtilProperties(local);
-        credentials = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(emailUtilProperties), new JsonParser(), emailUtilProperties.getRefreshToken()).getRefreshedCredentials();
+        loadLog4jProperties(Environment.LOCAL);
+        startActiveMq();
+    }
+
+    private void startActiveMq() throws Exception {
+        BrokerService broker = new BrokerService();
+        broker.setBrokerName("WebActiveMqBroker");
+        broker.setDedicatedTaskRunner(false);
+        broker.setDeleteAllMessagesOnStartup(true);
+        broker.addConnector("tcp://localhost:61616");
+        broker.setUseShutdownHook(false);
+        broker.start();
     }
 
     private void loadLog4jProperties(Environment environment) {

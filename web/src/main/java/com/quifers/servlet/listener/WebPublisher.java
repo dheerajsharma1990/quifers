@@ -1,7 +1,7 @@
 package com.quifers.servlet.listener;
 
+import com.quifers.domain.Order;
 import com.quifers.domain.enums.EmailType;
-import com.quifers.domain.id.OrderId;
 
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
@@ -18,10 +18,10 @@ public class WebPublisher {
         this.producer = producer;
     }
 
-    public void publishEmailMessage(EmailType emailType, OrderId orderId) throws JMSException {
+    public void publishEmailMessage(EmailType emailType, Order order) throws JMSException {
         ObjectMessage objectMessage = session.createObjectMessage();
+        objectMessage.setObject(order);
         objectMessage.setStringProperty("EMAIL_TYPE", emailType.name());
-        objectMessage.setStringProperty("ORDER_ID", orderId.getOrderId());
         producer.send(objectMessage);
     }
 }

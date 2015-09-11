@@ -19,23 +19,19 @@ import static com.quifers.properties.DBPersisterPropertiesLoader.loadDbPersister
 
 public class BaseDatabase {
 
+    protected Environment local = Environment.LOCAL;
     protected static LocalDatabaseHelper databaseHelper;
     protected static DaoFactory daoFactory;
 
     @BeforeSuite
     public void initialiseDBAndExecuteScripts() throws IOException, SQLException, ClassNotFoundException {
-        Environment environment = getEnvironment();
-        DBPersisterProperties dbPersisterProperties = loadDbPersisterProperties(environment);
+
+        DBPersisterProperties dbPersisterProperties = loadDbPersisterProperties(local);
         startServer(9092);
         Connection connection = connectToDb(dbPersisterProperties);
         databaseHelper = new LocalDatabaseHelper(connection);
         databaseHelper.executeSQLs();
-        daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
-    }
-
-    private Environment getEnvironment() {
-        String env = System.getProperty("env");
-        return env != null ? Environment.valueOf(env.toUpperCase()) : Environment.LOCAL;
+        daoFactory = DaoFactoryBuilder.getDaoFactory(local);
     }
 
     private Connection connectToDb(DBPersisterProperties dbPersisterProperties) throws ClassNotFoundException, SQLException {
@@ -46,6 +42,10 @@ public class BaseDatabase {
     @AfterSuite
     public void shutdownDB() {
         stopServer();
+    }
+
+    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
+        new BaseDatabase().initialiseDBAndExecuteScripts();
     }
 
 }

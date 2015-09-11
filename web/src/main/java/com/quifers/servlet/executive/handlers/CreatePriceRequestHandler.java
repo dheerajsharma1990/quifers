@@ -40,7 +40,7 @@ public class CreatePriceRequestHandler implements RequestHandler {
         order.setDropOffLiftWorking(createPriceRequest.isDropOffLiftWorking());
 
         orderDao.updateOrder(order);
-        webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, createPriceRequest.getOrderId());
+        webPublisher.publishEmailMessage(EmailType.BILL_DETAILS, order);
         GeneratePriceResponse priceResponse = new GeneratePriceResponse(servletResponse);
         priceResponse.writeResponse(order.getCost());
     }

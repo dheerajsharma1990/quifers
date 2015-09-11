@@ -1,6 +1,5 @@
 package com.quifers.api.test;
 
-import com.quifers.Environment;
 import com.quifers.db.impl.BaseDatabase;
 import com.quifers.domain.enums.OrderState;
 import org.apache.commons.io.IOUtils;
@@ -359,7 +358,7 @@ public class EndToEndWebTest extends BaseDatabase {
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
         new ActiveMqBroker().startBroker();
-        runJettyServer(Environment.LOCAL, 9111, 0);
+        runJettyServer(local, 9111, 0);
     }
 
     private String buildRequest() throws UnsupportedEncodingException {

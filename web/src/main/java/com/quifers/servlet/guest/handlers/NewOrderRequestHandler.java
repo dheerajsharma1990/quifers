@@ -30,7 +30,7 @@ public class NewOrderRequestHandler implements RequestHandler {
         NewOrderRequest newOrderRequest = requestValidator.validateRequest(servletRequest);
         Order order = newOrderRequest.getOrder();
         orderDao.saveOrder(order);
-        webPublisher.publishEmailMessage(EmailType.NEW_ORDER, order.getOrderId());
+        webPublisher.publishEmailMessage(EmailType.NEW_ORDER, order);
         JSONObject object = new JSONObject();
         object.put("success", "true");
         object.put("order_state", OrderState.BOOKED.name());

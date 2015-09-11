@@ -18,10 +18,6 @@ public class ActiveMqBroker {
         return this;
     }
 
-    public void stopBroker() throws Exception {
-        broker.stop();
-    }
-
     public static void main(String[] args) throws Exception {
         new ActiveMqBroker().startBroker();
     }

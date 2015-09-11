@@ -1,28 +1,25 @@
 package com.quifers.email;
 
 import com.quifers.Environment;
-import com.quifers.dao.OrderDao;
 import com.quifers.email.builders.AccessTokenRefreshRequestBuilder;
 import com.quifers.email.builders.EmailRequestBuilder;
 import com.quifers.email.helpers.CredentialsRefresher;
 import com.quifers.email.helpers.EmailCreatorFactory;
 import com.quifers.email.helpers.EmailHttpRequestSender;
 import com.quifers.email.helpers.EmailSender;
-import com.quifers.email.jms.EmailMessageConsumer;
-import com.quifers.email.jms.OrderReceiver;
+import com.quifers.email.jms.EmailMessageListener;
 import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
-import com.quifers.hibernate.DaoFactory;
-import com.quifers.hibernate.DaoFactoryBuilder;
+import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
-import javax.mail.MessagingException;
-import java.io.IOException;
+import javax.jms.Session;
 import java.io.InputStream;
 
 import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
@@ -37,34 +34,33 @@ public class EmailService {
         Environment environment = getEnvironment();
         loadLog4jProperties(environment);
         EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
-        DaoFactory daoFactory = DaoFactoryBuilder.getDaoFactory(environment);
-        startEmailService(emailUtilProperties, daoFactory);
+        startEmailService(emailUtilProperties);
     }
 
-    private static void startEmailService(EmailUtilProperties emailUtilProperties, DaoFactory daoFactory) {
+    private static void startEmailService(EmailUtilProperties emailUtilProperties) {
         LOGGER.info("Starting quifers email service...");
-        EmailMessageConsumer messageConsumer = null;
         try {
             CredentialsRefresher credentialsRefresher = new CredentialsRefresher(new HttpRequestSender(), new AccessTokenRefreshRequestBuilder(emailUtilProperties), jsonParser, emailUtilProperties.getRefreshToken());
-            messageConsumer = new EmailMessageConsumer(emailUtilProperties);
-            OrderReceiver orderReceiver = getOrderReceiver(emailUtilProperties, messageConsumer.getMessageConsumer(), credentialsRefresher, daoFactory.getOrderDao());
-            receiveOrders(orderReceiver);
+            EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
+            EmailRequestBuilder builder = new EmailRequestBuilder();
+            EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
+            EmailMessageListener emailMessageListener = new EmailMessageListener(emailSender, new EmailCreatorFactory(emailUtilProperties.getEmailAccount()), credentialsRefresher);
+            registerMessageListener(emailUtilProperties, emailMessageListener);
         } catch (Throwable e) {
             LOGGER.error("It's all over.Something terrible has happened.Email Service Is Shutting Down..{}", e);
-        } finally {
-            if (daoFactory != null) {
-                daoFactory.closeDaoFactory();
-            }
-            if (messageConsumer != null) {
-                messageConsumer.close();
-            }
         }
     }
 
-    private static void receiveOrders(OrderReceiver orderReceiver) throws JMSException, MessagingException, IOException {
-        while (true) {
-            orderReceiver.receiveOrders();
-        }
+    private static void registerMessageListener(EmailUtilProperties properties, EmailMessageListener emailMessageListener) throws JMSException {
+        LOGGER.info("Connecting to ActiveMq...");
+        ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory(properties.getActiveMqUrl());
+        Connection connection = connectionFactory.createConnection();
+        connection.setClientID("EMAIL.ACTIVEMQ.CLIENT");
+        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        MessageConsumer consumer = session.createConsumer(session.createQueue(properties.getEmailQueueName()));
+        consumer.setMessageListener(emailMessageListener);
+        connection.start();
+        LOGGER.info("Connected..");
     }
 
     private static Environment getEnvironment() throws Exception {
@@ -83,13 +79,5 @@ public class EmailService {
         InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
         PropertyConfigurator.configure(inputStream);
     }
-
-    private static OrderReceiver getOrderReceiver(EmailUtilProperties properties, MessageConsumer messageConsumer, CredentialsRefresher credentialsRefresher, OrderDao orderDao) throws JMSException, IOException, MessagingException {
-        EmailHttpRequestSender emailHttpRequestSender = new EmailHttpRequestSender(new HttpRequestSender());
-        EmailRequestBuilder builder = new EmailRequestBuilder();
-        EmailSender emailSender = new EmailSender(emailHttpRequestSender, builder);
-        return new OrderReceiver(messageConsumer, emailSender, new EmailCreatorFactory(properties.getEmailAccount()), credentialsRefresher, orderDao);
-    }
-
 
 }
