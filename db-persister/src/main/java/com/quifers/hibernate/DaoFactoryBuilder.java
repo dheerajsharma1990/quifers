@@ -14,6 +14,13 @@ public class DaoFactoryBuilder {
 
     private static DaoFactory daoFactory;
 
+    public static DaoFactory getDaoFactory(Environment environment) throws IOException {
+        if (daoFactory == null) {
+            daoFactory = buildDaoFactory(environment);
+        }
+        return daoFactory;
+    }
+
     private static DaoFactory buildDaoFactory(Environment environment) throws IOException {
         Configuration configuration = new Configuration();
         configuration.configure("hibernate/hibernate-config.xml");
@@ -29,12 +36,5 @@ public class DaoFactoryBuilder {
         configuration.setProperty("hibernate.connection.url", dbPersisterProperties.getUrl());
         configuration.setProperty("hibernate.connection.username", dbPersisterProperties.getUserName());
         configuration.setProperty("hibernate.connection.password", dbPersisterProperties.getPassword());
-    }
-
-    public static DaoFactory getDaoFactory(Environment environment) throws IOException {
-        if (daoFactory == null) {
-            daoFactory = buildDaoFactory(environment);
-        }
-        return daoFactory;
     }
 }

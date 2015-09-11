@@ -17,7 +17,18 @@ public class CredentialsGenerator {
 
     private static Logger LOGGER = LoggerFactory.getLogger(CredentialsGenerator.class);
 
-    public static Server runJettyServer(int port) throws Exception {
+    public static void main(String[] args) throws Exception {
+        loadLog4jProperties(Environment.LOCAL);
+        Server server = runJettyServer(8008);
+        server.join();
+    }
+
+    private static void loadLog4jProperties(Environment environment) {
+        InputStream inputStream = CredentialsGenerator.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+        PropertyConfigurator.configure(inputStream);
+    }
+
+    private static Server runJettyServer(int port) throws Exception {
 
         Server server = new Server(port);
 
@@ -33,17 +44,6 @@ public class CredentialsGenerator {
         LOGGER.info("Web App Started...");
         LOGGER.info("Open http://<machine-ip>:8008/accessCode to generate credentials..");
         return server;
-    }
-
-    public static void main(String[] args) throws Exception {
-        loadLog4jProperties(Environment.LOCAL);
-        Server server = runJettyServer(8008);
-        server.join();
-    }
-
-    private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = CredentialsGenerator.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
-        PropertyConfigurator.configure(inputStream);
     }
 
 }
