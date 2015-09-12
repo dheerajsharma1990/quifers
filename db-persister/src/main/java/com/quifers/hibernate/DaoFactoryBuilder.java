@@ -1,6 +1,7 @@
 package com.quifers.hibernate;
 
 import com.quifers.Environment;
+import com.quifers.dao.impl.DaoWrapper;
 import com.quifers.properties.DBPersisterProperties;
 import com.quifers.properties.DBPersisterPropertiesLoader;
 import org.hibernate.SessionFactory;
@@ -28,7 +29,7 @@ public class DaoFactoryBuilder {
         addDatabaseProperties(configuration, dbPersisterProperties);
         ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
         SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-        return new DaoFactory(sessionFactory);
+        return new DaoFactory(new DaoWrapper(sessionFactory));
     }
 
     private static void addDatabaseProperties(Configuration configuration, DBPersisterProperties dbPersisterProperties) {

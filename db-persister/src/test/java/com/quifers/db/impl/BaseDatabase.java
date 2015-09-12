@@ -25,7 +25,6 @@ public class BaseDatabase {
 
     @BeforeSuite
     public void initialiseDBAndExecuteScripts() throws IOException, SQLException, ClassNotFoundException {
-
         DBPersisterProperties dbPersisterProperties = loadDbPersisterProperties(local);
         startServer(9092);
         Connection connection = connectToDb(dbPersisterProperties);

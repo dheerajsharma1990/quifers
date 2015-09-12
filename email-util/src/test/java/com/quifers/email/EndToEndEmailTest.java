@@ -21,10 +21,10 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-@Test
+@Test(enabled = false)
 public class EndToEndEmailTest {
 
-    @Test
+    @Test(enabled = false)
     public void shouldSendEmailsSuccessfully() throws Exception {
         //given
         System.setProperty("env", "local");
