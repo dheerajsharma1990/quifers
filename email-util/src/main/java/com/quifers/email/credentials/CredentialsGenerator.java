@@ -18,13 +18,13 @@ public class CredentialsGenerator {
     private static Logger LOGGER = LoggerFactory.getLogger(CredentialsGenerator.class);
 
     public static void main(String[] args) throws Exception {
-        loadLog4jProperties(Environment.LOCAL);
+        loadLog4jProperties(Environment.getEnvironment(System.getProperty("env")));
         Server server = runJettyServer(8008);
         server.join();
     }
 
     private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = CredentialsGenerator.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+        InputStream inputStream = CredentialsGenerator.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
         PropertyConfigurator.configure(inputStream);
     }
 

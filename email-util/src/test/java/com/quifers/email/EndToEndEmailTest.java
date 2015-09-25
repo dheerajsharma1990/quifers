@@ -50,7 +50,8 @@ public class EndToEndEmailTest {
 
     @BeforeClass
     public void initialiseEmailService() throws Exception {
-        loadLog4jProperties(Environment.LOCAL);
+        Environment environment = Environment.getEnvironment("local");
+        loadLog4jProperties(environment);
         startActiveMq();
     }
 
@@ -65,7 +66,7 @@ public class EndToEndEmailTest {
     }
 
     private void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
         PropertyConfigurator.configure(inputStream);
     }
 

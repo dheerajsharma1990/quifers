@@ -19,7 +19,8 @@ import static com.quifers.properties.DBPersisterPropertiesLoader.loadDbPersister
 
 public class BaseDatabase {
 
-    protected Environment local = Environment.LOCAL;
+    protected String envName = "local";
+    protected Environment local = Environment.getEnvironment(envName);
     protected static LocalDatabaseHelper databaseHelper;
     protected static DaoFactory daoFactory;
 
@@ -41,10 +42,6 @@ public class BaseDatabase {
     @AfterSuite
     public void shutdownDB() {
         stopServer();
-    }
-
-    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException {
-        new BaseDatabase().initialiseDBAndExecuteScripts();
     }
 
 }

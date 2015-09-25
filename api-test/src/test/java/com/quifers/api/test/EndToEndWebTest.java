@@ -358,7 +358,7 @@ public class EndToEndWebTest extends BaseDatabase {
     @BeforeClass
     public void startServerAndDatabase() throws Exception {
         new ActiveMqBroker().startBroker();
-        runJettyServer(local, 9111, 0);
+        runJettyServer(envName, 9111, 0);
     }
 
     private String buildRequest() throws UnsupportedEncodingException {

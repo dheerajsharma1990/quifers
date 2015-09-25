@@ -15,13 +15,31 @@ import java.util.EnumSet;
 
 public class JettyRunner {
 
-    public static Server runJettyServer(Environment environment, int port, long lastOrderIdCounter) throws Exception {
-        loadLog4jProperties(environment);
-        Server server = new Server(port);
+    public static void main(String[] args) throws Exception {
+        if (args.length != 1) {
+            throw new Exception("Please provide last order number as the first argument.");
+        }
+        Server server = runJettyServer(System.getProperty("env"), 80, Long.valueOf(args[0]));
+        server.join();
+    }
 
+    public static Server runJettyServer(String env, int port, long lastOrderIdCounter) throws Exception {
+        Environment environment = Environment.getEnvironment(env);
+        loadLog4jProperties(environment);
+
+        return runServer(env, port, lastOrderIdCounter);
+    }
+
+    private static void loadLog4jProperties(Environment environment) {
+        InputStream inputStream = JettyRunner.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
+        PropertyConfigurator.configure(inputStream);
+    }
+
+    private static Server runServer(String env, int port, long lastOrderIdCounter) throws Exception {
+        Server server = new Server(port);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath("/");
-        context.setInitParameter("env", environment.name());
+        context.setInitParameter("env", env);
         context.setInitParameter("lastOrderIdCounter", String.valueOf(lastOrderIdCounter));
         context.addEventListener(new StartupContextListener());
 
@@ -32,32 +50,6 @@ public class JettyRunner {
         server.start();
 
         return server;
-    }
-
-    private static Environment getEnvironment() {
-        String envProperty = System.getProperty("env");
-        if (envProperty == null || envProperty.trim().equals("")) {
-            throw new IllegalArgumentException("No environment specified.");
-        }
-        try {
-            return Environment.valueOf(envProperty.toUpperCase().trim());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Invalid environment specified.", e);
-        }
-    }
-
-    private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = JettyRunner.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
-        PropertyConfigurator.configure(inputStream);
-    }
-
-    public static void main(String[] args) throws Exception {
-        if (args.length != 1) {
-            throw new Exception("Please provide last order number as the first argument.");
-        }
-        Environment environment = getEnvironment();
-        Server server = runJettyServer(environment, 80, Long.valueOf(args[0]));
-        server.join();
     }
 
 }

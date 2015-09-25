@@ -27,25 +27,12 @@ public class StartupContextListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         LOGGER.info("Starting quifers webapp...");
         ServletContext servletContext = servletContextEvent.getServletContext();
-        Environment environment = getEnvironment(servletContext);
+        Environment environment = Environment.getEnvironment(servletContext.getInitParameter("env"));
         initialiseDaoFactory(servletContext, environment);
         initialiseOrderIdService(servletContext);
         initialiseActiveMqPublisher(servletContext);
     }
 
-    private Environment getEnvironment(ServletContext servletContext) {
-        String env = servletContext.getInitParameter("env");
-        if (env == null) {
-            throw new IllegalArgumentException("No environment specified for running application.");
-        }
-        Environment environment;
-        try {
-            environment = Environment.valueOf(env.toUpperCase());
-        } catch (IllegalArgumentException exception) {
-            throw new IllegalArgumentException("No such Environment [" + env + "] present in Environment enum.", exception);
-        }
-        return environment;
-    }
 
     private void initialiseDaoFactory(ServletContext servletContext, Environment environment) {
         try {

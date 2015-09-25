@@ -31,7 +31,7 @@ public class EmailService {
     private static JsonParser jsonParser = new JsonParser();
 
     public static void main(String[] args) throws Exception {
-        Environment environment = getEnvironment();
+        Environment environment = Environment.getEnvironment(System.getProperty("env"));
         loadLog4jProperties(environment);
         EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
         startEmailService(emailUtilProperties);
@@ -63,20 +63,8 @@ public class EmailService {
         LOGGER.info("Connected..");
     }
 
-    private static Environment getEnvironment() throws Exception {
-        String env = System.getProperty("env");
-        if (env == null) {
-            throw new IllegalArgumentException("No environment specified.Kindly look at the Environment enum for possible values.");
-        }
-        try {
-            return Environment.valueOf(env.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("No such environment exists.", e);
-        }
-    }
-
     private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream("properties/" + environment.name().toLowerCase() + "/log4j.properties");
+        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
         PropertyConfigurator.configure(inputStream);
 
     }
