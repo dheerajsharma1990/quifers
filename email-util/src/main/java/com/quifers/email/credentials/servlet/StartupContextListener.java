@@ -13,8 +13,6 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.io.IOException;
 
-import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
-
 public class StartupContextListener implements ServletContextListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
@@ -37,7 +35,7 @@ public class StartupContextListener implements ServletContextListener {
     private void initialiseProperties(ServletContext servletContext) {
         try {
             Environment environment = Environment.getEnvironment(servletContext.getInitParameter("env"));
-            EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
+            EmailUtilProperties emailUtilProperties = new EmailUtilProperties(environment.loadProperties("email-util.properties"));
             servletContext.setAttribute(EMAIL_UTIL_PROPERTIES, emailUtilProperties);
         } catch (IOException e) {
             e.printStackTrace();

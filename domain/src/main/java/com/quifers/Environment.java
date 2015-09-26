@@ -1,10 +1,17 @@
 package com.quifers;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class Environment {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(Environment.class);
 
     private static final Environment[] allEnvironments = new Environment[]{
             new Environment("LOCAL"),
@@ -14,6 +21,14 @@ public class Environment {
 
     private Environment(String name) {
         this.name = name;
+    }
+
+    public Properties loadProperties(String fileName) throws IOException {
+        LOGGER.info("Loading properties from {}", fileName);
+        InputStream inputStream = Environment.class.getClassLoader().getResourceAsStream(getPropertiesFilePath(fileName));
+        Properties properties = new Properties();
+        properties.load(inputStream);
+        return properties;
     }
 
     public String getPropertiesFilePath(String fileName) {

@@ -22,8 +22,6 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import java.io.InputStream;
 
-import static com.quifers.email.properties.PropertiesLoader.loadEmailUtilProperties;
-
 public class EmailService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(EmailService.class);
@@ -33,7 +31,7 @@ public class EmailService {
     public static void main(String[] args) throws Exception {
         Environment environment = Environment.getEnvironment(System.getProperty("env"));
         loadLog4jProperties(environment);
-        EmailUtilProperties emailUtilProperties = loadEmailUtilProperties(environment);
+        EmailUtilProperties emailUtilProperties = new EmailUtilProperties(environment.loadProperties("email-util.properties"));
         startEmailService(emailUtilProperties);
     }
 

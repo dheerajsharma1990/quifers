@@ -16,12 +16,11 @@ import java.io.IOException;
 
 public class StartupContextListener implements ServletContextListener {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
+
     public static final String DAO_FACTORY = "DAO_FACTORY";
     public static final String ORDER_ID_SERVICE = "ORDER_ID_SERVICE";
     public static final String WEB_PUBLISHER = "WEB_PUBLISHER";
-
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(StartupContextListener.class);
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
