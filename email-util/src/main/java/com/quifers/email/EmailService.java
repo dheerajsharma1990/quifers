@@ -12,7 +12,6 @@ import com.quifers.email.properties.EmailUtilProperties;
 import com.quifers.email.util.HttpRequestSender;
 import com.quifers.email.util.JsonParser;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +19,6 @@ import javax.jms.Connection;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
-import java.io.InputStream;
 
 public class EmailService {
 
@@ -30,7 +28,6 @@ public class EmailService {
 
     public static void main(String[] args) throws Exception {
         Environment environment = Environment.getEnvironment(System.getProperty("env"));
-        loadLog4jProperties(environment);
         EmailUtilProperties emailUtilProperties = new EmailUtilProperties(environment.loadProperties("email-util.properties"));
         startEmailService(emailUtilProperties);
     }
@@ -59,12 +56,6 @@ public class EmailService {
         consumer.setMessageListener(emailMessageListener);
         connection.start();
         LOGGER.info("Connected..");
-    }
-
-    private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
-        PropertyConfigurator.configure(inputStream);
-
     }
 
 }

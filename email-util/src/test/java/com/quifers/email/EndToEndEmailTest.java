@@ -11,12 +11,10 @@ import com.quifers.domain.enums.OrderState;
 import com.quifers.domain.id.OrderId;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
-import org.apache.log4j.PropertyConfigurator;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import javax.jms.*;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,7 +49,7 @@ public class EndToEndEmailTest {
     @BeforeClass
     public void initialiseEmailService() throws Exception {
         Environment environment = Environment.getEnvironment("local");
-        loadLog4jProperties(environment);
+        environment.loadLog4jProperties();
         startActiveMq();
     }
 
@@ -63,11 +61,6 @@ public class EndToEndEmailTest {
         broker.addConnector("tcp://localhost:61616");
         broker.setUseShutdownHook(false);
         broker.start();
-    }
-
-    private void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = EmailService.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
-        PropertyConfigurator.configure(inputStream);
     }
 
     private Order getOrder() {

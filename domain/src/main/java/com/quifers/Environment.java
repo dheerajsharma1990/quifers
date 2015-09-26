@@ -1,6 +1,7 @@
 package com.quifers;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,15 +25,23 @@ public class Environment {
     }
 
     public Properties loadProperties(String fileName) throws IOException {
+        loadLog4jProperties();
+        return getProperties(fileName);
+    }
+
+    private Properties getProperties(String fileName) throws IOException {
         LOGGER.info("Loading properties from {}", fileName);
-        InputStream inputStream = Environment.class.getClassLoader().getResourceAsStream(getPropertiesFilePath(fileName));
         Properties properties = new Properties();
-        properties.load(inputStream);
+        properties.load(getInputStreamForFile(fileName));
         return properties;
     }
 
-    public String getPropertiesFilePath(String fileName) {
-        return "properties" + File.separator + name.toLowerCase() + File.separator + fileName;
+    public void loadLog4jProperties() {
+        PropertyConfigurator.configure(getInputStreamForFile("log4j.properties"));
+    }
+
+    private InputStream getInputStreamForFile(String fileName) {
+        return Environment.class.getClassLoader().getResourceAsStream("properties" + File.separator + name.toLowerCase() + File.separator + fileName);
     }
 
     public static Environment getEnvironment(String environment) {

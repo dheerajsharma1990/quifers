@@ -4,28 +4,21 @@ import com.quifers.Environment;
 import com.quifers.email.credentials.servlet.AccessCodeRequestServlet;
 import com.quifers.email.credentials.servlet.AccessTokenRequestServlet;
 import com.quifers.email.credentials.servlet.StartupContextListener;
-import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
-
 public class CredentialsGenerator {
 
     private static Logger LOGGER = LoggerFactory.getLogger(CredentialsGenerator.class);
 
     public static void main(String[] args) throws Exception {
-        loadLog4jProperties(Environment.getEnvironment(System.getProperty("env")));
+        Environment environment = Environment.getEnvironment(System.getProperty("env"));
+        environment.loadLog4jProperties();
         Server server = runJettyServer(8008);
         server.join();
-    }
-
-    private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = CredentialsGenerator.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
-        PropertyConfigurator.configure(inputStream);
     }
 
     private static Server runJettyServer(int port) throws Exception {

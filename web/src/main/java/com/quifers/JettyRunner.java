@@ -3,14 +3,12 @@ package com.quifers;
 import com.quifers.servlet.BaseServlet;
 import com.quifers.servlet.filters.AuthenticationFilter;
 import com.quifers.servlet.listener.StartupContextListener;
-import org.apache.log4j.PropertyConfigurator;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 
 import javax.servlet.DispatcherType;
-import java.io.InputStream;
 import java.util.EnumSet;
 
 public class JettyRunner {
@@ -25,14 +23,8 @@ public class JettyRunner {
 
     public static Server runJettyServer(String env, int port, long lastOrderIdCounter) throws Exception {
         Environment environment = Environment.getEnvironment(env);
-        loadLog4jProperties(environment);
-
+        environment.loadLog4jProperties();
         return runServer(env, port, lastOrderIdCounter);
-    }
-
-    private static void loadLog4jProperties(Environment environment) {
-        InputStream inputStream = JettyRunner.class.getClassLoader().getResourceAsStream(environment.getPropertiesFilePath("log4j.properties"));
-        PropertyConfigurator.configure(inputStream);
     }
 
     private static Server runServer(String env, int port, long lastOrderIdCounter) throws Exception {
