@@ -25,7 +25,6 @@ public class Environment {
     }
 
     public Properties loadProperties(String fileName) throws IOException {
-        loadLog4jProperties();
         return getProperties(fileName);
     }
 

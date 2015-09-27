@@ -28,6 +28,7 @@ public class EmailService {
 
     public static void main(String[] args) throws Exception {
         Environment environment = Environment.getEnvironment(System.getProperty("env"));
+        environment.loadLog4jProperties();
         EmailUtilProperties emailUtilProperties = new EmailUtilProperties(environment.loadProperties("email-util.properties"));
         startEmailService(emailUtilProperties);
     }
